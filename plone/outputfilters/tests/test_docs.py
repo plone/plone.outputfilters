@@ -1,0 +1,12 @@
+import unittest
+from Testing import ZopeTestCase as ztc
+from plone.outputfilters.tests.base import OutputFiltersTestCase
+
+def test_suite():
+    return unittest.TestSuite([
+
+        ztc.ZopeDocFileSuite(
+           'README.txt', package='plone.outputfilters',
+           test_class=OutputFiltersTestCase),
+
+        ])
