@@ -1,4 +1,6 @@
-from zope.interface import implements
+from zope.cachedescriptors.property import Lazy as lazy_property
+from zope.component import getAllUtilitiesRegisteredFor
+from zope.interface import implements, Interface, Attribute
 from Products.CMFCore.utils import getToolByName
 
 from sgmllib import SGMLParser, SGMLParseError
@@ -13,7 +15,15 @@ except ImportError:
 
 from plone.outputfilters.interfaces import IFilter
 
+
+class IImageCaptioningEnabler(Interface):
+    available = Attribute("Boolean indicating whether image captioning should be performed.")
+
+class IResolveUidsEnabler(Interface):
+    available = Attribute("Boolean indicating whether UID links should be resolved.")
+
 singleton_tags = ["img", "br", "hr", "input", "meta", "param", "col"]
+
 
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
@@ -29,15 +39,19 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
     # IFilter implementation
     order = 800
 
-    @property
+    @lazy_property
     def captioned_images(self):
-        # XXX
+        for u in getAllUtilitiesRegisteredFor(IImageCaptioningEnabler):
+            if u.available:
+                return True
         return False
     
-    @property
+    @lazy_property
     def resolve_uids(self):
-        # XXX
-        return True
+        for u in getAllUtilitiesRegisteredFor(IResolveUidsEnabler):
+            if u.available:
+                return True
+        return False
 
     def is_enabled(self):
         if self.context is None:

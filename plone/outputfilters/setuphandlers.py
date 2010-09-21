@@ -3,8 +3,8 @@ from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.MimetypesRegistry.interfaces import IMimetypesRegistryTool
 
 from plone.outputfilters.mimetype import text_plone_outputfilters_html
-from plone.outputfilters.transforms import plone_outputfilters_html_to_html, \
-                                           html_to_plone_outputfilters_html
+from plone.outputfilters.transforms.plone_outputfilters_html_to_html import plone_outputfilters_html_to_html
+from plone.outputfilters.transforms.html_to_plone_outputfilters_html import html_to_plone_outputfilters_html
 
 def register_mimetype(context, mimetype):
     mimetypes_registry = getUtility(IMimetypesRegistryTool)
