@@ -13,16 +13,7 @@ from Products.PortalTransforms.interfaces import itransform
 
 
 from plone.outputfilters.interfaces import IFilter
-
-def apply_filters(filters, data):
-    by_order = lambda x: x.order
-    filters = sorted(filters, key=by_order)
-    for filter in filters:
-        if filter.is_enabled():
-            res = filter(data)
-            if res is not None:
-                data = res
-    return data
+from plone.outputfilters import apply_filters
 
 
 class html_to_plone_outputfilters_html:

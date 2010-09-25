@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from plone.outputfilters.transforms.html_to_plone_outputfilters_html import apply_filters
+from plone.outputfilters import apply_filters
 
 class DummyFilter(object):
     order = 500
