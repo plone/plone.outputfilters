@@ -20,3 +20,9 @@ class OutputFiltersTestCase(ptc.PloneTestCase):
         @classmethod
         def tearDown(cls):
             pass
+
+class OutputFiltersDocTestCase(OutputFiltersTestCase):
+    # workaround for bug where the default test loader finds a bogus
+    # test case in a test case class if it was previously used by
+    # a Zope doctest suite
+    pass
