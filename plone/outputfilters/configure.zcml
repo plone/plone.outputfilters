@@ -3,6 +3,7 @@
     xmlns:gs="http://namespaces.zope.org/genericsetup"
     i18n_domain="plone.outputfilters">
 
+  <include package=".browser"/>
   <include package=".filters"/>
 
   <gs:registerProfile

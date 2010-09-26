@@ -5,7 +5,6 @@ from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from Products.CMFCore.utils import getToolByName
-from Products.Five import BrowserView
 
 from sgmllib import SGMLParser, SGMLParseError
 
@@ -25,21 +24,6 @@ class IResolveUidsEnabler(Interface):
     available = Attribute("Boolean indicating whether UID links should be resolved.")
 
 singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
-
-
-class CaptionedImageView(BrowserView):
-    
-    @lazy_property
-    def template(self):
-        try:
-            # BBB for kupu
-            template = self.context.restrictedTraverse('kupu_captioned_image')
-        except:
-            template = self.index
-        return template
-    
-    def __call__(self, **options):
-        return self.template(**options)
 
 
 class ResolveUIDAndCaptionFilter(SGMLParser):
