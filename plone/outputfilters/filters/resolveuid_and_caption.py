@@ -1,11 +1,13 @@
+from Acquisition import aq_base
+from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.DT_Var import newline_to_br
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from Products.CMFCore.utils import getToolByName
+from Products.Five import BrowserView
 
 from sgmllib import SGMLParser, SGMLParseError
-from urlparse import urlsplit, urljoin
-from urllib import unquote
 
 HAS_LINGUAPLONE = True
 try:
@@ -22,7 +24,22 @@ class IImageCaptioningEnabler(Interface):
 class IResolveUidsEnabler(Interface):
     available = Attribute("Boolean indicating whether UID links should be resolved.")
 
-singleton_tags = ["img", "br", "hr", "input", "meta", "param", "col"]
+singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
+
+
+class CaptionedImageView(BrowserView):
+    
+    @lazy_property
+    def template(self):
+        try:
+            # BBB for kupu
+            template = self.context.restrictedTraverse('kupu_captioned_image')
+        except:
+            template = self.index
+        return template
+    
+    def __call__(self, **options):
+        return self.template(**options)
 
 
 class ResolveUIDAndCaptionFilter(SGMLParser):
@@ -35,6 +52,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         self.context = context
         self.request = request
         self.pieces = []
+        self.captioned_image_template = context.restrictedTraverse('plone.outputfilters_captioned_image')
+        self.in_link = False
 
     # IFilter implementation
     order = 800
@@ -106,97 +125,117 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         reference_tool = getToolByName(context, 'reference_catalog')
         return reference_tool.lookupObject(uid)
 
+    def resolve_link(self, href):
+        obj = None
+        subpath = ''
+        appendix = ''
+        
+        # preserve querystring and/or appendix
+        for char in ('#', '?'):
+            parts = href.split(char)
+            href = parts[0]
+            if len(parts) > 1:
+                appendix += char + char.join(parts[1:])
+        
+        if 'resolveuid' in href:
+            # get the UUID
+            parts = href.split('/')
+            uid = parts[1]
+            if len(parts) > 2:
+                subpath = '/'.join(parts[2:])
+            
+            obj = self.lookup_uid(uid)
+        
+        return obj, subpath, appendix
+
+    def resolve_image(self, src):
+        image = fullimage = None
+        description = ''
+        base = self.context
+        subpath = src
+        appendix = ''
+        
+        if 'resolveuid' in src:
+            base, subpath, appendix = self.resolve_link(src)
+
+        # let's see if we can traverse to the image
+        try:
+            image = base.restrictedTraverse(subpath)
+        except:
+            return None, None, src, ''
+        
+        fullimage = image
+        src = image.absolute_url() + appendix
+        if image and hasattr(aq_base(image), 'Description'):
+            description = image.Description()
+        elif image and subpath:
+            # maybe it's an image scale; try traversing one less
+            parent_path = '/'.join(subpath.split('/')[:-1])
+            try:
+                fullimage = base.restrictedTraverse(parent_path)
+            except:
+                pass
+            if fullimage and hasattr(aq_base(fullimage), 'Description'):
+                description = fullimage.Description()
+        
+        return image, fullimage, src, description
+
     def unknown_starttag(self, tag, attrs):
-        """Here we've got the actual conversion of links and images. Convert UUID's to absolute url's, and process captioned images to HTML"""
-        if tag in ['a', 'img']:
-            # Only do something if tag is a link or images
+        """Here we've got the actual conversion of links and images.
+        
+        Convert UUID's to absolute URLs, and process captioned images to HTML.
+        """
+        if tag in ['a', 'img', 'area']:
+            # Only do something if tag is a link, image, or image map area.
+
             attributes = {}
             for (key, value) in attrs:
                 attributes[key] = value
 
             if tag == 'a':
+                self.in_link = True
+            if tag == 'a' or tag == 'area':
                 if attributes.has_key('href'):
                     href = attributes['href']
-                    if 'resolveuid' in href:
-                        # We should check if "Link using UIDs" is enabled in
-                        # the TinyMCE tool, but then the kupu resolveuid is
-                        # used, so let's always transform here
-                        parts = href.split("/")
-                        # Get the actual UUID
-                        uid = parts[1]
-                        appendix = ""
-                        if len(parts) > 2:
-                            # There is more than just the UUID, save it in
-                            # appendix
-                            appendix = "/".join(parts[2:])
-
-                        # move name of links to anchors to appendix
-                        # (resolveuid/12fc34#anchor)
-                        if '#' in uid:
-                            uid, anchor = uid.split('#')
-                            appendix = '#%s' % anchor  #anchor + appendix won't happen
-
-                        ref_obj = self.lookup_uid(uid)
-                        if ref_obj:
-                            href = ref_obj.absolute_url() + appendix
-                            attributes['href'] = href
-                            attrs = attributes.iteritems()
+                    if self.resolve_uids and 'resolveuid' in href:
+                        obj, subpath, appendix = self.resolve_link(href)
+                        href = obj.absolute_url() + subpath + appendix
+                        attributes['href'] = href
+                        attrs = attributes.iteritems()
             elif tag == 'img':
-                # First collect some attributes
-                src = ""
-                description = ""
-                if attributes.has_key("src"):
-                    src = attributes["src"]
-                # if we set an description within tinymce we want to keep that one
-                if attributes.has_key("alt") and attributes["alt"]:
-                    description = attributes["alt"]
-                if 'resolveuid' in src:
-                    # We need to convert the UUID to a relative path here
-                    parts = src.split("/")
-                    uid = parts[1]
-                    appendix = ""
-                    if len(parts) > 2:
-                        # There is more than just the UUID, save it in appendix (query parameters for example)
-                        appendix = "/" + "/".join(parts[2:])
-                    image_obj = self.lookup_uid(uid)
-                    if image_obj:
-                        # Only do something when the image is actually found in the reference_catalog
-                        src = image_obj.absolute_url() + appendix
-                        attributes["src"] = src
-                        if hasattr(image_obj, "Description") and not description:
-                            description = image_obj.Description()
+                src = attributes.get('src', '')
+                image, fullimage, src, description = self.resolve_image(src)
+
+                attributes["src"] = src
+                if attributes.get('alt', ''):
+                    caption = attributes['alt']
                 else:
-                    # It's a relative path, let's see if we can get the description from the portal catalog
-                    full_path = urljoin(self.context.absolute_url(), src)
-                    #remove any encoded characters
-                    full_path = unquote(full_path)
-                    scheme, netloc, path, query, fragment = urlsplit(full_path)
-                    portal_catalog = getToolByName(self.context, "portal_catalog")
-                    # Check if we can find this in the portal catalog
-                    brains = portal_catalog({'path' : {'query':path}, 'type' : 'Image'})
-                    if len(brains) == 0:
-                        # Maybe something like 'image_preview' is in the path, let's chop it
-                        query= {'path' : {'query' : "/".join(path.split('/')[:-1])}, 'type' : 'Image'}
-                        brains = portal_catalog(query)
-                    if len(brains) > 0 and not description:
-                        description = brains[0].Description
-                # Check if the image is a captioned image
-                classes = ""
-                if attributes.has_key("class"):
-                    classes = attributes["class"]
-                if self.captioned_images and classes.find('captioned') != -1:
-                    # We have captioned images, and we need to convert them, so let's do so
-                    width_style = ""
-                    if attributes.has_key("width"):
-                        width_style="style=\"width:%spx;\" " % attributes["width"]
-                    image_attributes = ""
-                    image_attributes = image_attributes.join(["%s %s=\"%s\"" % (image_attributes, key, value) for (key, value) in attributes.items() if not key in ["class", "src"]])
-                    captioned_html = """<dl %sclass="%s">
-                                        <dt %s>
-                                            <img %s src="%s"/>
-                                        </dt>
-                                        <dd class="image-caption">%s</dd>
-                                        </dl>""" % (width_style, classes, width_style, image_attributes, src ,description)
+                    caption = description
+
+                # Check if the image needs to be captioned
+                if self.captioned_images and image and caption and 'captioned' in attributes.get('class', '').split(' '):
+                    klass = attributes['class']
+                    del attributes['class']
+                    del attributes['src']
+                    options = {
+                        'class': klass,
+                        'originalwidth': attributes.get('width', None),
+                        'originalalt': attributes.get('alt', None),
+                        'url_path': fullimage.absolute_url_path(),
+                        'caption': newline_to_br(html_quote(caption)),
+                        'image': image,
+                        'fullimage': fullimage,
+                        'tag': image.tag(**attributes),
+                        'isfullsize': image.width == fullimage.width and image.height == fullimage.height,
+                        'width': attributes.get('width', image.width),
+                        }
+                    if self.in_link:
+                        # Must preserve original link, don't overwrite with a link to the image
+                        options['isfullsize'] = True
+                    
+                    captioned_html = self.captioned_image_template(**options)
+                    if isinstance(captioned_html, unicode):
+                        captioned_html = captioned_html.encode('utf8')
                     self.append_data(captioned_html)
                     return True
                 else:
@@ -212,6 +251,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
     def unknown_endtag(self, tag):
         """Add the endtag unmodified"""
+        if tag == 'a':
+            self.in_link = False
         self.append_data("</%s>" % tag)
 
     def parse_declaration(self, i):

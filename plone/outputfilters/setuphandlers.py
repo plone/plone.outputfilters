@@ -12,7 +12,9 @@ def register_mimetype(context, mimetype):
 
 def unregister_mimetype(context, mimetype):
     mimetypes_registry = getUtility(IMimetypesRegistryTool)
-    mimetypes_registry.unregister(mimetype())
+    mimetype_instance = mimetypes_registry.lookup(mimetype)
+    if mimetype_instance:
+        mimetypes_registry.unregister(mimetype_instance[0])
 
 def register_transform(context, transform):
     transform_tool = getUtility(IPortalTransformsTool)
@@ -47,7 +49,7 @@ def uninstall_mimetype_and_transforms(context):
     """ unregister mimetype and transformations for captioned images """
     unregister_transform(context, "plone_outputfilters_html_to_html")
     unregister_transform(context, "html_to_plone_outputfilters_html")
-    unregister_mimetype(context, text_plone_outputfilters_html)
+    unregister_mimetype(context, 'text/x-plone-outputfilters-html')
     unregister_transform_policy(context, "text/x-html-safe")
 
 def importVarious(context):

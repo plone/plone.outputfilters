@@ -24,3 +24,15 @@ class TransformsTestCase(OutputFiltersTestCase):
         policies = [mimetype for (mimetype, required) in policies
                              if mimetype == "text/x-html-safe"]
         self.assertEqual(1, len(policies))
+
+    def test_uninstallation(self):
+        from plone.outputfilters.setuphandlers import uninstall_mimetype_and_transforms
+        uninstall_mimetype_and_transforms(self.portal)
+
+        policies = self.transforms.listPolicies()
+        policies = [mimetype for (mimetype, required) in policies
+                             if mimetype == "text/x-html-safe"]
+        self.assertEqual(0, len(policies))
+
+        # make sure it doesn't break if trying to uninstall again
+        uninstall_mimetype_and_transforms(self.portal)

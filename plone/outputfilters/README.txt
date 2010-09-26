@@ -109,7 +109,7 @@ Now when text is transformed from text/html to text/x-html-safe, the filter will
 be applied.
 
  >>> str(self.portal.portal_transforms.convertTo('text/x-html-safe',
- ...     'test--test', mimetype='text/html'))
+ ...     'test--test', mimetype='text/html', context=self.portal))
  'test\xe2\x80\x94test'
 
 
