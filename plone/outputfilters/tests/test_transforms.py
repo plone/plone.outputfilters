@@ -1,3 +1,4 @@
+import unittest
 from plone.outputfilters.tests.base import OutputFiltersTestCase
 
 class TransformsTestCase(OutputFiltersTestCase):
@@ -36,3 +37,7 @@ class TransformsTestCase(OutputFiltersTestCase):
 
         # make sure it doesn't break if trying to uninstall again
         uninstall_mimetype_and_transforms(self.portal)
+
+
+def test_suite():
+    return unittest.defaultTestLoader.loadTestsFromName(__name__)

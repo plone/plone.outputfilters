@@ -2,7 +2,18 @@ from zExceptions import NotFound
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.browser import BrowserView
-from plone.app.uuid.utils import uuidToURL
+
+try:
+    from plone.app.uuid.utils import uuidToURL
+except ImportError:
+    from zope.app.component.hooks import getSite
+    from Products.CMFCore.utils import getToolByName
+    def uuidToURL(uuid):
+        catalog = getToolByName(getSite(), 'portal_catalog')
+        res = catalog(UID=uuid)
+        if res:
+            return res[0].getObject()
+
 
 class ResolveUIDView(BrowserView):
     """Resolve a URL like /resolveuid/<uuid> to a normalized URL.

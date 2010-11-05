@@ -1,3 +1,4 @@
+import unittest
 from doctest import REPORT_NDIFF, OutputChecker
 from plone.outputfilters.tests.base import OutputFiltersTestCase
 from Products.PortalTransforms.tests.utils import normalize_html
@@ -31,9 +32,9 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         self.setRoles(['Manager'])
         
         data = open(join(PREFIX,'image.jpg'),'rb').read()
-        self.portal.invokeFactory('Image', id='image.jpg', title='Image',
-                                  description='My caption', file=data)
+        self.portal.invokeFactory('Image', id='image.jpg', title='Image', file=data)
         image = getattr(self.portal, 'image.jpg')
+        image.setDescription('My caption')
         image.reindexObject()
         self.UID = image.UID()
         
@@ -185,3 +186,7 @@ alert(1);
 
     def test_image_captioning_uses_kupu_captioned_image_template(self):
         pass
+
+
+def test_suite():
+    return unittest.defaultTestLoader.loadTestsFromName(__name__)

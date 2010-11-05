@@ -1,6 +1,7 @@
-from unittest import TestCase
+import unittest
 
 from plone.outputfilters import apply_filters
+
 
 class DummyFilter(object):
     order = 500
@@ -13,7 +14,8 @@ class DummyFilter(object):
         self.__class__.called.append(self)
         return data
 
-class FilterTestCase(TestCase):
+
+class FilterTestCase(unittest.TestCase):
     
     def setUp(self):
         DummyFilter.called = []
@@ -49,3 +51,6 @@ class FilterTestCase(TestCase):
         
         res = apply_filters([filter], '')
         self.assertEqual('', res)
+
+def test_suite():
+    return unittest.defaultTestLoader.loadTestsFromName(__name__)
