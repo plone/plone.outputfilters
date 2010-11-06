@@ -236,7 +236,15 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_uses_kupu_captioned_image_template(self):
-        pass
+        # for backwards compatibility, a custom captioned image template
+        # can be supplied with a name of 'kupu_captioned_image'
+        from Products.PageTemplates.PageTemplate import PageTemplate
+        template = PageTemplate()
+        template.write('foo')
+        self.portal._setOb('kupu_captioned_image', template)
+        
+        text_in = """<img class="captioned" src="image.jpg"/>"""
+        self._assertTransformsTo(text_in, 'foo')
 
 
 def test_suite():
