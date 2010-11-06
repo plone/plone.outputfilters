@@ -6,7 +6,7 @@ from Products.PloneTestCase.layer import PloneSite
 
 ptc.setupPloneSite(extension_profiles=['plone.outputfilters:default'])
 
-class OutputFiltersTestCase(ptc.PloneTestCase):
+class OutputFiltersTestCase(ptc.FunctionalTestCase):
 
     class layer(PloneSite):
 

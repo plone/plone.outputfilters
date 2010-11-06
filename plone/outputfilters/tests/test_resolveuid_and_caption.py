@@ -91,6 +91,29 @@ alert(1);
 </map>"""
         self._assertTransformsTo(text_in, text_out)
 
+    def test_resolveuid_view(self):
+        res = self.publish('/plone/resolveuid/%s' % self.UID)
+        self.assertEqual(301, res.status)
+        self.assertEqual('http://nohost/plone/image.jpg', res.headers['location'])
+    
+    def test_resolveuid_view_bad_uuid(self):
+        res = self.publish('/plone/resolveuid/BOGUS')
+        self.assertEqual(404, res.status)
+    
+    def test_resolveuid_view_subpath(self):
+        res = self.publish('/plone/resolveuid/%s/image_thumb' % self.UID)
+        self.assertEqual(301, res.status)
+        self.assertEqual('http://nohost/plone/image.jpg/image_thumb', res.headers['location'])
+    
+    def test_resolveuid_view_querystring(self):
+        res = self.publish('/plone/resolveuid/%s?qs' % self.UID)
+        self.assertEqual(301, res.status)
+        self.assertEqual('http://nohost/plone/image.jpg?qs', res.headers['location'])
+    
+    def test_BBB_uuidToURL(self):
+        from plone.outputfilters.browser.resolveuid import BBB_uuidToURL
+        self.assertEqual('http://nohost/plone/image.jpg', BBB_uuidToURL(self.UID))
+
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/plone/image.jpg" />"""
         text_out = """<img src="http://nohost/plone/image.jpg" />"""

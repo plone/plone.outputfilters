@@ -1,6 +1,7 @@
 from zope.interface import Interface
 from zope import schema
 
+
 class IFilter(Interface):
     """A filter that accepts raw HTML and returns a filtered version.
     

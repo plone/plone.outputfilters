@@ -10,8 +10,8 @@ PortalTransforms machinery.
 
 With both Archetypes TextFields and the RichText field of
 ``plone.app.textfield``, this transform is typically applied when the field
-value is first accessed. The result of the transform is then cached until the
-value is replaced.
+value is first accessed. The result of the transform is then cached in a
+volatile attribute for an hour or until the value is replaced.
 
 
 Included Filters
@@ -34,12 +34,13 @@ of the item being linked.  For example, a link might look like this::
 
  <a href="resolveuid/6992f1f6-ae36-11df-9adf-001ec2a8cdf1">
 
-Such URLs can be resolved by the resolveuid view, but this requires an extra
-redirect to reach the actual object. The resolveuid filter will avoid that by
-replacing such URLs with the object's actual full absolute URL.
+Such URLs can be resolved by the resolveuid view. However, resolving links in
+this way requires an extra request to reach the actual object following a
+redirect. The resolveuid filter avoids that by replacing such URLs with the
+object's actual full absolute URL.
 
 UIDs are resolved using ``plone.app.uuid.utils.uuidToURL``, with a fallback to
-the Archetypes UID catalog for backwards compatibility. LingaPlone translations
+the Archetypes UID catalog for backwards compatibility. LinguaPlone translations
 are supported when LinguaPlone is present.
 
 The resolveuid filter is enabled when XXX

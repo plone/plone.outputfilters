@@ -2,17 +2,24 @@ from zExceptions import NotFound
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.browser import BrowserView
+from zope.app.component.hooks import getSite
+from Products.CMFCore.utils import getToolByName
+
+
+def BBB_uuidToURL(uuid):
+    """Resolves UUIDs via the UID catalog index.
+    
+    Provided for compatibility when plone.app.uuid is not present.
+    """
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    res = catalog(UID=uuid)
+    if res:
+        return res[0].getURL()
 
 try:
     from plone.app.uuid.utils import uuidToURL
 except ImportError:
-    from zope.app.component.hooks import getSite
-    from Products.CMFCore.utils import getToolByName
-    def uuidToURL(uuid):
-        catalog = getToolByName(getSite(), 'portal_catalog')
-        res = catalog(UID=uuid)
-        if res:
-            return res[0].getObject()
+    uuidToURL = BBB_uuidToURL
 
 
 class ResolveUIDView(BrowserView):
@@ -25,12 +32,16 @@ class ResolveUIDView(BrowserView):
         url = uuidToURL(uuid)
         
         if not url:
+            # BBB for kupu
             hook = getattr(self.context, 'kupu_resolveuid_hook', None)
             if hook:
                 obj = hook(uuid)
-            if not obj:
-                raise NotFound("The link you followed appears to be broken")
-            url = obj.absolute_url()
+                if not obj:
+                    raise NotFound("The link you followed is broken")
+                url = obj.absolute_url()
+        
+        if not url:
+            raise NotFound("The link you followed is broken")
 
         traverse_subpath = self.request['TraversalRequestNameStack']
         if traverse_subpath:
