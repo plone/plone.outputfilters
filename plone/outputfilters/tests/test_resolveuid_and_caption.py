@@ -81,6 +81,13 @@ alert(1);
         self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
         self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"' in str(res))
 
+    def test_resolve_relative_links_to_absolute(self):
+        # relative URLs are bad, b/c the text may be getting fetched to be
+        # rendered in some other context. so they should get absolutized
+        text_in = """<a href="image.jpg">image</a>"""
+        text_out = """<a href="http://nohost/plone/image.jpg">image</a>"""
+        self._assertTransformsTo(text_in, text_out)
+
     def test_resolve_unresolvable_uids(self):
         text_in = """<a href="resolveuid/foo">foo</a><a href="http://example.com/bar">bar</a>"""
         self._assertTransformsTo(text_in, text_in)
@@ -217,8 +224,8 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
     
     def test_image_captioning_preserves_existing_links(self):
-        text_in = """<a href="xyzzy" class="link"><img class="image-left captioned" src="image.jpg/image_thumb"/></a>"""
-        text_out = """<a href="xyzzy" class="link"><dl class="image-left captioned">
+        text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/image_thumb"/></a>"""
+        text_out = """<a href="/xyzzy" class="link"><dl class="image-left captioned">
 <dt><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>

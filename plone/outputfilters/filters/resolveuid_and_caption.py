@@ -6,6 +6,7 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
+from urlparse import urljoin
 from sgmllib import SGMLParser, SGMLParseError
 
 HAS_LINGUAPLONE = True
@@ -184,8 +185,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         obj, subpath, appendix = self.resolve_link(href)
                         if obj:
                             href = obj.absolute_url() + subpath + appendix
-                            attributes['href'] = href
-                            attrs = attributes.iteritems()
+                    elif not href.startswith('http') and not href.startswith('/'):
+                        # absolutize relative URIs; this text isn't necessarily
+                        # being rendered in the context where it was stored
+                        obj, subpath, appendix = self.resolve_link(href)
+                        href = urljoin(self.context.absolute_url() + '/', href) + appendix
+                    attributes['href'] = href
+                    attrs = attributes.iteritems()
             elif tag == 'img':
                 src = attributes.get('src', '')
                 image, fullimage, src, description = self.resolve_image(src)
