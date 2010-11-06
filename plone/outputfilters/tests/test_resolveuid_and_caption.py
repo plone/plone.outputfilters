@@ -17,6 +17,8 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         return parser
 
     def _assertTransformsTo(self, input, expected):
+        # compare two chunks of HTML ignoring whitespace differences,
+        # and with a useful diff on failure
         out = self.parser(input)
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
@@ -79,8 +81,26 @@ alert(1);
         self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
         self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"' in str(res))
 
+    def test_resolve_unresolvable_uids(self):
+        text_in = """<a href="resolveuid/foo">foo</a><a href="http://example.com/bar">bar</a>"""
+        self._assertTransformsTo(text_in, text_in)
+
     def test_resolve_uids_non_AT_content(self):
-        pass
+        # UUIDs can be derefenced as long as they are in the UID catalog
+        from OFS.SimpleItem import SimpleItem
+        class DummyContent(SimpleItem):
+            def __init__(self, id):
+                self.id = id
+            def UID(self):
+                return 'foo'
+            allowedRolesAndUsers = ('Anonymous',)
+        dummy = DummyContent('foo')
+        self.portal._setObject('foo', dummy)
+        self.portal.portal_catalog.catalog_object(self.portal.foo)
+        
+        text_in = """<a href="resolveuid/foo">foo</a>"""
+        text_out = """<a href="http://nohost/plone/foo">foo</a>"""
+        self._assertTransformsTo(text_in, text_out)
 
     def test_resolve_uids_in_image_maps(self):
         text_in = """<map id="the_map" name="the_map">
@@ -113,6 +133,10 @@ alert(1);
     def test_BBB_uuidToURL(self):
         from plone.outputfilters.browser.resolveuid import BBB_uuidToURL
         self.assertEqual('http://nohost/plone/image.jpg', BBB_uuidToURL(self.UID))
+    
+    def test_BBB_uuidToObject(self):
+        from plone.outputfilters.browser.resolveuid import BBB_uuidToObject
+        self.failUnless(self.portal['image.jpg'].aq_base is BBB_uuidToObject(self.UID).aq_base)
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/plone/image.jpg" />"""
@@ -161,6 +185,10 @@ alert(1);
     
     def test_image_captioning_bad_uid(self):
         text_in = """<img src="resolveuid/notauid" width="120" height="144" start="fileopen" alt="Duncan's picture" class="image-left captioned" loop="1" />"""
+        self._assertTransformsTo(text_in, text_in)
+    
+    def test_image_captioning_external_url(self):
+        text_in = """<img src="http://example.com/foo" class="captioned" />"""
         self._assertTransformsTo(text_in, text_in)
     
     def test_image_captioning_prefers_alt_text(self):

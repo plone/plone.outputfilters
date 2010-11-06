@@ -7,7 +7,7 @@ from Products.CMFCore.utils import getToolByName
 
 
 def BBB_uuidToURL(uuid):
-    """Resolves UUIDs via the UID catalog index.
+    """Resolves a UUID to a URL via the UID catalog index.
     
     Provided for compatibility when plone.app.uuid is not present.
     """
@@ -16,10 +16,22 @@ def BBB_uuidToURL(uuid):
     if res:
         return res[0].getURL()
 
+def BBB_uuidToObject(uuid):
+    """Resolves a UUID to an object via the UID catalog index.
+    
+    Provided for compatibility when plone.app.uuid is not present.
+    """
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    res = catalog(UID=uuid)
+    if res:
+        return res[0].getObject()
+
 try:
     from plone.app.uuid.utils import uuidToURL
+    from plone.app.uuid.utils import uuidToObject
 except ImportError:
     uuidToURL = BBB_uuidToURL
+    uuidToObject = BBB_uuidToObject
 
 
 class ResolveUIDView(BrowserView):

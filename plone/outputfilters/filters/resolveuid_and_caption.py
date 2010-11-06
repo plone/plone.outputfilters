@@ -4,7 +4,7 @@ from DocumentTemplate.DT_Var import newline_to_br
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
-from Products.CMFCore.utils import getToolByName
+from plone.outputfilters.browser.resolveuid import uuidToObject
 
 from sgmllib import SGMLParser, SGMLParseError
 
@@ -106,8 +106,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             uids = translated_references(context, context.Language(), uid)
             if len(uids) > 0:
                 uid = uids[0]
-        reference_tool = getToolByName(context, 'reference_catalog')
-        return reference_tool.lookupObject(uid)
+        return uuidToObject(uid)
 
     def resolve_link(self, href):
         obj = None
@@ -183,9 +182,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     href = attributes['href']
                     if self.resolve_uids and 'resolveuid' in href:
                         obj, subpath, appendix = self.resolve_link(href)
-                        href = obj.absolute_url() + subpath + appendix
-                        attributes['href'] = href
-                        attrs = attributes.iteritems()
+                        if obj:
+                            href = obj.absolute_url() + subpath + appendix
+                            attributes['href'] = href
+                            attrs = attributes.iteritems()
             elif tag == 'img':
                 src = attributes.get('src', '')
                 image, fullimage, src, description = self.resolve_image(src)
