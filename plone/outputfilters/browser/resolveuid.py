@@ -5,6 +5,10 @@ from zope.publisher.browser import BrowserView
 from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
+# Here is a bunch of BBB stuff so that we can continue to work with
+# Plone 3 without requiring plone.app.uuid.  If Plone 3 support is
+# dropped in the editors that depend on plone.outputfilters, then
+# code can be updated to simply use the functions from plone.app.uuid
 
 def BBB_uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID catalog index.
@@ -32,6 +36,12 @@ try:
 except ImportError:
     uuidToURL = BBB_uuidToURL
     uuidToObject = BBB_uuidToObject
+    def uuidFor(obj):
+        return obj.UID()
+else:
+    from plone.uuid.interfaces import IUUID
+    def uuidFor(obj):
+        return IUUID(obj, None)
 
 
 class ResolveUIDView(BrowserView):
