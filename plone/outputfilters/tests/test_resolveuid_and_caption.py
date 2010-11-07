@@ -198,15 +198,6 @@ alert(1);
         text_in = """<img src="http://example.com/foo" class="captioned" />"""
         self._assertTransformsTo(text_in, text_in)
     
-    def test_image_captioning_prefers_alt_text(self):
-        # if alt text is specified, it should be used as the caption
-        text_in = """<img class="captioned" alt="picture alt text" src="image.jpg"/>"""
-        text_out = """<dl class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="picture alt text" title="Image" height="331" width="500" /></dt>
- <dd class="image-caption" style="width:500px;">picture alt text</dd>
-</dl>"""
-        self._assertTransformsTo(text_in, text_out)
-    
     def test_image_captioning_preserves_custom_attributes(self):
         text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
         text_out = """<dl class="captioned">
@@ -219,7 +210,7 @@ alert(1);
         text_in = """<img class=captioned height=144 alt="picture alt text" src="resolveuid/%s" width=120 />""" % self.UID
         text_out = """<dl class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="picture alt text" title="Image" height="144" width="120" /></dt>
- <dd class="image-caption" style="width:120px;">picture alt text</dd>
+ <dd class="image-caption" style="width:120px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
     
