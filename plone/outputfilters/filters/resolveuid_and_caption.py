@@ -169,6 +169,35 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
         return image, fullimage, src, description
 
+    def handle_captioned_image(self, attributes, image, fullimage, caption):
+        """Handle captioned image.
+        """
+        klass = attributes['class']
+        del attributes['class']
+        del attributes['src']
+        options = {
+            'class': klass,
+            'originalwidth': attributes.get('width', None),
+            'originalalt': attributes.get('alt', None),
+            'url_path': fullimage.absolute_url_path(),
+            'caption': newline_to_br(html_quote(caption)),
+            'image': image,
+            'fullimage': fullimage,
+            'tag': image.tag(**attributes),
+            'isfullsize': (image.width == fullimage.width and
+                           image.height == fullimage.height),
+            'width': attributes.get('width', image.width),
+            }
+        if self.in_link:
+            # Must preserve original link, don't overwrite
+            # with a link to the image
+            options['isfullsize'] = True
+
+        captioned_html = self.captioned_image_template(**options)
+        if isinstance(captioned_html, unicode):
+            captioned_html = captioned_html.encode('utf8')
+        self.append_data(captioned_html)
+
     def unknown_starttag(self, tag, attrs):
         """Here we've got the actual conversion of links and images.
 
@@ -183,57 +212,31 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
             if tag == 'a':
                 self.in_link = True
-            if tag == 'a' or tag == 'area':
-                if 'href' in attributes:
-                    href = attributes['href']
-                    if self.resolve_uids and 'resolveuid' in href:
-                        obj, subpath, appendix = self.resolve_link(href)
-                        if obj:
-                            href = obj.absolute_url() + subpath + appendix
-                    elif (not href.startswith('http') and
-                          not href.startswith('/')):
-                        # absolutize relative URIs; this text isn't necessarily
-                        # being rendered in the context where it was stored
-                        obj, subpath, appendix = self.resolve_link(href)
-                        href = urljoin(self.context.absolute_url() + '/',
-                                       href) + appendix
-                    attributes['href'] = href
-                    attrs = attributes.iteritems()
+            if (tag == 'a' or tag == 'area') and 'href' in attributes:
+                href = attributes['href']
+                if self.resolve_uids and 'resolveuid' in href:
+                    obj, subpath, appendix = self.resolve_link(href)
+                    if obj:
+                        href = obj.absolute_url() + subpath + appendix
+                elif not href.startswith('http') and not href.startswith('/'):
+                    # absolutize relative URIs; this text isn't necessarily
+                    # being rendered in the context where it was stored
+                    obj, subpath, appendix = self.resolve_link(href)
+                    href = urljoin(self.context.absolute_url() + '/',
+                                   href) + appendix
+                attributes['href'] = href
+                attrs = attributes.iteritems()
             elif tag == 'img':
                 src = attributes.get('src', '')
                 image, fullimage, src, description = self.resolve_image(src)
-
                 attributes["src"] = src
                 caption = description
 
                 # Check if the image needs to be captioned
                 if (self.captioned_images and image and caption
                     and 'captioned' in attributes.get('class', '').split(' ')):
-                    klass = attributes['class']
-                    del attributes['class']
-                    del attributes['src']
-                    options = {
-                        'class': klass,
-                        'originalwidth': attributes.get('width', None),
-                        'originalalt': attributes.get('alt', None),
-                        'url_path': fullimage.absolute_url_path(),
-                        'caption': newline_to_br(html_quote(caption)),
-                        'image': image,
-                        'fullimage': fullimage,
-                        'tag': image.tag(**attributes),
-                        'isfullsize': (image.width == fullimage.width and
-                                       image.height == fullimage.height),
-                        'width': attributes.get('width', image.width),
-                        }
-                    if self.in_link:
-                        # Must preserve original link, don't overwrite
-                        # with a link to the image
-                        options['isfullsize'] = True
-
-                    captioned_html = self.captioned_image_template(**options)
-                    if isinstance(captioned_html, unicode):
-                        captioned_html = captioned_html.encode('utf8')
-                    self.append_data(captioned_html)
+                    self.handle_captioned_image(attributes, image, fullimage,
+                                                caption)
                     return True
                 else:
                     # Nothing happens with the image, so add it normally
