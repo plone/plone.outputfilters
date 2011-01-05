@@ -120,7 +120,7 @@ A filter is a callable which accepts a UTF-8-encoded HTML string as input, and
 returns a modified UTF-8-encoded HTML string. A return value of ``None`` may be
 used to indicate that the input should not be modified.
 
- .. include:: filters/example.py
+ .. include:: plone/outputfilters/filters/example.py
     :literal:
 
 The ``order`` attribute may be used to affect the order in which filters are
