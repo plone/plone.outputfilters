@@ -12,7 +12,7 @@ from Products.CMFCore.utils import getToolByName
 
 def BBB_uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID catalog index.
-    
+
     Provided for compatibility when plone.app.uuid is not present.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
@@ -22,7 +22,7 @@ def BBB_uuidToURL(uuid):
 
 def BBB_uuidToObject(uuid):
     """Resolves a UUID to an object via the UID catalog index.
-    
+
     Provided for compatibility when plone.app.uuid is not present.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
@@ -48,11 +48,11 @@ class ResolveUIDView(BrowserView):
     """Resolve a URL like /resolveuid/<uuid> to a normalized URL.
     """
     implements(IPublishTraverse)
-    
+
     def publishTraverse(self, request, name):
         uuid = name
         url = uuidToURL(uuid)
-        
+
         if not url:
             # BBB for kupu
             hook = getattr(self.context, 'kupu_resolveuid_hook', None)
@@ -61,7 +61,7 @@ class ResolveUIDView(BrowserView):
                 if not obj:
                     raise NotFound("The link you followed is broken")
                 url = obj.absolute_url()
-        
+
         if not url:
             raise NotFound("The link you followed is broken")
 

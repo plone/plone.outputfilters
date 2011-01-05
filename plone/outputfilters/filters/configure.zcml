@@ -1,12 +1,12 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser">
-  
+
   <adapter
     provides="..interfaces.IFilter"
     name="resolveuid_and_caption"
     for="* *"
     factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
     />
-  
+
 </configure>

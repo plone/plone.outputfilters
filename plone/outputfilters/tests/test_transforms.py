@@ -2,7 +2,7 @@ import unittest
 from plone.outputfilters.tests.base import OutputFiltersTestCase
 
 class TransformsTestCase(OutputFiltersTestCase):
-    
+
     def afterSetUp(self):
         from zope.component import getUtility
         from Products.PortalTransforms.interfaces import IPortalTransformsTool

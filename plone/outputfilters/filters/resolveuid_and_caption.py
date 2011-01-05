@@ -30,7 +30,7 @@ singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
     implements(IFilter)
-    
+
     def __init__(self, context=None, request=None):
         SGMLParser.__init__(self)
         self.current_status = None
@@ -49,7 +49,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if u.available:
                 return True
         return False
-    
+
     @lazy_property
     def resolve_uids(self):
         for u in getAllUtilitiesRegisteredFor(IResolveUidsEnabler):
@@ -113,23 +113,23 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         obj = None
         subpath = ''
         appendix = ''
-        
+
         # preserve querystring and/or appendix
         for char in ('#', '?'):
             parts = href.split(char)
             href = parts[0]
             if len(parts) > 1:
                 appendix += char + char.join(parts[1:])
-        
+
         if 'resolveuid' in href:
             # get the UUID
             parts = href.split('/')
             uid = parts[1]
             if len(parts) > 2:
                 subpath = '/'.join(parts[2:])
-            
+
             obj = self.lookup_uid(uid)
-        
+
         return obj, subpath, appendix
 
     def resolve_image(self, src):
@@ -138,7 +138,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         base = self.context
         subpath = src
         appendix = ''
-        
+
         if 'resolveuid' in src:
             base, subpath, appendix = self.resolve_link(src)
 
@@ -147,7 +147,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             image = base.restrictedTraverse(subpath)
         except:
             return None, None, src, ''
-        
+
         fullimage = image
         src = image.absolute_url() + appendix
         if image and hasattr(aq_base(image), 'Description'):
@@ -161,12 +161,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 pass
             if fullimage and hasattr(aq_base(fullimage), 'Description'):
                 description = fullimage.Description()
-        
+
         return image, fullimage, src, description
 
     def unknown_starttag(self, tag, attrs):
         """Here we've got the actual conversion of links and images.
-        
+
         Convert UUID's to absolute URLs, and process captioned images to HTML.
         """
         if tag in ['a', 'img', 'area']:
@@ -219,7 +219,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     if self.in_link:
                         # Must preserve original link, don't overwrite with a link to the image
                         options['isfullsize'] = True
-                    
+
                     captioned_html = self.captioned_image_template(**options)
                     if isinstance(captioned_html, unicode):
                         captioned_html = captioned_html.encode('utf8')

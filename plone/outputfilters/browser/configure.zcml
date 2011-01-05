@@ -1,7 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser">
-  
+
   <browser:page
     name="plone.outputfilters_captioned_image"
     for="*"

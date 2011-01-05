@@ -13,7 +13,7 @@
       description="Framework for applying filters to HTML as it is rendered."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  
+
   <gs:importStep
       name="plone_outputfilters_various"
       title="HTML Output Filters installation"

@@ -39,7 +39,7 @@ class html_to_plone_outputfilters_html:
         context = kwargs.get('context')
         request = getattr(getSite(), 'REQUEST', None)
         filters = [f for _, f in getAdapters((context, request), IFilter)]
-        
+
         res = apply_filters(filters, orig)
         data.setData(res)
         return data
