@@ -19,10 +19,13 @@ from plone.outputfilters.interfaces import IFilter
 
 
 class IImageCaptioningEnabler(Interface):
-    available = Attribute("Boolean indicating whether image captioning should be performed.")
+    available = Attribute(
+        "Boolean indicating whether image captioning should be performed.")
+
 
 class IResolveUidsEnabler(Interface):
-    available = Attribute("Boolean indicating whether UID links should be resolved.")
+    available = Attribute(
+        "Boolean indicating whether UID links should be resolved.")
 
 singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
 
@@ -37,7 +40,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         self.context = context
         self.request = request
         self.pieces = []
-        self.captioned_image_template = context.restrictedTraverse('plone.outputfilters_captioned_image')
+        self.captioned_image_template = context.restrictedTraverse(
+            'plone.outputfilters_captioned_image')
         self.in_link = False
 
     # IFilter implementation
@@ -70,7 +74,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
     # SGMLParser implementation
 
     def append_data(self, data, add_eol=0):
-        """Append data unmodified to self.data, add_eol adds a newline character"""
+        """Append data unmodified to self.data, add_eol adds a newline
+        character"""
         if add_eol:
             data += '\n'
         self.pieces.append(data)
@@ -179,17 +184,19 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if tag == 'a':
                 self.in_link = True
             if tag == 'a' or tag == 'area':
-                if attributes.has_key('href'):
+                if 'href' in attributes:
                     href = attributes['href']
                     if self.resolve_uids and 'resolveuid' in href:
                         obj, subpath, appendix = self.resolve_link(href)
                         if obj:
                             href = obj.absolute_url() + subpath + appendix
-                    elif not href.startswith('http') and not href.startswith('/'):
+                    elif (not href.startswith('http') and
+                          not href.startswith('/')):
                         # absolutize relative URIs; this text isn't necessarily
                         # being rendered in the context where it was stored
                         obj, subpath, appendix = self.resolve_link(href)
-                        href = urljoin(self.context.absolute_url() + '/', href) + appendix
+                        href = urljoin(self.context.absolute_url() + '/',
+                                       href) + appendix
                     attributes['href'] = href
                     attrs = attributes.iteritems()
             elif tag == 'img':
@@ -200,7 +207,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 caption = description
 
                 # Check if the image needs to be captioned
-                if self.captioned_images and image and caption and 'captioned' in attributes.get('class', '').split(' '):
+                if (self.captioned_images and image and caption
+                    and 'captioned' in attributes.get('class', '').split(' ')):
                     klass = attributes['class']
                     del attributes['class']
                     del attributes['src']
@@ -213,11 +221,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         'image': image,
                         'fullimage': fullimage,
                         'tag': image.tag(**attributes),
-                        'isfullsize': image.width == fullimage.width and image.height == fullimage.height,
+                        'isfullsize': (image.width == fullimage.width and
+                                       image.height == fullimage.height),
                         'width': attributes.get('width', image.width),
                         }
                     if self.in_link:
-                        # Must preserve original link, don't overwrite with a link to the image
+                        # Must preserve original link, don't overwrite
+                        # with a link to the image
                         options['isfullsize'] = True
 
                     captioned_html = self.captioned_image_template(**options)
@@ -251,7 +261,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if k == -1:
                 k = len(self.rawdata)
             data = self.rawdata[i+9:k]
-            j = k+3
+            j = k + 3
             self.append_data("<![CDATA[%s]]>" % data)
         else:
             try:

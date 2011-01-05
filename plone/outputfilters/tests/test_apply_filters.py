@@ -10,6 +10,7 @@ class DummyFilter(object):
         return True
 
     called = []
+
     def __call__(self, data):
         self.__class__.called.append(self)
         return data
@@ -51,6 +52,7 @@ class FilterTestCase(unittest.TestCase):
 
         res = apply_filters([filter], '')
         self.assertEqual('', res)
+
 
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)

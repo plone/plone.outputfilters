@@ -14,7 +14,8 @@ class IFilter(Interface):
     order = schema.Int(title=u"Order")
 
     def is_enabled():
-        """Returns a boolean indicating whether the filter should be applied."""
+        """Returns a boolean indicating whether the filter should be
+        applied."""
 
     def __call__(data):
         """Apply the filter.

@@ -6,6 +6,7 @@ from Products.PloneTestCase.layer import PloneSite
 
 ptc.setupPloneSite(extension_profiles=['plone.outputfilters:default'])
 
+
 class OutputFiltersTestCase(ptc.FunctionalTestCase):
 
     class layer(PloneSite):
@@ -20,6 +21,7 @@ class OutputFiltersTestCase(ptc.FunctionalTestCase):
         @classmethod
         def tearDown(cls):
             pass
+
 
 class OutputFiltersDocTestCase(OutputFiltersTestCase):
     # workaround for bug where the default test loader finds a bogus

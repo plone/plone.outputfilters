@@ -20,8 +20,9 @@ class plone_outputfilters_html_to_html:
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
-        }
+            'inputs': ('list', 'Inputs',
+                       'Input(s) MIME type. Change with care.'),
+            }
         if name:
             self.__name__ = name
 
@@ -29,11 +30,12 @@ class plone_outputfilters_html_to_html:
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        # we actually don't do anything in this transform, it is needed to get back in
-        # the transformation policy chain
+        # We actually don't do anything in this transform, it is
+        # needed to get back in the transformation policy chain
         text = orig
         data.setData(text)
         return data
+
 
 # This needs to be here to avoid breaking existing instances
 def register():

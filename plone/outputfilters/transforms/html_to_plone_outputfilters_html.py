@@ -27,7 +27,8 @@ class html_to_plone_outputfilters_html:
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
+            'inputs': ('list', 'Inputs',
+                       'Input(s) MIME type. Change with care.'),
         }
         if name:
             self.__name__ = name
@@ -43,6 +44,7 @@ class html_to_plone_outputfilters_html:
         res = apply_filters(filters, orig)
         data.setData(res)
         return data
+
 
 # This needs to be here to avoid breaking existing instances
 def register():

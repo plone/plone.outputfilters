@@ -8,6 +8,7 @@ from plone.outputfilters.filters.resolveuid_and_caption import \
 from os.path import join, abspath, dirname
 PREFIX = abspath(dirname(__file__))
 
+
 class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
 
     def _makeParser(self, **kw):
@@ -27,20 +28,23 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         except AssertionError:
             class wrapper(object):
                 want = expected
-            raise AssertionError(self.outputchecker.output_difference(wrapper, out, REPORT_NDIFF))
+            raise AssertionError(self.outputchecker.output_difference(
+                    wrapper, out, REPORT_NDIFF))
 
     def afterSetUp(self):
         # create an image and record its UID
         self.setRoles(['Manager'])
 
-        data = open(join(PREFIX,'image.jpg'),'rb').read()
-        self.portal.invokeFactory('Image', id='image.jpg', title='Image', file=data)
+        data = open(join(PREFIX, 'image.jpg'), 'rb').read()
+        self.portal.invokeFactory('Image', id='image.jpg', title='Image',
+                                  file=data)
         image = getattr(self.portal, 'image.jpg')
         image.setDescription('My caption')
         image.reindexObject()
         self.UID = image.UID()
 
-        self.parser = self._makeParser(captioned_images = True, resolve_uids = True)
+        self.parser = self._makeParser(captioned_images=True,
+                                       resolve_uids=True)
         assert self.parser.is_enabled()
 
         self.outputchecker = OutputChecker()
@@ -79,7 +83,8 @@ alert(1);
 </html>""" % (self.UID, self.UID)
         res = self.parser(text)
         self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
-        self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"' in str(res))
+        self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"'
+                        in str(res))
 
     def test_resolve_relative_links_to_absolute(self):
         # relative URLs are bad, b/c the text may be getting fetched to be
@@ -95,12 +100,14 @@ alert(1);
     def test_resolve_uids_non_AT_content(self):
         # UUIDs can be derefenced as long as they are in the UID catalog
         from OFS.SimpleItem import SimpleItem
+
         class DummyContent(SimpleItem):
             def __init__(self, id):
                 self.id = id
             def UID(self):
                 return 'foo'
             allowedRolesAndUsers = ('Anonymous',)
+
         dummy = DummyContent('foo')
         self.portal._setObject('foo', dummy)
         self.portal.portal_catalog.catalog_object(self.portal.foo)
@@ -121,7 +128,8 @@ alert(1);
     def test_resolveuid_view(self):
         res = self.publish('/plone/resolveuid/%s' % self.UID)
         self.assertEqual(301, res.status)
-        self.assertEqual('http://nohost/plone/image.jpg', res.headers['location'])
+        self.assertEqual('http://nohost/plone/image.jpg',
+                         res.headers['location'])
 
     def test_resolveuid_view_bad_uuid(self):
         res = self.publish('/plone/resolveuid/BOGUS')
@@ -130,20 +138,24 @@ alert(1);
     def test_resolveuid_view_subpath(self):
         res = self.publish('/plone/resolveuid/%s/image_thumb' % self.UID)
         self.assertEqual(301, res.status)
-        self.assertEqual('http://nohost/plone/image.jpg/image_thumb', res.headers['location'])
+        self.assertEqual('http://nohost/plone/image.jpg/image_thumb',
+                         res.headers['location'])
 
     def test_resolveuid_view_querystring(self):
         res = self.publish('/plone/resolveuid/%s?qs' % self.UID)
         self.assertEqual(301, res.status)
-        self.assertEqual('http://nohost/plone/image.jpg?qs', res.headers['location'])
+        self.assertEqual('http://nohost/plone/image.jpg?qs',
+                         res.headers['location'])
 
     def test_BBB_uuidToURL(self):
         from plone.outputfilters.browser.resolveuid import BBB_uuidToURL
-        self.assertEqual('http://nohost/plone/image.jpg', BBB_uuidToURL(self.UID))
+        self.assertEqual('http://nohost/plone/image.jpg',
+                         BBB_uuidToURL(self.UID))
 
     def test_BBB_uuidToObject(self):
         from plone.outputfilters.browser.resolveuid import BBB_uuidToObject
-        self.failUnless(self.portal['image.jpg'].aq_base is BBB_uuidToObject(self.UID).aq_base)
+        self.failUnless(self.portal['image.jpg'].aq_base
+                        is BBB_uuidToObject(self.UID).aq_base)
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/plone/image.jpg" />"""

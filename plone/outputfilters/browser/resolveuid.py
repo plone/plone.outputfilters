@@ -10,6 +10,7 @@ from Products.CMFCore.utils import getToolByName
 # dropped in the editors that depend on plone.outputfilters, then
 # code can be updated to simply use the functions from plone.app.uuid
 
+
 def BBB_uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID catalog index.
 
@@ -19,6 +20,7 @@ def BBB_uuidToURL(uuid):
     res = catalog(UID=uuid)
     if res:
         return res[0].getURL()
+
 
 def BBB_uuidToObject(uuid):
     """Resolves a UUID to an object via the UID catalog index.

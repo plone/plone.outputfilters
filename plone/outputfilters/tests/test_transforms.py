@@ -1,6 +1,7 @@
 import unittest
 from plone.outputfilters.tests.base import OutputFiltersTestCase
 
+
 class TransformsTestCase(OutputFiltersTestCase):
 
     def afterSetUp(self):
@@ -27,7 +28,8 @@ class TransformsTestCase(OutputFiltersTestCase):
         self.assertEqual(1, len(policies))
 
     def test_uninstallation(self):
-        from plone.outputfilters.setuphandlers import uninstall_mimetype_and_transforms
+        from plone.outputfilters.setuphandlers import \
+            uninstall_mimetype_and_transforms
         uninstall_mimetype_and_transforms(self.portal)
 
         policies = self.transforms.listPolicies()
