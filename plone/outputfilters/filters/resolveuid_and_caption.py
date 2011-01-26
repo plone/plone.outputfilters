@@ -217,7 +217,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 if self.resolve_uids and 'resolveuid' in href:
                     obj, subpath, appendix = self.resolve_link(href)
                     if obj:
-                        href = obj.absolute_url() + subpath + appendix
+                        href = obj.absolute_url()
+                        if subpath:
+                            href += '/' + subpath
+                        href += appendix
                 elif not href.startswith('http') and not href.startswith('/'):
                     # absolutize relative URIs; this text isn't necessarily
                     # being rendered in the context where it was stored

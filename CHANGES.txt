@@ -1,10 +1,15 @@
 Changelog
 =========
 
-1.0a2 (Unreleased)
+1.0b1 (2011-01-25)
 ------------------
 
+- Fix issue with resolving resolveuid links with subpaths. This fixes
+  http://dev.plone.org/plone/ticket/11426
+  [davisagli]
+
 1.0a1 (2011-01-03)
--------------------
+------------------
 
 - Initial implementation.
+  [davisagli]

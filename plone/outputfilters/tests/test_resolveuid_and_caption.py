@@ -93,6 +93,11 @@ alert(1);
         text_out = """<a href="http://nohost/plone/image.jpg">image</a>"""
         self._assertTransformsTo(text_in, text_out)
 
+    def test_resolve_uid_plus_subpath(self):
+        text_in = """<a href="resolveuid/%s/RSS">foo</a>""" % self.UID
+        text_out = """<a href="http://nohost/plone/image.jpg/RSS">foo</a>"""
+        self._assertTransformsTo(text_in, text_out)
+
     def test_resolve_unresolvable_uids(self):
         text_in = """<a href="resolveuid/foo">foo</a><a href="http://example.com/bar">bar</a>"""
         self._assertTransformsTo(text_in, text_in)
@@ -193,7 +198,7 @@ alert(1);
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
-
+    
     def test_image_captioning_resolveuid_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/image_thumb"/>""" % self.UID
         text_out = """<dl class="captioned">
