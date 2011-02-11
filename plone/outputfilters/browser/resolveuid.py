@@ -69,6 +69,8 @@ class ResolveUIDView(BrowserView):
 
         traverse_subpath = self.request['TraversalRequestNameStack']
         if traverse_subpath:
+            traverse_subpath = list(traverse_subpath)
+            traverse_subpath.reverse()
             url = '/'.join([url] + traverse_subpath)
             self.request['TraversalRequestNameStack'] = []
 
