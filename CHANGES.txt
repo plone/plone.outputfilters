@@ -4,6 +4,9 @@ Changelog
 1.0b2 (unreleased)
 ------------------
 
+- Fix resolveuid so that uid resolution occurs after authentication.
+  [elro]
+
 - Please remember to run tests before checking in!
   [elro]
 
