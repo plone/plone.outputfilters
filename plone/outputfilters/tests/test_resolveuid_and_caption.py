@@ -169,7 +169,7 @@ alert(1);
 
     def test_image_captioning_absolute_path(self):
         text_in = """<img class="captioned" src="/plone/image.jpg"/>"""
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
@@ -177,7 +177,7 @@ alert(1);
 
     def test_image_captioning_relative_path(self):
         text_in = """<img class="captioned" src="image.jpg"/>"""
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
@@ -185,7 +185,7 @@ alert(1);
 
     def test_image_captioning_relative_path_scale(self):
         text_in = """<img class="captioned" src="image.jpg/image_thumb"/>"""
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:128px;" class="captioned">
 <dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
@@ -193,7 +193,7 @@ alert(1);
 
     def test_image_captioning_resolveuid(self):
         text_in = """<img class="captioned" src="resolveuid/%s"/>""" % self.UID
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
@@ -201,7 +201,7 @@ alert(1);
     
     def test_image_captioning_resolveuid_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/image_thumb"/>""" % self.UID
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:128px;" class="captioned">
 <dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
@@ -217,7 +217,7 @@ alert(1);
 
     def test_image_captioning_preserves_custom_attributes(self):
         text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:42px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="42" width="42" foo="bar" /></dt>
  <dd class="image-caption" style="width:42px;">My caption</dd>
 </dl>"""
@@ -225,7 +225,7 @@ alert(1);
 
     def test_image_captioning_handles_unquoted_attributes(self):
         text_in = """<img class=captioned height=144 alt="picture alt text" src="resolveuid/%s" width=120 />""" % self.UID
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:120px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="picture alt text" title="Image" height="144" width="120" /></dt>
  <dd class="image-caption" style="width:120px;">My caption</dd>
 </dl>"""
@@ -233,7 +233,7 @@ alert(1);
 
     def test_image_captioning_preserves_existing_links(self):
         text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/image_thumb"/></a>"""
-        text_out = """<a href="/xyzzy" class="link"><dl class="image-left captioned">
+        text_out = """<a href="/xyzzy" class="link"><dl style="width:128px;" class="image-left captioned">
 <dt><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>
@@ -244,7 +244,7 @@ alert(1);
         self.portal['image.jpg'].setTitle(u'Kupu Test Image \xe5\xe4\xf6')
         self.portal['image.jpg'].setDescription(u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
-        text_out = """<dl class="captioned">
+        text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" title="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6</dd>
 </dl>"""

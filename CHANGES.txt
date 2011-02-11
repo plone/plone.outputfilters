@@ -4,6 +4,9 @@ Changelog
 1.0b2 (unreleased)
 ------------------
 
+- Please remember to run tests before checking in!
+  [elro]
+
 - Fix issue where resolving links with subpaths resulted in a reversed
   subpath.
   [elro]

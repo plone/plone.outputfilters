@@ -51,9 +51,20 @@ class ResolveUIDView(BrowserView):
     """
     implements(IPublishTraverse)
 
+    subpath = None
+
     def publishTraverse(self, request, name):
-        uuid = name
-        url = uuidToURL(uuid)
+        self.uuid = name
+        traverse_subpath = self.request['TraversalRequestNameStack']
+        if traverse_subpath:
+            traverse_subpath = list(traverse_subpath)
+            traverse_subpath.reverse()
+            self.subpath = traverse_subpath
+            self.request['TraversalRequestNameStack'] = []
+        return self
+
+    def __call__(self):
+        url = uuidToURL(self.uuid)
 
         if not url:
             # BBB for kupu
@@ -67,18 +78,12 @@ class ResolveUIDView(BrowserView):
         if not url:
             raise NotFound("The link you followed is broken")
 
-        traverse_subpath = self.request['TraversalRequestNameStack']
-        if traverse_subpath:
-            traverse_subpath = list(traverse_subpath)
-            traverse_subpath.reverse()
-            url = '/'.join([url] + traverse_subpath)
-            self.request['TraversalRequestNameStack'] = []
+        if self.subpath:
+            url = '/'.join([url] + self.subpath)
 
         if self.request.QUERY_STRING:
             url += '?' + self.request.QUERY_STRING
 
         self.request.response.redirect(url, status=301)
-        return self
 
-    def __call__(self):
         return ''
