@@ -129,6 +129,10 @@ alert(1);
  <area alt="alpha" href="http://nohost/plone/image.jpg" coords="1,2,3,4" shape="rect" />
 </map>"""
         self._assertTransformsTo(text_in, text_out)
+    
+    def test_resolve_uids_ignores_mailto(self):
+        text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
+        self._assertTransformsTo(text_in, text_in)
 
     def test_resolveuid_view(self):
         res = self.publish('/plone/resolveuid/%s' % self.UID)
