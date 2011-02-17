@@ -133,6 +133,10 @@ alert(1);
     def test_resolve_uids_ignores_mailto(self):
         text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
+    
+    def test_resolve_uids_handles_junk(self):
+        text_in = """<a class="external-link" href="mailto&lt;foo@example.com&gt;">foo@example.com</a>"""
+        self._assertTransformsTo(text_in, text_in)
 
     def test_resolveuid_view(self):
         res = self.publish('/plone/resolveuid/%s' % self.UID)
@@ -207,6 +211,14 @@ alert(1);
         text_in = """<img class="captioned" src="resolveuid/%s/image_thumb"/>""" % self.UID
         text_out = """<dl style="width:128px;" class="captioned">
 <dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
+ <dd class="image-caption" style="width:128px;">My caption</dd>
+</dl>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_image_captioning_resolveuid_new_scale(self):
+        text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
+        text_out = """<dl style="width:128px;" class="captioned">
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/image/thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
