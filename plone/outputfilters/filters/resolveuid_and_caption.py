@@ -6,6 +6,7 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
+from cgi import escape
 from urlparse import urljoin
 from sgmllib import SGMLParser, SGMLParseError
 
@@ -212,7 +213,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
             if tag == 'a':
                 self.in_link = True
-            if (tag == 'a' or tag == 'area') and 'href' in attributes:
+            if (tag == 'a' or tag == 'area') and 'href' in attributes \
+                and not attributes['href'].startswith('mailto'):
                 href = attributes['href']
                 if self.resolve_uids and 'resolveuid' in href:
                     obj, subpath, appendix = self.resolve_link(href)
@@ -246,7 +248,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     attrs = attributes.iteritems()
 
         # Add the tag to the result
-        strattrs = "".join([' %s="%s"' % (key, value) for key, value in attrs])
+        strattrs = "".join([' %s="%s"' % (key, escape(value)) for key, value in attrs])
         if tag in singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
