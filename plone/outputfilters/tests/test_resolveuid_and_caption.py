@@ -1,5 +1,5 @@
 import unittest
-from doctest import REPORT_NDIFF, OutputChecker
+from doctest import REPORT_NDIFF, OutputChecker, _ellipsis_match
 from plone.outputfilters.tests.base import OutputFiltersTestCase
 from Products.PortalTransforms.tests.utils import normalize_html
 from plone.outputfilters.filters.resolveuid_and_caption import \
@@ -24,7 +24,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
         try:
-            self.assertEqual(normalized_out, normalized_expected)
+            self.assertTrue(_ellipsis_match(normalized_expected, normalized_out))
         except AssertionError:
             class wrapper(object):
                 want = expected
@@ -171,12 +171,12 @@ alert(1);
                         is BBB_uuidToObject(self.UID).aq_base)
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
-        text_in = """<img src="/plone/image.jpg" />"""
+        text_in = """<img src="/image.jpg" />"""
         text_out = """<img src="http://nohost/plone/image.jpg" />"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_absolute_path(self):
-        text_in = """<img class="captioned" src="/plone/image.jpg"/>"""
+        text_in = """<img class="captioned" src="/image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
@@ -218,7 +218,7 @@ alert(1);
     def test_image_captioning_resolveuid_new_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
         text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/image/thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)

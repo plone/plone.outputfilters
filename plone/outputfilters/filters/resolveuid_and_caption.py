@@ -1,12 +1,17 @@
-from Acquisition import aq_base
+from ZODB.POSException import ConflictError
+from Acquisition import aq_base, aq_acquire
+from zExceptions import NotFound
+from zope.publisher.interfaces import NotFound as ztkNotFound
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
+from zope.app.component.hooks import getSite
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
 from cgi import escape
+from urllib import unquote
 from urlparse import urljoin
 from sgmllib import SGMLParser, SGMLParseError
 
@@ -139,35 +144,51 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         return obj, subpath, appendix
 
     def resolve_image(self, src):
-        image = fullimage = None
         description = ''
         base = self.context
         subpath = src
         appendix = ''
 
+        def traverse_path(base, path):
+            if path.startswith('/'):
+                base = getSite()
+                path = path[1:]
+            obj = base
+            components = path.split('/')
+            while components:
+                child_id = unquote(components.pop(0))
+                try:
+                    if hasattr(aq_base(obj), 'scale'):
+                        if components:
+                            child = obj.scale(child_id, components.pop())
+                        else:
+                            child = obj.field(child_id).get(obj.context)
+                    else:
+                        child = obj.restrictedTraverse(child_id)
+                except ConflictError:
+                    raise
+                except (AttributeError, KeyError, NotFound, ztkNotFound):
+                    return
+                obj = child
+            return obj
+
         if 'resolveuid' in src:
             base, subpath, appendix = self.resolve_link(src)
 
-        # let's see if we can traverse to the image
-        try:
-            image = base.restrictedTraverse(subpath)
-        except:
-            return None, None, src, ''
+        image = traverse_path(base, subpath)
+        if image is None:
+            return None, None, src, description
 
+        # if it's a scale, find the full image by traversing one less
         fullimage = image
-        src = image.absolute_url() + appendix
-        if image and hasattr(aq_base(image), 'Description'):
-            description = image.Description()
-        elif image and subpath:
-            # maybe it's an image scale; try traversing one less
+        if subpath:
             parent_path = '/'.join(subpath.split('/')[:-1])
-            try:
-                fullimage = base.restrictedTraverse(parent_path)
-            except:
-                pass
-            if fullimage and hasattr(aq_base(fullimage), 'Description'):
-                description = fullimage.Description()
+            parent = traverse_path(base, parent_path)
+            if hasattr(aq_base(parent), 'tag'):
+                fullimage = parent
 
+        src = image.absolute_url() + appendix
+        description = aq_acquire(image, 'Description')()
         return image, fullimage, src, description
 
     def handle_captioned_image(self, attributes, image, fullimage, caption):

@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.0b3 (unreleased)
+------------------
+
+- Resolve image paths beginning with a slash relative to the Plone site root.
+  [davisagli]
+
+- Support image captioning for new-style image scales using the @@images view.
+  [davisagli]
+
 1.0b2 (2011-01-11)
 ------------------
 
