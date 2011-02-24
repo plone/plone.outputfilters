@@ -46,12 +46,14 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         self.context = context
         self.request = request
         self.pieces = []
-        self.captioned_image_template = context.restrictedTraverse(
-            'plone.outputfilters_captioned_image')
         self.in_link = False
 
     # IFilter implementation
     order = 800
+
+    @lazy_property
+    def captioned_image_template(self):
+        return self.context.restrictedTraverse('plone.outputfilters_captioned_image')
 
     @lazy_property
     def captioned_images(self):
