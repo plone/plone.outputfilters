@@ -35,6 +35,10 @@ class IResolveUidsEnabler(Interface):
 
 singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
 
+def tag(img, **attributes):
+    if hasattr(aq_base(img), 'tag'):
+        return img.tag(**attributes)
+
 
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
@@ -199,6 +203,21 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         klass = attributes['class']
         del attributes['class']
         del attributes['src']
+        view = fullimage.restrictedTraverse('@@images', None)
+        if view is not None:
+            original_width, original_height = view.getImageSize()
+        else:
+            original_width, original_height = fullimage.width, fullimage.height
+        if image is not fullimage:
+            # image is a scale object
+            tag = image.tag
+            width = image.width
+        else:
+            if hasattr(aq_base(image), 'tag'):
+                tag = image.tag
+            else:
+                tag = view.tag
+            width = original_width
         options = {
             'class': klass,
             'originalwidth': attributes.get('width', None),
@@ -207,10 +226,11 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             'caption': newline_to_br(html_quote(caption)),
             'image': image,
             'fullimage': fullimage,
-            'tag': image.tag(**attributes),
-            'isfullsize': (image.width == fullimage.width and
-                           image.height == fullimage.height),
-            'width': attributes.get('width', image.width),
+            'tag': tag(**attributes),
+            'isfullsize': image is fullimage or (
+                          image.width == original_width and
+                          image.height == original_height),
+            'width': attributes.get('width', width),
             }
         if self.in_link:
             # Must preserve original link, don't overwrite
@@ -267,7 +287,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                                                 caption)
                     return True
                 else:
-                    # Nothing happens with the image, so add it normally
+                    if fullimage is not None:
+                        # Check to see if the alt / title tags need setting
+                        title = fullimage.Title()
+                        if 'alt' not in attributes:
+                            attributes['alt'] = title
+                        if 'title' not in attributes:
+                            attributes['title'] = title
                     attrs = attributes.iteritems()
 
         # Add the tag to the result
