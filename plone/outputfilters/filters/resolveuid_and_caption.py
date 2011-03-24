@@ -10,9 +10,11 @@ from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
+import re
 from cgi import escape
 from urllib import unquote
 from urlparse import urljoin
+from urlparse import urlsplit
 from sgmllib import SGMLParser, SGMLParseError
 
 HAS_LINGUAPLONE = True
@@ -23,6 +25,8 @@ except ImportError:
 
 from plone.outputfilters.interfaces import IFilter
 
+appendix_re = re.compile('^(.*)([\?#].*)$')
+resolveuid_re = re.compile('^resolveuid/([^/]*)/?(.*)$')
 
 class IImageCaptioningEnabler(Interface):
     available = Attribute(
@@ -128,38 +132,40 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
     def resolve_link(self, href):
         obj = None
-        subpath = ''
+        subpath = href
         appendix = ''
 
         # preserve querystring and/or appendix
-        for char in ('#', '?'):
-            parts = href.split(char)
-            href = parts[0]
-            if len(parts) > 1:
-                appendix += char + char.join(parts[1:])
+        match = appendix_re.match(href)
+        if match is not None:
+            subpath, appendix = match.groups()
 
-        if 'resolveuid' in href:
-            # get the UUID
-            parts = href.split('/')
-            uid = parts[1]
-            if len(parts) > 2:
-                subpath = '/'.join(parts[2:])
-
-            obj = self.lookup_uid(uid)
+        if self.resolve_uids:
+            match = resolveuid_re.match(subpath)
+            if match is not None:
+                uid, _subpath = match.groups()
+                obj = self.lookup_uid(uid)
+                if obj is not None:
+                    subpath = _subpath
 
         return obj, subpath, appendix
 
     def resolve_image(self, src):
         description = ''
+        if urlsplit(src)[0]:
+            # We have a scheme
+            return None, None, src, description
+        
         base = self.context
         subpath = src
         appendix = ''
 
-        def traverse_path(base, path):
+        def traversal_stack(base, path):
             if path.startswith('/'):
                 base = getSite()
                 path = path[1:]
             obj = base
+            stack = [obj]
             components = path.split('/')
             while components:
                 child_id = unquote(components.pop(0))
@@ -176,25 +182,42 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 except (AttributeError, KeyError, NotFound, ztkNotFound):
                     return
                 obj = child
-            return obj
+                stack.append(obj)
+            return stack
 
-        if 'resolveuid' in src:
-            base, subpath, appendix = self.resolve_link(src)
+        def traverse_path(base, path):
+            stack = traversal_stack(base, path)
+            if stack is None:
+                return
+            return stack[-1]
 
-        image = traverse_path(base, subpath)
-        if image is None:
-            return None, None, src, description
-
-        # if it's a scale, find the full image by traversing one less
-        fullimage = image
-        if subpath:
-            parent_path = '/'.join(subpath.split('/')[:-1])
-            parent = traverse_path(base, parent_path)
-            if hasattr(aq_base(parent), 'tag'):
-                fullimage = parent
+        obj, subpath, appendix = self.resolve_link(src)
+        if obj is not None:
+            # resolved uid
+            fullimage = obj
+            image = traverse_path(fullimage, subpath)
+        elif '/@@' in subpath:
+            # split on view
+            pos = subpath.find('/@@')
+            fullimage = traverse_path(base, subpath[:pos])
+            if fullimage is None:
+                return None, None, src, description
+            image = traverse_path(fullimage, subpath[pos+1:])
+        else:
+            stack = traversal_stack(base, subpath)
+            if stack is None:
+                return None, None, src, description
+            image = stack.pop()
+            # if it's a scale, find the full image by traversing one less
+            fullimage = image
+            stack.reverse()
+            for parent in stack:
+                if hasattr(aq_base(parent), 'tag'):
+                    fullimage = parent
+                    break
 
         src = image.absolute_url() + appendix
-        description = aq_acquire(image, 'Description')()
+        description = aq_acquire(fullimage, 'Description')()
         return image, fullimage, src, description
 
     def handle_captioned_image(self, attributes, image, fullimage, caption):
@@ -250,50 +273,44 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         if tag in ['a', 'img', 'area']:
             # Only do something if tag is a link, image, or image map area.
 
-            attributes = {}
-            for (key, value) in attrs:
-                attributes[key] = value
-
+            attributes = dict(attrs)
             if tag == 'a':
                 self.in_link = True
-            if (tag == 'a' or tag == 'area') and 'href' in attributes \
-                and not attributes['href'].startswith('mailto'):
+            if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
-                if self.resolve_uids and 'resolveuid' in href:
+                scheme = urlsplit(href)[0]
+                if not scheme and not href.startswith('/') and not href.startswith('mailto<'):
                     obj, subpath, appendix = self.resolve_link(href)
-                    if obj:
+                    if obj is not None:
                         href = obj.absolute_url()
                         if subpath:
                             href += '/' + subpath
                         href += appendix
-                elif not href.startswith('http') and not href.startswith('/'):
-                    # absolutize relative URIs; this text isn't necessarily
-                    # being rendered in the context where it was stored
-                    obj, subpath, appendix = self.resolve_link(href)
-                    href = urljoin(self.context.absolute_url() + '/',
-                                   href) + appendix
-                attributes['href'] = href
-                attrs = attributes.iteritems()
+                    elif resolveuid_re.match(href) is None:
+                        # absolutize relative URIs; this text isn't necessarily
+                        # being rendered in the context where it was stored
+                        href = urljoin(self.context.absolute_url() + '/',
+                                       subpath) + appendix
+                    attributes['href'] = href
+                    attrs = attributes.iteritems()
             elif tag == 'img':
                 src = attributes.get('src', '')
                 image, fullimage, src, description = self.resolve_image(src)
                 attributes["src"] = src
                 caption = description
-
                 # Check if the image needs to be captioned
-                if (self.captioned_images and image and caption
+                if (self.captioned_images and image is not None and caption
                     and 'captioned' in attributes.get('class', '').split(' ')):
                     self.handle_captioned_image(attributes, image, fullimage,
                                                 caption)
                     return True
-                else:
-                    if fullimage is not None:
-                        # Check to see if the alt / title tags need setting
-                        title = fullimage.Title()
-                        if 'alt' not in attributes:
-                            attributes['alt'] = title
-                        if 'title' not in attributes:
-                            attributes['title'] = title
+                elif fullimage is not None:
+                    # Check to see if the alt / title tags need setting
+                    title = aq_acquire(fullimage, 'Title')()
+                    if 'alt' not in attributes:
+                        attributes['alt'] = title
+                    if 'title' not in attributes:
+                        attributes['title'] = title
                     attrs = attributes.iteritems()
 
         # Add the tag to the result

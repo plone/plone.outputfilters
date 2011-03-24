@@ -218,7 +218,7 @@ alert(1);
     def test_image_captioning_resolveuid_new_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
         text_out = """<dl style="width:128px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></dt>
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)

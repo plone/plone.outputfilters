@@ -4,6 +4,11 @@ Changelog
 1.0b4 (unreleased)
 ------------------
 
+- Make captioning and linking work with new style image scales.
+  [elro]
+
+- General refactoring of link resolution.
+  [elro]
 
 1.0b4 (2011-03-22)
 ------------------
