@@ -1,7 +1,15 @@
 Changelog
 =========
 
-1.0b4 (2011-03-24)
+
+1.0b5 (Unreleased)
+------------------
+
+- Add MANIFEST.in.
+  [WouterVH]
+
+
+1.0b5 (2011-03-24)
 ------------------
 
 - Make captioning and linking work with new style image scales.
@@ -9,6 +17,7 @@ Changelog
 
 - General refactoring of link resolution.
   [elro]
+
 
 1.0b4 (2011-03-22)
 ------------------
@@ -24,6 +33,7 @@ Changelog
   without need of mocking it.
   [garbas]
 
+
 1.0b3 (2011-02-24)
 ------------------
 
@@ -32,6 +42,7 @@ Changelog
 
 - Support image captioning for new-style image scales using the @@images view.
   [davisagli]
+
 
 1.0b2 (2011-01-11)
 ------------------
@@ -46,12 +57,14 @@ Changelog
   subpath.
   [elro]
 
+
 1.0b1 (2011-01-25)
 ------------------
 
 - Fix issue with resolving resolveuid links with subpaths. This fixes
   http://dev.plone.org/plone/ticket/11426
   [davisagli]
+
 
 1.0a1 (2011-01-03)
 ------------------
