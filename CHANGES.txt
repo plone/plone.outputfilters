@@ -2,14 +2,17 @@ Changelog
 =========
 
 
-1.0b5 (Unreleased)
-------------------
+1.0 - 2011-05-13
+----------------
+
+- Release 1.0 Final.
+  [esteele]
 
 - Add MANIFEST.in.
   [WouterVH]
 
 
-1.0b5 (2011-03-24)
+1.0b5 - 2011-03-24
 ------------------
 
 - Make captioning and linking work with new style image scales.
@@ -19,7 +22,7 @@ Changelog
   [elro]
 
 
-1.0b4 (2011-03-22)
+1.0b4 - 2011-03-22
 ------------------
 
 - Add alt and title tags to images.
@@ -34,7 +37,7 @@ Changelog
   [garbas]
 
 
-1.0b3 (2011-02-24)
+1.0b3 - 2011-02-24
 ------------------
 
 - Resolve image paths beginning with a slash relative to the Plone site root.
@@ -44,7 +47,7 @@ Changelog
   [davisagli]
 
 
-1.0b2 (2011-01-11)
+1.0b2 - 2011-01-11
 ------------------
 
 - Fix resolveuid so that uid resolution occurs after authentication.
@@ -58,7 +61,7 @@ Changelog
   [elro]
 
 
-1.0b1 (2011-01-25)
+1.0b1 - 2011-01-25
 ------------------
 
 - Fix issue with resolving resolveuid links with subpaths. This fixes
@@ -66,7 +69,7 @@ Changelog
   [davisagli]
 
 
-1.0a1 (2011-01-03)
+1.0a1 - 2011-01-03
 ------------------
 
 - Initial implementation.
