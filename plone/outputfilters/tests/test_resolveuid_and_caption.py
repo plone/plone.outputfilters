@@ -170,6 +170,18 @@ alert(1);
         self.failUnless(self.portal['image.jpg'].aq_base
                         is BBB_uuidToObject(self.UID).aq_base)
 
+
+    def test_BBB_uuidToURL_permission(self):
+        from plone.outputfilters.browser.resolveuid import BBB_uuidToURL
+        from plone.outputfilters.browser.resolveuid import BBB_uuidToObject
+        self.portal.invokeFactory('Document', id='page', title='Page')
+        page = self.portal['page']
+        self.logout()
+        self.assertEqual('http://nohost/plone/page',
+                         BBB_uuidToURL(page.UID()))
+        self.failUnless(page.aq_base
+                        is BBB_uuidToObject(page.UID()).aq_base)
+
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
         text_out = """<img src="http://nohost/plone/image.jpg" alt="Image" title="Image" />"""
