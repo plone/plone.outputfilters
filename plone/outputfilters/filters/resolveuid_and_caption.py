@@ -37,6 +37,7 @@ if sys.version_info[0] == 2 and sys.version_info[1] == 4:
 else:
     from cgi import escape
 
+
 class IImageCaptioningEnabler(Interface):
     available = Attribute(
         "Boolean indicating whether image captioning should be performed.")
@@ -47,6 +48,7 @@ class IResolveUidsEnabler(Interface):
         "Boolean indicating whether UID links should be resolved.")
 
 singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
+
 
 def tag(img, **attributes):
     if hasattr(aq_base(img), 'tag'):
@@ -164,7 +166,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         if urlsplit(src)[0]:
             # We have a scheme
             return None, None, src, description
-        
+
         base = self.context
         subpath = src
         appendix = ''
@@ -211,7 +213,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             fullimage = traverse_path(base, subpath[:pos])
             if fullimage is None:
                 return None, None, src, description
-            image = traverse_path(fullimage, subpath[pos+1:])
+            image = traverse_path(fullimage, subpath[pos + 1:])
         else:
             stack = traversal_stack(base, subpath)
             if stack is None:
@@ -339,11 +341,11 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
-        if self.rawdata[i:i+9] == '<![CDATA[':
+        if self.rawdata[i:i + 9] == '<![CDATA[':
             k = self.rawdata.find(']]>', i)
             if k == -1:
                 k = len(self.rawdata)
-            data = self.rawdata[i+9:k]
+            data = self.rawdata[i + 9:k]
             j = k + 3
             self.append_data("<![CDATA[%s]]>" % data)
         else:

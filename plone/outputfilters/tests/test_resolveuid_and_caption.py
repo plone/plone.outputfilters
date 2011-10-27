@@ -86,12 +86,10 @@ alert(1);
         self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"'
                         in str(res))
 
-
     def test_resolve_uids_relative_link(self):
         text_in = """<a href="../resolveuid/%s">foo</a>""" % self.UID
         text_out = """<a href="http://nohost/plone/image.jpg">foo</a>"""
         self._assertTransformsTo(text_in, text_out)
-
 
     def test_resolve_relative_links_to_absolute(self):
         # relative URLs are bad, b/c the text may be getting fetched to be
@@ -114,10 +112,13 @@ alert(1);
         from OFS.SimpleItem import SimpleItem
 
         class DummyContent(SimpleItem):
+
             def __init__(self, id):
                 self.id = id
+
             def UID(self):
                 return 'foo'
+
             allowedRolesAndUsers = ('Anonymous',)
 
         dummy = DummyContent('foo')
@@ -136,11 +137,11 @@ alert(1);
  <area alt="alpha" href="http://nohost/plone/image.jpg" coords="1,2,3,4" shape="rect" />
 </map>"""
         self._assertTransformsTo(text_in, text_out)
-    
+
     def test_resolve_uids_ignores_mailto(self):
         text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
-    
+
     def test_resolve_uids_handles_junk(self):
         text_in = """<a class="external-link" href="mailto&lt;foo@example.com&gt;">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
@@ -180,7 +181,6 @@ alert(1);
         from plone.outputfilters.browser.resolveuid import BBB_uuidToObject
         self.failUnless(self.portal['image.jpg'].aq_base
                         is BBB_uuidToObject(self.UID).aq_base)
-
 
     def test_BBB_uuidToURL_permission(self):
         from plone.outputfilters.browser.resolveuid import BBB_uuidToURL
@@ -229,7 +229,7 @@ alert(1);
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
-    
+
     def test_image_captioning_resolveuid_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/image_thumb"/>""" % self.UID
         text_out = """<dl style="width:128px;" class="captioned">

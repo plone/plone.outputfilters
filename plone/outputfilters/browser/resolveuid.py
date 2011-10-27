@@ -38,10 +38,12 @@ try:
 except ImportError:
     uuidToURL = BBB_uuidToURL
     uuidToObject = BBB_uuidToObject
+
     def uuidFor(obj):
         return obj.UID()
 else:
     from plone.uuid.interfaces import IUUID
+
     def uuidFor(obj):
         return IUUID(obj, None)
 
