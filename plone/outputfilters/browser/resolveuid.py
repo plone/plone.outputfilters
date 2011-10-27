@@ -16,9 +16,10 @@ def BBB_uuidToURL(uuid):
 
     Provided for compatibility when plone.app.uuid is not present.
     """
-    obj = BBB_uuidToObject(uuid)
-    if obj is not None:
-        return obj.absolute_url()
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    res = catalog.unrestrictedSearchResults(UID=uuid)
+    if res:
+        return res[0].getURL()
 
 
 def BBB_uuidToObject(uuid):
@@ -26,8 +27,10 @@ def BBB_uuidToObject(uuid):
 
     Provided for compatibility when plone.app.uuid is not present.
     """
-    reference_catalog = getToolByName(getSite(), 'reference_catalog')
-    return reference_catalog.lookupObject(uuid)
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    res = catalog.unrestrictedSearchResults(UID=uuid)
+    if res:
+        return res[0]._unrestrictedGetObject()
 
 try:
     from plone.app.uuid.utils import uuidToURL
