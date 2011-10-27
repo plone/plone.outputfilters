@@ -138,6 +138,10 @@ alert(1);
         text_in = """<a class="external-link" href="mailto&lt;foo@example.com&gt;">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
 
+    def test_resolve_uids_entities(self):
+        text_in = """<a class="external-link" href="http://www.example.org/foo?a=1&amp;b=2">example.org</a>"""
+        self._assertTransformsTo(text_in, text_in)
+
     def test_resolveuid_view(self):
         res = self.publish('/plone/resolveuid/%s' % self.UID)
         self.assertEqual(301, res.status)

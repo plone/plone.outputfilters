@@ -11,7 +11,6 @@ from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
 import re
-from cgi import escape
 from urllib import unquote
 from urlparse import urljoin
 from urlparse import urlsplit
@@ -27,6 +26,16 @@ from plone.outputfilters.interfaces import IFilter
 
 appendix_re = re.compile('^(.*)([\?#].*)$')
 resolveuid_re = re.compile('^resolveuid/([^/]*)/?(.*)$')
+
+# The SGMLParser works differently on Python 2.4 and later
+# The attributes are passed escaped in the unknown_...-methods
+# in 2.4 and raw in Python 2.6
+# No need to escape in python 2.4
+import sys
+if sys.version_info[0] == 2 and sys.version_info[1] == 4:
+    escape = lambda s: s
+else:
+    from cgi import escape
 
 class IImageCaptioningEnabler(Interface):
     available = Attribute(
