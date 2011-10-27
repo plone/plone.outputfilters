@@ -1,10 +1,17 @@
 Changelog
 =========
 
-1.0.1 - Unreleased
+1.1 - Unreleased
 ------------------
 
-- Fixed resolving of protected objects
+- Fixed resolving of protected objects for AT content
+  [tom_gross]
+
+- Fixed resolving of relative ../resolveuid/... links
+  [tom_gross]
+
+- Respect implementation differences in Python 2.4 and
+  Python 2.6 sgmlparser
   [tom_gross]
 
 1.0 - 2011-05-13
