@@ -6,7 +6,7 @@ version = '1.1dev'
 setup(name='plone.outputfilters',
       version=version,
       description="Transformations applied to HTML in Plone text fields as they are rendered",
-      long_description=open(os.path.join('plone', 'outputfilters', "README.txt")).read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open("CHANGES.txt").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers

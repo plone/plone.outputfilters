@@ -7,7 +7,7 @@ def test_suite():
     return unittest.TestSuite([
 
         ztc.ZopeDocFileSuite(
-           'README.txt', package='plone.outputfilters',
+           '../../README.rst', package='plone.outputfilters',
            test_class=OutputFiltersDocTestCase),
 
         ])
