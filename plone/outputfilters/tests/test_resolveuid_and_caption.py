@@ -86,6 +86,13 @@ alert(1);
         self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"'
                         in str(res))
 
+
+    def test_resolve_uids_relative_link(self):
+        text_in = """<a href="../resolveuid/%s">foo</a>""" % self.UID
+        text_out = """<a href="http://nohost/plone/image.jpg">foo</a>"""
+        self._assertTransformsTo(text_in, text_out)
+
+
     def test_resolve_relative_links_to_absolute(self):
         # relative URLs are bad, b/c the text may be getting fetched to be
         # rendered in some other context. so they should get absolutized
