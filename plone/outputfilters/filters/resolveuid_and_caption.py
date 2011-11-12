@@ -4,7 +4,10 @@ from zExceptions import NotFound
 from zope.publisher.interfaces import NotFound as ztkNotFound
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
-from zope.app.component.hooks import getSite
+try:
+    from zope.component.hooks import getSite
+except ImportError:
+    from zope.app.component.hooks import getSite
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
