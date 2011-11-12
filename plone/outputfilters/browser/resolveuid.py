@@ -2,7 +2,10 @@ from zExceptions import NotFound
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.browser import BrowserView
-from zope.app.component.hooks import getSite
+try:
+    from zope.component.hooks import getSite
+except ImportError:
+    from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
 # Here is a bunch of BBB stuff so that we can continue to work with
