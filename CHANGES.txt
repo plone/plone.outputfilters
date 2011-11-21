@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1 - Unreleased
-------------------
+1.1 - 2011-11-21
+----------------
 
 - Fixed resolving of protected objects for AT content
   [tom_gross]
@@ -16,6 +16,7 @@ Changelog
 
 - Fixed resolving of images in protected folders for captioning
   [mj]
+
 
 1.0 - 2011-05-13
 ----------------
