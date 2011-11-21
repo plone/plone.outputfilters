@@ -214,6 +214,27 @@ alert(1);
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
+    def test_image_captioning_relative_path_private_folder(self):
+        # Images in a private folder may or may not still be renderable, but
+        # traversal to them must not raise an error!
+        self.loginAsPortalOwner()
+        self.portal.invokeFactory('Folder', id='private', 
+            title='Private Folder')
+        data = open(join(PREFIX, 'image.jpg'), 'rb').read()
+        self.portal.private.invokeFactory('Image', id='image.jpg',
+            title='Image', file=data)
+        image = getattr(self.portal.private, 'image.jpg')
+        image.setDescription('My private image caption')
+        image.reindexObject()
+        self.logout()
+
+        text_in = """<img class="captioned" src="private/image.jpg"/>"""
+        text_out = """<dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/private/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+ <dd class="image-caption" style="width:500px;">My private image caption</dd>
+</dl>"""
+        self._assertTransformsTo(text_in, text_out)
+
     def test_image_captioning_relative_path_scale(self):
         text_in = """<img class="captioned" src="image.jpg/image_thumb"/>"""
         text_out = """<dl style="width:128px;" class="captioned">

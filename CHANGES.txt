@@ -14,6 +14,9 @@ Changelog
   Python 2.6 sgmlparser
   [tom_gross]
 
+- Fixed resolving of images in protected folders for captioning
+  [mj]
+
 1.0 - 2011-05-13
 ----------------
 

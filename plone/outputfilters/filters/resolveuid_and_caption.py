@@ -190,7 +190,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         else:
                             child = obj.field(child_id).get(obj.context)
                     else:
-                        child = obj.restrictedTraverse(child_id)
+                        # Do not use restrictedTraverse here; the path to the
+                        # image may lead over containers that lack the View
+                        # permission for the current user!
+                        # Also, if the image itself is not viewable, we rather
+                        # show a broken image than hide it or raise 
+                        # unauthorized here (for the referring document).
+                        child = obj.unrestrictedTraverse(child_id)
                 except ConflictError:
                     raise
                 except (AttributeError, KeyError, NotFound, ztkNotFound):
