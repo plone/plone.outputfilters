@@ -4,6 +4,9 @@ Changelog
 1.2 - unreleased
 ----------------
 
+- Fixed testing error when packaged with a missing README.rst.
+  [maurits]
+
 
 1.1 - 2011-11-21
 ----------------
