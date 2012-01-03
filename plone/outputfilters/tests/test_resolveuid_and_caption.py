@@ -218,7 +218,7 @@ alert(1);
         # Images in a private folder may or may not still be renderable, but
         # traversal to them must not raise an error!
         self.loginAsPortalOwner()
-        self.portal.invokeFactory('Folder', id='private', 
+        self.portal.invokeFactory('Folder', id='private',
             title='Private Folder')
         data = open(join(PREFIX, 'image.jpg'), 'rb').read()
         self.portal.private.invokeFactory('Image', id='image.jpg',

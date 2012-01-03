@@ -194,7 +194,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         # image may lead over containers that lack the View
                         # permission for the current user!
                         # Also, if the image itself is not viewable, we rather
-                        # show a broken image than hide it or raise 
+                        # show a broken image than hide it or raise
                         # unauthorized here (for the referring document).
                         child = obj.unrestrictedTraverse(child_id)
                 except ConflictError:
