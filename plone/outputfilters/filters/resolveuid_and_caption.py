@@ -1,5 +1,5 @@
 from ZODB.POSException import ConflictError
-from Acquisition import aq_base, aq_acquire
+from Acquisition import aq_base, aq_acquire, aq_parent
 from zExceptions import NotFound
 from zope.publisher.interfaces import NotFound as ztkNotFound
 from DocumentTemplate.DT_Util import html_quote
@@ -309,8 +309,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     elif resolveuid_re.match(href) is None:
                         # absolutize relative URIs; this text isn't necessarily
                         # being rendered in the context where it was stored
-                        href = urljoin(self.context.absolute_url() + '/',
-                                       subpath) + appendix
+                        relative_root = self.context
+                        if not getattr(
+                            self.context, 'isPrincipiaFolderish', False):
+                            relative_root = aq_parent(self.context)
+                        actual_url = relative_root.absolute_url()
+                        href = urljoin(actual_url + '/', subpath) + appendix
                     attributes['href'] = href
                     attrs = attributes.iteritems()
             elif tag == 'img':

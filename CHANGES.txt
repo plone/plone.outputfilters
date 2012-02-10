@@ -4,6 +4,12 @@ Changelog
 1.2 - unreleased
 ----------------
 
+- When making relative URIs absolute, use the parent as the relative
+  root when the context is not folderish.  Fixes an issue where
+  relative URLs from Plone 3, for example, had the wrong URLs under
+  Plone 4 when a default page was used for a folder.
+  [rossp]
+
 - Fixed testing error when packaged with a missing README.rst.
   [maurits]
 
