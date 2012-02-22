@@ -94,7 +94,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
     def is_enabled(self):
         if self.context is None:
             return False
-        return self.captioned_images or self.resolve_uids
+        else:
+            return True
 
     def __call__(self, data):
         self.feed(data)
@@ -328,7 +329,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     self.handle_captioned_image(attributes, image, fullimage,
                                                 caption)
                     return True
-                elif fullimage is not None:
+                if fullimage is not None:
                     # Check to see if the alt / title tags need setting
                     title = aq_acquire(fullimage, 'Title')()
                     if 'alt' not in attributes:
