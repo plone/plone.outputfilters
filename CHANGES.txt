@@ -4,6 +4,9 @@ Changelog
 1.2 - unreleased
 ----------------
 
+- Make sure links to expired objects can still be resolved by the resolveuid view.
+  [davisagli]
+
 - alt/title attributes on img tags were not present if tinymce uid linking was not used
   [iElectric]
 

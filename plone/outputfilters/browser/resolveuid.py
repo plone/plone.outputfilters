@@ -8,13 +8,8 @@ except ImportError:
     from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
-# Here is a bunch of BBB stuff so that we can continue to work with
-# Plone 3 without requiring plone.app.uuid.  If Plone 3 support is
-# dropped in the editors that depend on plone.outputfilters, then
-# code can be updated to simply use the functions from plone.app.uuid
 
-
-def BBB_uuidToURL(uuid):
+def uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID catalog index.
 
     Provided for compatibility when plone.app.uuid is not present.
@@ -25,7 +20,7 @@ def BBB_uuidToURL(uuid):
         return res[0].getURL()
 
 
-def BBB_uuidToObject(uuid):
+def uuidToObject(uuid):
     """Resolves a UUID to an object via the UID catalog index.
 
     Provided for compatibility when plone.app.uuid is not present.
@@ -35,18 +30,13 @@ def BBB_uuidToObject(uuid):
     if res:
         return res[0]._unrestrictedGetObject()
 
-try:
-    from plone.app.uuid.utils import uuidToURL
-    from plone.app.uuid.utils import uuidToObject
-except ImportError:
-    uuidToURL = BBB_uuidToURL
-    uuidToObject = BBB_uuidToObject
 
+try:
+    from plone.uuid.interfaces import IUUID
+except ImportError:
     def uuidFor(obj):
         return obj.UID()
-else:
-    from plone.uuid.interfaces import IUUID
-
+else:    
     def uuidFor(obj):
         return IUUID(obj, None)
 

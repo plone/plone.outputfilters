@@ -31,6 +31,9 @@ setup(name='plone.outputfilters',
           'Products.PortalTransforms',
           # -*- Extra requirements: -*-
       ],
+      extras_require={
+          'test': ['Products.PloneTestCase'],
+      },
       entry_points="""
       # -*- Entry points: -*-
 
