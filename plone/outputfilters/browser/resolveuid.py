@@ -61,7 +61,7 @@ class ResolveUIDView(BrowserView):
             # BBB for kupu
             hook = getattr(self.context, 'kupu_resolveuid_hook', None)
             if hook:
-                obj = hook(uuid)
+                obj = hook(self.uuid)
                 if not obj:
                     raise NotFound("The link you followed is broken")
                 url = obj.absolute_url()

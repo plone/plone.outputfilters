@@ -4,6 +4,10 @@ Changelog
 1.2 - unreleased
 ----------------
 
+- Fixed undefined uuid variable in kupu_resolveuid_hook branch
+  in resolveuid view.
+  [vincentfretin]
+
 - Make sure links to expired objects can still be resolved by the resolveuid view.
   [davisagli]
 
