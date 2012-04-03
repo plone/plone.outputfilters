@@ -11,8 +11,6 @@ from Products.CMFCore.utils import getToolByName
 
 def uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID catalog index.
-
-    Provided for compatibility when plone.app.uuid is not present.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
     res = catalog.unrestrictedSearchResults(UID=uuid)
@@ -22,8 +20,6 @@ def uuidToURL(uuid):
 
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the UID catalog index.
-
-    Provided for compatibility when plone.app.uuid is not present.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
     res = catalog.unrestrictedSearchResults(UID=uuid)
@@ -36,7 +32,7 @@ try:
 except ImportError:
     def uuidFor(obj):
         return obj.UID()
-else:    
+else:
     def uuidFor(obj):
         return IUUID(obj, None)
 
