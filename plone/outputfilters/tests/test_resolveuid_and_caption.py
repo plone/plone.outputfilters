@@ -17,6 +17,23 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
             setattr(parser, k, v)
         return parser
 
+    def _makeDummyContent(self):
+        from OFS.SimpleItem import SimpleItem
+
+        class DummyContent(SimpleItem):
+
+            def __init__(self, id):
+                self.id = id
+
+            def UID(self):
+                return 'foo'
+
+            allowedRolesAndUsers = ('Anonymous',)
+
+        dummy = DummyContent('foo')
+        self.portal._setObject('foo', dummy)
+        self.portal.portal_catalog.catalog_object(self.portal.foo)
+
     def _assertTransformsTo(self, input, expected):
         # compare two chunks of HTML ignoring whitespace differences,
         # and with a useful diff on failure
@@ -108,26 +125,17 @@ alert(1);
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_non_AT_content(self):
-        # UUIDs can be derefenced as long as they are in the UID catalog
-        from OFS.SimpleItem import SimpleItem
-
-        class DummyContent(SimpleItem):
-
-            def __init__(self, id):
-                self.id = id
-
-            def UID(self):
-                return 'foo'
-
-            allowedRolesAndUsers = ('Anonymous',)
-
-        dummy = DummyContent('foo')
-        self.portal._setObject('foo', dummy)
-        self.portal.portal_catalog.catalog_object(self.portal.foo)
-
+        # UUIDs can be derefenced as long as they are in the UID index
+        self._makeDummyContent()
         text_in = """<a href="resolveuid/foo">foo</a>"""
         text_out = """<a href="http://nohost/plone/foo">foo</a>"""
         self._assertTransformsTo(text_in, text_out)
+
+    def test_resolve_uids_fragment(self):
+        self._makeDummyContent()
+        self.parser = self._makeParser(resolve_uids=True, context=self.portal.foo)
+        text_in = """<a href="#a">anchor</a>"""
+        self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_in_image_maps(self):
         text_in = """<map id="the_map" name="the_map">

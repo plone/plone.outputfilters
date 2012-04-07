@@ -300,7 +300,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
                 scheme = urlsplit(href)[0]
-                if not scheme and not href.startswith('/') and not href.startswith('mailto<'):
+                if not scheme and not href.startswith('/') and not href.startswith('mailto<') and not href.startswith('#'):
                     obj, subpath, appendix = self.resolve_link(href)
                     if obj is not None:
                         href = obj.absolute_url()

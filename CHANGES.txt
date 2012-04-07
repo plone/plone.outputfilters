@@ -4,6 +4,9 @@ Changelog
 1.2 - unreleased
 ----------------
 
+- Prevent transformation of links to anchors on the same page.
+  [davisagli]
+
 - Fixed undefined uuid variable in kupu_resolveuid_hook branch
   in resolveuid view.
   [vincentfretin]
