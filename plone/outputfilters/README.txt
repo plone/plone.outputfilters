@@ -1,0 +1,62 @@
+Adding a custom filter
+======================
+
+As an example, the following filter replaces all doubled hyphens ("--") with em
+dashes ("—"). (Don't use the example verbatim, because it doesn't parse HTML to
+apply itself only to text nodes, so will mangle HTML comments.)
+
+A filter is a callable which accepts a UTF-8-encoded HTML string as input, and
+returns a modified UTF-8-encoded HTML string. A return value of ``None`` may be
+used to indicate that the input should not be modified.
+
+ .. include:: plone/outputfilters/filters/example.py
+    :literal:
+
+The ``order`` attribute may be used to affect the order in which filters are
+applied (higher values run later). The is_enabled method should return a boolean
+indicating whether the filter should be applied.
+
+Filters are registered in ZCML as a named multi-adapter of the context and
+request to IFilter.
+
+ >>> from Products.Five.zcml import load_string
+ >>> load_string("""
+ ... <configure
+ ...     xmlns="http://namespaces.zope.org/zope">
+ ... 
+ ...   <adapter
+ ...     name="em_dash_adder"
+ ...     provides="plone.outputfilters.interfaces.IFilter"
+ ...     for="* *"
+ ...     factory="plone.outputfilters.filters.example.EmDashAdder"
+ ...     />
+ ... 
+ ... </configure>
+ ... """)
+
+Now when text is transformed from text/html to text/x-html-safe, the filter will
+be applied.
+
+ >>> str(self.portal.portal_transforms.convertTo('text/x-html-safe',
+ ...     'test--test', mimetype='text/html', context=self.portal))
+ 'test\xe2\x80\x94test'
+
+
+How it works
+============
+
+``plone.outputfilters`` hooks into the PortalTransforms machinery by installing:
+ 
+1. a new mimetype ("text/x-plone-outputfilters-html")
+2. a transform from text/html to text/x-plone-outputfilters-html
+3. a null transform from text/x-plone-outputfilters-html back to text/html
+4. a "transform policy" for the text/x-html-safe mimetype, which says that text
+   being transformed to text/x-html-safe must first be transformed to
+   text/x-plone-outputfilters-html
+
+The filter adapters are looked up and applied during the execution of the
+transform from step #2.
+
+This should be considered an implementation detail and may change at some point
+in the future.
+
