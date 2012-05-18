@@ -187,7 +187,7 @@ alert(1);
 
     def test_uuidToObject(self):
         from plone.outputfilters.browser.resolveuid import uuidToObject
-        self.failUnless(self.portal['image.jpg'].aq_base
+        self.assertTrue(self.portal['image.jpg'].aq_base
                         is uuidToObject(self.UID).aq_base)
 
     def test_uuidToURL_permission(self):
@@ -198,7 +198,7 @@ alert(1);
         self.logout()
         self.assertEqual('http://nohost/plone/page',
                          uuidToURL(page.UID()))
-        self.failUnless(page.aq_base
+        self.assertTrue(page.aq_base
                         is uuidToObject(page.UID()).aq_base)
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
