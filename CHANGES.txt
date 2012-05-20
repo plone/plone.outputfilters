@@ -8,6 +8,9 @@ Changelog
   plone/outputfilters/README.txt.
   [maurits]
 
+- Small pep8 update
+  [pbdiode]
+
 
 1.2 - 2012-04-09
 ----------------

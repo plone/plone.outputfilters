@@ -41,7 +41,8 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
         try:
-            self.assertTrue(_ellipsis_match(normalized_expected, normalized_out))
+            self.assertTrue(_ellipsis_match(normalized_expected,
+                                            normalized_out))
         except AssertionError:
             class wrapper(object):
                 want = expected
@@ -133,7 +134,8 @@ alert(1);
 
     def test_resolve_uids_fragment(self):
         self._makeDummyContent()
-        self.parser = self._makeParser(resolve_uids=True, context=self.portal.foo)
+        self.parser = self._makeParser(resolve_uids=True,
+                                       context=self.portal.foo)
         text_in = """<a href="#a">anchor</a>"""
         self._assertTransformsTo(text_in, text_in)
 
