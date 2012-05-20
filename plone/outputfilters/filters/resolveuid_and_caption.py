@@ -75,7 +75,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
     @lazy_property
     def captioned_image_template(self):
-        return self.context.restrictedTraverse('plone.outputfilters_captioned_image')
+        return self.context.restrictedTraverse(
+                    'plone.outputfilters_captioned_image')
 
     @lazy_property
     def captioned_images(self):
@@ -300,7 +301,9 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
                 scheme = urlsplit(href)[0]
-                if not scheme and not href.startswith('/') and not href.startswith('mailto<') and not href.startswith('#'):
+                if not scheme and not href.startswith('/') \
+                        and not href.startswith('mailto<') \
+                        and not href.startswith('#'):
                     obj, subpath, appendix = self.resolve_link(href)
                     if obj is not None:
                         href = obj.absolute_url()
@@ -339,7 +342,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     attrs = attributes.iteritems()
 
         # Add the tag to the result
-        strattrs = "".join([' %s="%s"' % (key, escape(value)) for key, value in attrs])
+        strattrs = "".join([' %s="%s"'
+                               % (key, escape(value)) for key, value in attrs])
         if tag in singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
