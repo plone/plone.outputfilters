@@ -338,7 +338,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     if 'alt' not in attributes:
                         attributes['alt'] = title
                     if 'title' not in attributes:
-                        attributes['title'] = title
+                        attributes['title'] = description or title
                     attrs = attributes.iteritems()
 
         # Add the tag to the result
