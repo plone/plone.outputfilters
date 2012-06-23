@@ -190,7 +190,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         if components:
                             child = obj.scale(child_id, components.pop())
                         else:
-                            child = obj.field(child_id).get(obj.context)
+                            child = obj.scale(child_id)
                     else:
                         # Do not use restrictedTraverse here; the path to the
                         # image may lead over containers that lack the View
