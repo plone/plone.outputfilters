@@ -34,7 +34,7 @@ setup(name='plone.outputfilters',
           # -*- Extra requirements: -*-
       ],
       extras_require={
-          'test': ['Products.PloneTestCase'],
+          'test': ['Products.PloneTestCase', 'plone.namedfile'],
       },
       entry_points="""
       # -*- Entry points: -*-
