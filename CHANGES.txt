@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4 (unreleased)
+1.4 (2012-08-04)
 ----------------
 
 - Fix incompatibilities with plone.namedfile
