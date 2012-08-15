@@ -1,3 +1,4 @@
+from Acquisition import aq_base
 from zExceptions import NotFound
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
@@ -34,7 +35,10 @@ except ImportError:
         return obj.UID()
 else:
     def uuidFor(obj):
-        return IUUID(obj, None)
+        uuid = IUUID(obj, None)
+        if uuid is None and hasattr(aq_base(obj), 'UID'):
+            uuid = obj.UID()
+        return uuid
 
 
 class ResolveUIDView(BrowserView):
