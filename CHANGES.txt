@@ -4,6 +4,10 @@ Changelog
 1.6 (unreleased)
 ----------------
 
+- Declare dependency on zope.app.component.
+  [maurits]
+
+
 1.5 (2012-08-15)
 ----------------
 
