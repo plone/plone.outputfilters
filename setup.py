@@ -31,7 +31,6 @@ setup(name='plone.outputfilters',
           'Products.GenericSetup',
           'Products.MimetypesRegistry',
           'Products.PortalTransforms',
-          'zope.app.component',
       ],
       extras_require={
           'test': ['Products.PloneTestCase'],
