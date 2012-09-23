@@ -28,7 +28,7 @@ except ImportError:
 from plone.outputfilters.interfaces import IFilter
 
 appendix_re = re.compile('^(.*)([\?#].*)$')
-resolveuid_re = re.compile('^[./]*resolveuid/([^/]*)/?(.*)$')
+resolveuid_re = re.compile('^[./]*resolve[Uu]id/([^/]*)/?(.*)$')
 
 # The SGMLParser works differently on Python 2.4 and later
 # The attributes are passed escaped in the unknown_...-methods
