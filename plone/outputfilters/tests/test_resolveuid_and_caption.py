@@ -380,6 +380,10 @@ alert(1);
         text_in = """<img class="captioned" src="image.jpg"/>"""
         self._assertTransformsTo(text_in, 'foo')
 
+    def test_resolve_uids_with_bigU(self):
+        text = """<a href="resolveUid/%s">foo</a>""" % self.UID
+        res = self.parser(text)
+        self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
 
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)
