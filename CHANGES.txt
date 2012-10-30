@@ -4,6 +4,10 @@ Changelog
 1.7 (unreleased)
 ----------------
 
+- When resolving images, only look upward for the full image if the
+  image that was traversed is not a content item (i.e. is a scale).
+  [davisagli, datakurre]
+
 - Also convert "resolveUid/" links (big 'U') that FCKeditor used to create. 
   [hacklschorsch]
 
