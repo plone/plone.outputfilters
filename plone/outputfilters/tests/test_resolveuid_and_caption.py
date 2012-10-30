@@ -228,6 +228,30 @@ alert(1);
         self.assertTrue(page.aq_base
                         is uuidToObject(page.UID()).aq_base)
 
+    def test_image_captioning_in_news_item(self):
+        # Create a news item with a relative unscaled image
+        self.portal.invokeFactory('News Item', id='a-news-item', title='Title')
+        news_item = getattr(self.portal, 'a-news-item')
+        news_item.setText('<p><img class="captioned" src="image.jpg"/></p>')
+        news_item.setDescription("Description.")
+
+        # Enable image captioning
+        from zope.interface import implements
+        from zope.component import provideUtility
+        from plone.outputfilters.filters.resolveuid_and_caption import\
+            IImageCaptioningEnabler
+        class ResolveCaptioningEnabler(object):
+            implements(IImageCaptioningEnabler)
+            available = True
+        provideUtility(ResolveCaptioningEnabler(), IImageCaptioningEnabler)
+
+        # Test captioning
+        output = news_item.getText()
+        self.assertEqual(output, """<p><dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+ <dd class="image-caption" style="width:500px;">My caption</dd>
+</dl></p>""")
+
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
         text_out = """<img src="http://nohost/plone/image.jpg" alt="Image" title="Image" />"""
