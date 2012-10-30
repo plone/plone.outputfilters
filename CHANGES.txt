@@ -4,9 +4,11 @@ Changelog
 1.7 (unreleased)
 ----------------
 
-- Also convert "resolveUid/" links (big 'U') that FCKeditor used to create. 
+- Also convert "resolveUid/" links (big 'U') that FCKeditor used to create.
   [hacklschorsch]
 
+- Also escape double quotes, fixes #13219
+  [maartenkling]
 
 1.6 (2012-08-16)
 ----------------
