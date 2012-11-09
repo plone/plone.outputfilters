@@ -7,6 +7,8 @@ Changelog
 - Also convert "resolveUid/" links (big 'U') that FCKeditor used to create. 
   [hacklschorsch]
 
+- Work around bug in SGMLParser to handle singleton tags correctly.
+  [tom_gross]
 
 1.6 (2012-08-16)
 ----------------
