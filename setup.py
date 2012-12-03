@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.7'
+version = '1.7-FHNW1'
 
 setup(name='plone.outputfilters',
       version=version,

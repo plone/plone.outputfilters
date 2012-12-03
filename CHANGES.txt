@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.7 (unreleased)
-----------------
+1.7-FHNW1 (2012-12-03)
+----------------------
 
 - Also convert "resolveUid/" links (big 'U') that FCKeditor used to create. 
   [hacklschorsch]
