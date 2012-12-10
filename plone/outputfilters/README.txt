@@ -2,7 +2,7 @@ Adding a custom filter
 ======================
 
 As an example, the following filter replaces all doubled hyphens ("--") with em
-dashes ("—"). (Don't use the example verbatim, because it doesn't parse HTML to
+dashes ("-"). (Don't use the example verbatim, because it doesn't parse HTML to
 apply itself only to text nodes, so will mangle HTML comments.)
 
 A filter is a callable which accepts a UTF-8-encoded HTML string as input, and
