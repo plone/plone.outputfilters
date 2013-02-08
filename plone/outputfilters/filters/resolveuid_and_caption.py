@@ -8,6 +8,7 @@ try:
     from zope.component.hooks import getSite
 except ImportError:
     from zope.app.component.hooks import getSite
+from Products.CMFCore.interfaces import IContentish
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.interface import implements, Interface, Attribute
@@ -245,11 +246,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             image = stack.pop()
             # if it's a scale, find the full image by traversing one less
             fullimage = image
-            stack.reverse()
-            for parent in stack:
-                if hasattr(aq_base(parent), 'tag'):
-                    fullimage = parent
-                    break
+            if not IContentish.providedBy(fullimage):
+                stack.reverse()
+                for parent in stack:
+                    if hasattr(aq_base(parent), 'tag'):
+                        fullimage = parent
+                        break
 
         src = image.absolute_url() + appendix
         description = aq_acquire(fullimage, 'Description')()
@@ -356,7 +358,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
         # Add the tag to the result
         strattrs = "".join([' %s="%s"'
-                               % (key, escape(value)) for key, value in attrs])
+                               % (key, escape(value, quote=True))
+                                    for key, value in attrs])
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
