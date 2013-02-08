@@ -4,12 +4,6 @@ Changelog
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
-
-1.8-FHNW1 (2013-02-08)
-----------------------
-
 - Work around bug in SGMLParser to handle singleton tags correctly.
   [tom_gross]
 
