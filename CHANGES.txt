@@ -4,7 +4,9 @@ Changelog
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- If we have an image description it should go into the alt text of the img
+  tag
+  [ale-rt]
 
 
 1.8 (2012-12-10)
