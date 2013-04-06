@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.9 (unreleased)
+1.9 (2013-04-06)
 ----------------
 
 - If we have an image description it should go into the alt text of the img
