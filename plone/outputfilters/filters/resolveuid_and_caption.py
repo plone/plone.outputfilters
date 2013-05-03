@@ -51,8 +51,6 @@ class IResolveUidsEnabler(Interface):
     available = Attribute(
         "Boolean indicating whether UID links should be resolved.")
 
-singleton_tags = ["img", "area", "br", "hr", "input", "meta", "param", "col"]
-
 
 def tag(img, **attributes):
     if hasattr(aq_base(img), 'tag'):
@@ -62,6 +60,11 @@ def tag(img, **attributes):
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
     implements(IFilter)
+
+    singleton_tags = set([
+      'area', 'base', 'basefont', 'br', 'col', 'command', 'embed', 'frame',
+      'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param',
+      'source', 'track', 'wbr'])
 
     def __init__(self, context=None, request=None):
         SGMLParser.__init__(self)
@@ -99,7 +102,15 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         else:
             return True
 
+    def _shorttag_replace(self, match):
+        tag = match.group(1)
+        if tag in self.singleton_tags:
+            return '<' + tag + ' />'
+        else:
+            return '<' + tag + '></' + tag + '>'
+
     def __call__(self, data):
+        data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
         self.feed(data)
         self.close()
         return self.getResult()
@@ -349,7 +360,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         strattrs = "".join([' %s="%s"'
                                % (key, escape(value, quote=True))
                                     for key, value in attrs])
-        if tag in singleton_tags:
+        if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
             self.append_data("<%s%s>" % (tag, strattrs))
