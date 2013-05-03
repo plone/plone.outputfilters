@@ -4,7 +4,8 @@ Changelog
 1.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Work around bug in SGMLParser to handle singleton tags correctly.
+  [tom_gross]
 
 
 1.9 (2013-04-06)

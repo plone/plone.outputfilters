@@ -409,5 +409,8 @@ alert(1);
         res = self.parser(text)
         self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
 
+    def test_singleton_elements(self):
+        self._assertTransformsTo('<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')
+
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)
