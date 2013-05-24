@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.10 (unreleased)
+1.10 (2013-05-23)
 -----------------
 
 - Work around bug in SGMLParser to handle singleton tags correctly.
