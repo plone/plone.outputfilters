@@ -4,7 +4,8 @@ Changelog
 1.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- handle possibility of img tag being unicode to prevent unicode errors
+  [vangheem]
 
 
 1.10 (2013-05-23)

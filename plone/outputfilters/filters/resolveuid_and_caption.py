@@ -360,6 +360,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         strattrs = "".join([' %s="%s"'
                                % (key, escape(value, quote=True))
                                     for key, value in attrs])
+        if isinstance(strattrs, unicode):
+            strattrs = strattrs.encode('utf8')
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
