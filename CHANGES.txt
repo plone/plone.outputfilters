@@ -4,6 +4,9 @@ Changelog
 1.11 (unreleased)
 -----------------
 
+- img unicode issue : fix resolve_image to avoid that it returns unicode
+  [gotcha]
+  
 - handle possibility of img tag being unicode to prevent unicode errors
   [vangheem]
 
