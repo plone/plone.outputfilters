@@ -253,7 +253,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         fullimage = parent
                         break
 
-        src = image.absolute_url() + appendix
+        url = image.absolute_url()
+        if isinstance(url, unicode):
+            url = url.encode('utf8')
+        src = url + appendix
         description = aq_acquire(fullimage, 'Description')()
         return image, fullimage, src, description
 
@@ -360,8 +363,6 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         strattrs = "".join([' %s="%s"'
                                % (key, escape(value, quote=True))
                                     for key, value in attrs])
-        if isinstance(strattrs, unicode):
-            strattrs = strattrs.encode('utf8')
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
