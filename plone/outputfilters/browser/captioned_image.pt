@@ -1,4 +1,5 @@
-<dl tal:attributes="class options/class;style string:width:${options/width}px;;;">
+<dl tal:attributes="style string:width:${options/width}px;;;
+	                class options/class;">
 <dt><a tal:omit-tag="options/isfullsize" rel="lightbox"
    tal:attributes="href options/url_path;"
    tal:content="structure options/tag">[image goes here]</a></dt>
