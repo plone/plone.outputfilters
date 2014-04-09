@@ -237,8 +237,6 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if fullimage is None:
                 return None, None, src, description
             image = traverse_path(fullimage, subpath[pos + 1:])
-            if image is None:
-                return None, None, src, description
         else:
             stack = traversal_stack(base, subpath)
             if stack is None:
@@ -252,7 +250,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     if hasattr(aq_base(parent), 'tag'):
                         fullimage = parent
                         break
-
+        
+        if image is None:
+            return None, None, src, description
+        
         url = image.absolute_url()
         if isinstance(url, unicode):
             url = url.encode('utf8')

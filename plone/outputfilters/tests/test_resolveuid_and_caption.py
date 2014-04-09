@@ -353,6 +353,14 @@ alert(1);
     def test_image_captioning_bad_uid(self):
         text_in = """<img src="resolveuid/notauid" width="120" height="144" start="fileopen" alt="Duncan's picture" class="image-left captioned" loop="1" />"""
         self._assertTransformsTo(text_in, text_in)
+        
+    def test_image_captioning_unknown_scale(self):
+        text_in = """<img src="resolveuid/%s/madeup" />""" % self.UID
+        self._assertTransformsTo(text_in, text_in)        
+
+    def test_image_captioning_unknown_scale_images_view(self):
+        text_in = """<img src="resolveuid/%s/@@images/image/madeup" />""" % self.UID
+        self._assertTransformsTo(text_in, text_in)        
 
     def test_image_captioning_external_url(self):
         text_in = """<img src="http://example.com/foo" class="captioned" />"""
