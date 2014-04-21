@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser">
 
   <adapter
@@ -8,5 +9,10 @@
     for="* *"
     factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
     />
+
+  <!-- in Plone 5, we always resolve uids -->
+  <utility factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
+           name="plone5-always-enabled"
+           zcml:condition="have plone-5" />
 
 </configure>

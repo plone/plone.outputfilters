@@ -52,6 +52,12 @@ class IResolveUidsEnabler(Interface):
         "Boolean indicating whether UID links should be resolved.")
 
 
+class ResolveUidsAlwaysEnabled(object):
+    implements(IResolveUidsEnabler)
+
+    available = True
+
+
 def tag(img, **attributes):
     if hasattr(aq_base(img), 'tag'):
         return img.tag(**attributes)
