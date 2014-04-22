@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.14 (unreleased)
+1.14 (2014-04-22)
 -----------------
 
 - for plone 5, always resolveuids
