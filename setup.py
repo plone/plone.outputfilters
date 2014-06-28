@@ -13,9 +13,9 @@ setup(name='plone.outputfilters',
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Framework :: Plone",
-        "Programming Language :: Python",
-        ],
+          "Framework :: Plone",
+          "Programming Language :: Python",
+      ],
       keywords='plone transform filter uid caption',
       author='David Glick, Plone Foundation',
       author_email='davidglick@groundwire.org',
@@ -33,7 +33,10 @@ setup(name='plone.outputfilters',
           'Products.PortalTransforms',
       ],
       extras_require={
-          'test': ['Products.PloneTestCase'],
+          'test': [
+              'plone.app.contenttypes',
+              'plone.app.testing',
+          ],
       },
       entry_points="""
       # -*- Entry points: -*-

@@ -37,26 +37,31 @@ indicating whether the filter should be applied.
 Filters are registered in ZCML as a named multi-adapter of the context and
 request to IFilter.
 
- >>> from Products.Five.zcml import load_string
- >>> load_string("""
+ >>> from Zope2.App import zcml
+ >>> import Products.Five
+ >>> configure = """
  ... <configure
  ...     xmlns="http://namespaces.zope.org/zope">
- ... 
+ ...
  ...   <adapter
  ...     name="em_dash_adder"
  ...     provides="plone.outputfilters.interfaces.IFilter"
  ...     for="* *"
  ...     factory="plone.outputfilters.filters.example.EmDashAdder"
  ...     />
- ... 
+ ...
  ... </configure>
- ... """)
+ ... """
+ >>> zcml.load_config("configure.zcml", Products.Five)
+ >>> zcml.load_string(configure)
 
 Now when text is transformed from text/html to text/x-html-safe, the filter will
 be applied.
 
- >>> str(self.portal.portal_transforms.convertTo('text/x-html-safe',
- ...     'test--test', mimetype='text/html', context=self.portal))
+ >>> app = layer['app']
+ >>> portal = layer['portal']
+ >>> str(portal.portal_transforms.convertTo('text/x-html-safe',
+ ...     'test--test', mimetype='text/html', context=portal))
  'test\xe2\x80\x94test'
 
 
@@ -64,7 +69,7 @@ How it works
 ============
 
 ``plone.outputfilters`` hooks into the PortalTransforms machinery by installing:
- 
+
 1. a new mimetype ("text/x-plone-outputfilters-html")
 2. a transform from text/html to text/x-plone-outputfilters-html
 3. a null transform from text/x-plone-outputfilters-html back to text/html
