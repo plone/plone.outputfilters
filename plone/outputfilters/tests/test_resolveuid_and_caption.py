@@ -1,9 +1,13 @@
 import unittest
 from doctest import REPORT_NDIFF, OutputChecker, _ellipsis_match
-from plone.outputfilters.tests.base import OutputFiltersTestCase
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 from plone.outputfilters.filters.resolveuid_and_caption import \
     ResolveUIDAndCaptionFilter
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import logout
+
 import pkg_resources
 
 # plone.namedfile is not part of coredev (yet) as such
@@ -21,7 +25,9 @@ from os.path import join, abspath, dirname
 PREFIX = abspath(dirname(__file__))
 
 
-class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
+class ResolveUIDAndCaptionFilterIntegrationTestCase(unittest.TestCase):
+
+    layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 
     def _makeParser(self, **kw):
         parser = ResolveUIDAndCaptionFilter(context=self.portal)
@@ -45,7 +51,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         if HAS_NAMEDFILE:
             class DummyContent2(NFDummyContent):
                 id = __name__ = title = 'foo2'
-    
+
                 def UID(self):
                     return 'foo2'
 
@@ -75,9 +81,11 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
             raise AssertionError(self.outputchecker.output_difference(
                     wrapper, out, REPORT_NDIFF))
 
-    def afterSetUp(self):
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
         # create an image and record its UID
-        self.setRoles(['Manager'])
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
         data = open(join(PREFIX, 'image.jpg'), 'rb').read()
         self.portal.invokeFactory('Image', id='image.jpg', title='Image',
@@ -222,7 +230,7 @@ alert(1);
         from plone.outputfilters.browser.resolveuid import uuidToObject
         self.portal.invokeFactory('Document', id='page', title='Page')
         page = self.portal['page']
-        self.logout()
+        logout()
         self.assertEqual('http://nohost/plone/page',
                          uuidToURL(page.UID()))
         self.assertTrue(page.aq_base
@@ -285,7 +293,7 @@ alert(1);
         image = getattr(self.portal.private, 'image.jpg')
         image.setDescription('My private image caption')
         image.reindexObject()
-        self.logout()
+        logout()
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
