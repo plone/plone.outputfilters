@@ -11,7 +11,7 @@ from Products.CMFCore.utils import getToolByName
 
 
 def uuidToURL(uuid):
-    """Resolves a UUID to a URL via the UID catalog index.
+    """Resolves a UUID to a URL via the UID index of portal_catalog.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
     res = catalog.unrestrictedSearchResults(UID=uuid)
@@ -20,7 +20,7 @@ def uuidToURL(uuid):
 
 
 def uuidToObject(uuid):
-    """Resolves a UUID to an object via the UID catalog index.
+    """Resolves a UUID to an object via the UID index of portal_catalog.
     """
     catalog = getToolByName(getSite(), 'portal_catalog')
     res = catalog.unrestrictedSearchResults(UID=uuid)
