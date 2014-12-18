@@ -1,4 +1,3 @@
-import unittest
 from doctest import REPORT_NDIFF, OutputChecker, _ellipsis_match
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
@@ -6,7 +5,7 @@ from plone.outputfilters.filters.resolveuid_and_caption import \
     ResolveUIDAndCaptionFilter
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
-from plone.app.testing import logout
+from plone.app.testing.bbb import PloneTestCase
 
 import pkg_resources
 
@@ -25,9 +24,11 @@ from os.path import join, abspath, dirname
 PREFIX = abspath(dirname(__file__))
 
 
-class ResolveUIDAndCaptionFilterIntegrationTestCase(unittest.TestCase):
+class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
 
     layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+
+    image_id = 'image.jpg'
 
     def _makeParser(self, **kw):
         parser = ResolveUIDAndCaptionFilter(context=self.portal)
@@ -61,7 +62,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(unittest.TestCase):
 
         if HAS_NAMEDFILE:
             dummy2 = DummyContent2('foo2')
-            data = open(join(PREFIX, 'image.jpg'), 'rb').read()
+            data = open(join(PREFIX, self.image_id), 'rb').read()
             dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
             self.portal._setObject('foo2', dummy2)
             self.portal.portal_catalog.catalog_object(self.portal.foo2)
@@ -81,16 +82,15 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(unittest.TestCase):
             raise AssertionError(self.outputchecker.output_difference(
                     wrapper, out, REPORT_NDIFF))
 
-    def setUp(self):
-        self.portal = self.layer['portal']
-        self.request = self.layer['request']
+    def afterSetUp(self):
         # create an image and record its UID
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-        data = open(join(PREFIX, 'image.jpg'), 'rb').read()
-        self.portal.invokeFactory('Image', id='image.jpg', title='Image',
-                                  file=data)
-        image = getattr(self.portal, 'image.jpg')
+        data = open(join(PREFIX, self.image_id), 'rb').read()
+        if not self.image_id in self.portal:
+            self.portal.invokeFactory(
+                'Image', id=self.image_id, title='Image', file=data)
+        image = self.portal[self.image_id]
         image.setDescription('My caption')
         image.reindexObject()
         self.UID = image.UID()
@@ -99,6 +99,11 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(unittest.TestCase):
         assert self.parser.is_enabled()
 
         self.outputchecker = OutputChecker()
+
+    def beforeTearDown(self):
+        self.login()
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        del self.portal[self.image_id]
 
     def test_parsing_minimal(self):
         text = '<div>Some simple text.</div>'
@@ -230,7 +235,7 @@ alert(1);
         from plone.outputfilters.browser.resolveuid import uuidToObject
         self.portal.invokeFactory('Document', id='page', title='Page')
         page = self.portal['page']
-        logout()
+        self.logout()
         self.assertEqual('http://nohost/plone/page',
                          uuidToURL(page.UID()))
         self.assertTrue(page.aq_base
@@ -293,7 +298,7 @@ alert(1);
         image = getattr(self.portal.private, 'image.jpg')
         image.setDescription('My private image caption')
         image.reindexObject()
-        logout()
+        self.logout()
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
@@ -361,14 +366,14 @@ alert(1);
     def test_image_captioning_bad_uid(self):
         text_in = """<img src="resolveuid/notauid" width="120" height="144" start="fileopen" alt="Duncan's picture" class="image-left captioned" loop="1" />"""
         self._assertTransformsTo(text_in, text_in)
-        
+
     def test_image_captioning_unknown_scale(self):
         text_in = """<img src="resolveuid/%s/madeup" />""" % self.UID
-        self._assertTransformsTo(text_in, text_in)        
+        self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_unknown_scale_images_view(self):
         text_in = """<img src="resolveuid/%s/@@images/image/madeup" />""" % self.UID
-        self._assertTransformsTo(text_in, text_in)        
+        self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_external_url(self):
         text_in = """<img src="http://example.com/foo" class="captioned" />"""
@@ -427,6 +432,3 @@ alert(1);
 
     def test_singleton_elements(self):
         self._assertTransformsTo('<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')
-
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)
