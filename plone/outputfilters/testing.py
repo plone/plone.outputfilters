@@ -14,15 +14,9 @@ class PloneOutputfilters(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         import plone.outputfilters
-        xmlconfig.file(
-            'configure.zcml',
-            plone.outputfilters,
-            context=configurationContext
-        )
+        self.loadZCML(package=plone.outputfilters)
         # Install product and call its initialize() function
-        fiveconfigure.debug_mode = True
         z2.installProduct(app, 'plone.outputfilters')
-        fiveconfigure.debug_mode = False
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'plone.outputfilters:default')
