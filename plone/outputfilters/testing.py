@@ -7,6 +7,15 @@ from zope.configuration import xmlconfig
 from Products.Five import fiveconfigure
 from plone.testing import z2
 
+from plone.outputfilters.filters.resolveuid_and_caption import IImageCaptioningEnabler
+from zope.interface import implements
+import zope.component
+
+class DummyImageCaptioningEnabler(object):
+    implements(IImageCaptioningEnabler)
+
+    available = True
+
 
 class PloneOutputfilters(PloneSandboxLayer):
 
@@ -17,6 +26,13 @@ class PloneOutputfilters(PloneSandboxLayer):
         self.loadZCML(package=plone.outputfilters)
         # Install product and call its initialize() function
         z2.installProduct(app, 'plone.outputfilters')
+        gsm = zope.component.getGlobalSiteManager()
+        gsm.registerUtility(DummyImageCaptioningEnabler(), IImageCaptioningEnabler, 'outputfiltertest', event=False)
+
+
+    def tearDownZope(self, app):
+        gsm = zope.component.getGlobalSiteManager()
+        gsm.unregisterUtility(provided=IImageCaptioningEnabler, name='outputfiltertest')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'plone.outputfilters:default')

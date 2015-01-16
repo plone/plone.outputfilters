@@ -399,7 +399,7 @@ alert(1);
     def test_image_captioning_handles_unquoted_attributes(self):
         text_in = """<img class=captioned height=144 alt="picture alt text" src="resolveuid/%s" width=120 />""" % self.UID
         text_out = """<dl style="width:120px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="picture alt text" title="Image" height="144" width="120" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="picture alt text" title="Image" height="144" width="120" /></dt>
  <dd class="image-caption" style="width:120px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)

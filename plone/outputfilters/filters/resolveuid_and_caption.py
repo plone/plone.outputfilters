@@ -262,6 +262,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         klass = attributes['class']
         del attributes['class']
         del attributes['src']
+        if 'width' in attributes:
+            attributes['width'] = int(attributes['width'])
+        if 'height' in attributes:
+            attributes['height'] = int(attributes['height'])
         view = fullimage.restrictedTraverse('@@images', None)
         if view is not None:
             original_width, original_height = view.getImageSize()
