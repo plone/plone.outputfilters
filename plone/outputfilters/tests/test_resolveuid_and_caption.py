@@ -391,7 +391,7 @@ alert(1);
     def test_image_captioning_preserves_custom_attributes(self):
         text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
         text_out = """<dl style="width:42px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="42" width="42" foo="bar" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="42" width="42" foo="bar" /></dt>
  <dd class="image-caption" style="width:42px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
