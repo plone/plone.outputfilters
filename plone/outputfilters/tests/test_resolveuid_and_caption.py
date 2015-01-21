@@ -7,6 +7,7 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing.bbb import PloneTestCase
 
+import re
 import pkg_resources
 
 # plone.namedfile is not part of coredev (yet) as such
@@ -252,25 +253,17 @@ alert(1);
     def test_image_captioning_in_news_item(self):
         # Create a news item with a relative unscaled image
         self.portal.invokeFactory('News Item', id='a-news-item', title='Title')
-        news_item = getattr(self.portal, 'a-news-item')
+        news_item = self.portal['a-news-item']
         from plone.app.textfield.value import RichTextValue
-        news_item.text = RichTextValue('<p><img class="captioned" src="image.jpg"/></p>', 'text/plain', 'text/html')
+        news_item.text = RichTextValue(
+            '<p><img class="captioned" src="image.jpg"/></p>',
+            'text/html', 'text/x-html-safe')
         news_item.setDescription("Description.")
-
-        # Enable image captioning
-        from zope.interface import implements
-        from zope.component import provideUtility
-        from plone.outputfilters.filters.resolveuid_and_caption import\
-            IImageCaptioningEnabler
-        class ResolveCaptioningEnabler(object):
-            implements(IImageCaptioningEnabler)
-            available = True
-        provideUtility(ResolveCaptioningEnabler(), IImageCaptioningEnabler)
 
         # Test captioning
         output = news_item.text.output
-        self.assertEqual(output, """<p><dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+        self.assertRegexpMatches(output, r"""<p><dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl></p>""")
 
