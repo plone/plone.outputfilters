@@ -1,10 +1,17 @@
 import unittest
-from plone.outputfilters.tests.base import OutputFiltersTestCase
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
 
 
-class TransformsTestCase(OutputFiltersTestCase):
+class TransformsTestCase(unittest.TestCase):
 
-    def afterSetUp(self):
+    layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
         from zope.component import getUtility
         from Products.PortalTransforms.interfaces import IPortalTransformsTool
         self.transforms = getUtility(IPortalTransformsTool)
@@ -23,8 +30,10 @@ class TransformsTestCase(OutputFiltersTestCase):
 
     def test_transform_policy_installed(self):
         policies = self.transforms.listPolicies()
-        policies = [mimetype for (mimetype, required) in policies
-                             if mimetype == "text/x-html-safe"]
+        policies = [
+            mimetype for (mimetype, required) in policies
+            if mimetype == "text/x-html-safe"
+        ]
         self.assertEqual(1, len(policies))
 
     def test_uninstallation(self):
@@ -33,8 +42,10 @@ class TransformsTestCase(OutputFiltersTestCase):
         uninstall_mimetype_and_transforms(self.portal)
 
         policies = self.transforms.listPolicies()
-        policies = [mimetype for (mimetype, required) in policies
-                             if mimetype == "text/x-html-safe"]
+        policies = [
+            mimetype for (mimetype, required) in policies
+            if mimetype == "text/x-html-safe"
+        ]
         self.assertEqual(0, len(policies))
 
         # make sure it doesn't break if trying to uninstall again

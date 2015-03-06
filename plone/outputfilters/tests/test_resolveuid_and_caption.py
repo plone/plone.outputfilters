@@ -1,9 +1,13 @@
-import unittest
 from doctest import REPORT_NDIFF, OutputChecker, _ellipsis_match
-from plone.outputfilters.tests.base import OutputFiltersTestCase
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 from plone.outputfilters.filters.resolveuid_and_caption import \
     ResolveUIDAndCaptionFilter
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing.bbb import PloneTestCase
+
+import re
 import pkg_resources
 
 # plone.namedfile is not part of coredev (yet) as such
@@ -17,11 +21,22 @@ else:
     from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
     HAS_NAMEDFILE = True
 
+
+
 from os.path import join, abspath, dirname
 PREFIX = abspath(dirname(__file__))
 
+def dummy_image():
+    from plone.namedfile.file import NamedBlobImage
+    filename = join(PREFIX, u'image.jpg')
+    data = open(filename, 'rb').read()
+    return NamedBlobImage(data=data, filename=filename)
 
-class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
+class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
+
+    layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+
+    image_id = 'image.jpg'
 
     def _makeParser(self, **kw):
         parser = ResolveUIDAndCaptionFilter(context=self.portal)
@@ -45,7 +60,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         if HAS_NAMEDFILE:
             class DummyContent2(NFDummyContent):
                 id = __name__ = title = 'foo2'
-    
+
                 def UID(self):
                     return 'foo2'
 
@@ -55,7 +70,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
 
         if HAS_NAMEDFILE:
             dummy2 = DummyContent2('foo2')
-            data = open(join(PREFIX, 'image.jpg'), 'rb').read()
+            data = open(join(PREFIX, self.image_id), 'rb').read()
             dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
             self.portal._setObject('foo2', dummy2)
             self.portal.portal_catalog.catalog_object(self.portal.foo2)
@@ -77,13 +92,15 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
 
     def afterSetUp(self):
         # create an image and record its UID
-        self.setRoles(['Manager'])
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-        data = open(join(PREFIX, 'image.jpg'), 'rb').read()
-        self.portal.invokeFactory('Image', id='image.jpg', title='Image',
-                                  file=data)
-        image = getattr(self.portal, 'image.jpg')
+        data = open(join(PREFIX, self.image_id), 'rb').read()
+        if not self.image_id in self.portal:
+            self.portal.invokeFactory(
+                'Image', id=self.image_id, title='Image')
+        image = self.portal[self.image_id]
         image.setDescription('My caption')
+        image.image = dummy_image()
         image.reindexObject()
         self.UID = image.UID()
         self.parser = self._makeParser(captioned_images=True,
@@ -91,6 +108,11 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(OutputFiltersTestCase):
         assert self.parser.is_enabled()
 
         self.outputchecker = OutputChecker()
+
+    def beforeTearDown(self):
+        self.login()
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        del self.portal[self.image_id]
 
     def test_parsing_minimal(self):
         text = '<div>Some simple text.</div>'
@@ -231,24 +253,17 @@ alert(1);
     def test_image_captioning_in_news_item(self):
         # Create a news item with a relative unscaled image
         self.portal.invokeFactory('News Item', id='a-news-item', title='Title')
-        news_item = getattr(self.portal, 'a-news-item')
-        news_item.setText('<p><img class="captioned" src="image.jpg"/></p>')
+        news_item = self.portal['a-news-item']
+        from plone.app.textfield.value import RichTextValue
+        news_item.text = RichTextValue(
+            '<p><img class="captioned" src="image.jpg"/></p>',
+            'text/html', 'text/x-html-safe')
         news_item.setDescription("Description.")
 
-        # Enable image captioning
-        from zope.interface import implements
-        from zope.component import provideUtility
-        from plone.outputfilters.filters.resolveuid_and_caption import\
-            IImageCaptioningEnabler
-        class ResolveCaptioningEnabler(object):
-            implements(IImageCaptioningEnabler)
-            available = True
-        provideUtility(ResolveCaptioningEnabler(), IImageCaptioningEnabler)
-
         # Test captioning
-        output = news_item.getText()
-        self.assertEqual(output, """<p><dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+        output = news_item.text.output
+        self.assertRegexpMatches(output, r"""<p><dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl></p>""")
 
@@ -260,7 +275,7 @@ alert(1);
     def test_image_captioning_absolute_path(self):
         text_in = """<img class="captioned" src="/image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/...jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -268,7 +283,7 @@ alert(1);
     def test_image_captioning_relative_path(self):
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/...jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -279,25 +294,25 @@ alert(1);
         self.loginAsPortalOwner()
         self.portal.invokeFactory('Folder', id='private',
             title='Private Folder')
-        data = open(join(PREFIX, 'image.jpg'), 'rb').read()
         self.portal.private.invokeFactory('Image', id='image.jpg',
-            title='Image', file=data)
+            title='Image')
         image = getattr(self.portal.private, 'image.jpg')
         image.setDescription('My private image caption')
+        image.image = dummy_image()
         image.reindexObject()
         self.logout()
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/private/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/private/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My private image caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_relative_path_scale(self):
-        text_in = """<img class="captioned" src="image.jpg/image_thumb"/>"""
+        text_in = """<img class="captioned" src="image.jpg/@@images/image/thumb"/>"""
         text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -305,15 +320,15 @@ alert(1);
     def test_image_captioning_resolveuid(self):
         text_in = """<img class="captioned" src="resolveuid/%s"/>""" % self.UID
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_scale(self):
-        text_in = """<img class="captioned" src="resolveuid/%s/image_thumb"/>""" % self.UID
+        text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
         text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></a></dt>
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -337,7 +352,7 @@ alert(1);
     def test_image_captioning_resolveuid_no_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image"/>""" % self.UID
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
 <dd class="image-caption" style="width:500px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -353,14 +368,14 @@ alert(1);
     def test_image_captioning_bad_uid(self):
         text_in = """<img src="resolveuid/notauid" width="120" height="144" start="fileopen" alt="Duncan's picture" class="image-left captioned" loop="1" />"""
         self._assertTransformsTo(text_in, text_in)
-        
+
     def test_image_captioning_unknown_scale(self):
         text_in = """<img src="resolveuid/%s/madeup" />""" % self.UID
-        self._assertTransformsTo(text_in, text_in)        
+        self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_unknown_scale_images_view(self):
         text_in = """<img src="resolveuid/%s/@@images/image/madeup" />""" % self.UID
-        self._assertTransformsTo(text_in, text_in)        
+        self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_external_url(self):
         text_in = """<img src="http://example.com/foo" class="captioned" />"""
@@ -369,7 +384,7 @@ alert(1);
     def test_image_captioning_preserves_custom_attributes(self):
         text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
         text_out = """<dl style="width:42px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Image" title="Image" height="42" width="42" foo="bar" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="42" width="42" foo="bar" /></dt>
  <dd class="image-caption" style="width:42px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -377,15 +392,15 @@ alert(1);
     def test_image_captioning_handles_unquoted_attributes(self):
         text_in = """<img class=captioned height=144 alt="picture alt text" src="resolveuid/%s" width=120 />""" % self.UID
         text_out = """<dl style="width:120px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="picture alt text" title="Image" height="144" width="120" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="picture alt text" title="Image" height="144" width="120" /></dt>
  <dd class="image-caption" style="width:120px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_preserves_existing_links(self):
-        text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/image_thumb"/></a>"""
+        text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/@@images/image/thumb"/></a>"""
         text_out = """<a href="/xyzzy" class="link"><dl style="width:128px;" class="image-left captioned">
-<dt><img src="http://nohost/plone/image.jpg/image_thumb" alt="Image" title="Image" height="84" width="128" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></dt>
  <dd class="image-caption" style="width:128px;">My caption</dd>
 </dl>
 </a>"""
@@ -396,7 +411,7 @@ alert(1);
         self.portal['image.jpg'].setDescription(u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/image" alt="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" title="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" height="331" width="500" /></dt>
+<dt><img src="http://nohost/plone/image.jpg/@@images/...jpeg" alt="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" title="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" height="331" width="500" /></dt>
  <dd class="image-caption" style="width:500px;">Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -419,6 +434,3 @@ alert(1);
 
     def test_singleton_elements(self):
         self._assertTransformsTo('<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')
-
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)

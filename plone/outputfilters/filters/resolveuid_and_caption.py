@@ -4,10 +4,7 @@ from zExceptions import NotFound
 from zope.publisher.interfaces import NotFound as ztkNotFound
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
-try:
-    from zope.component.hooks import getSite
-except ImportError:
-    from zope.app.component.hooks import getSite
+from zope.component.hooks import getSite
 from Products.CMFCore.interfaces import IContentish
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
@@ -31,15 +28,7 @@ from plone.outputfilters.interfaces import IFilter
 appendix_re = re.compile('^(.*)([\?#].*)$')
 resolveuid_re = re.compile('^[./]*resolve[Uu]id/([^/]*)/?(.*)$')
 
-# The SGMLParser works differently on Python 2.4 and later
-# The attributes are passed escaped in the unknown_...-methods
-# in 2.4 and raw in Python 2.6
-# No need to escape in python 2.4
-import sys
-if sys.version_info[0] == 2 and sys.version_info[1] == 4:
-    escape = lambda s: s
-else:
-    from cgi import escape
+from cgi import escape
 
 
 class IImageCaptioningEnabler(Interface):
@@ -273,7 +262,11 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         klass = attributes['class']
         del attributes['class']
         del attributes['src']
-        view = fullimage.restrictedTraverse('@@images', None)
+        if 'width' in attributes:
+            attributes['width'] = int(attributes['width'])
+        if 'height' in attributes:
+            attributes['height'] = int(attributes['height'])
+        view = fullimage.unrestrictedTraverse('@@images', None)
         if view is not None:
             original_width, original_height = view.getImageSize()
         else:
@@ -286,7 +279,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if hasattr(aq_base(image), 'tag'):
                 tag = image.tag
             else:
-                tag = view.tag
+                tag = view.scale().tag
             width = original_width
         options = {
             'class': klass,

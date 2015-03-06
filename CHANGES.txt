@@ -4,7 +4,9 @@ Changelog
 1.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- For full-size (non-scaled) plone.app.contenttypes images,
+  preserve height/width specified in img tag attributes.
+  [davisagli]
 
 
 1.14 (2014-04-22)
