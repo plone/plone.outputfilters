@@ -279,7 +279,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if hasattr(aq_base(image), 'tag'):
                 tag = image.tag
             else:
-                tag = view.tag
+                tag = view.scale().tag
             width = original_width
         options = {
             'class': klass,
