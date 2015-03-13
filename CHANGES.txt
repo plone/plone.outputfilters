@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0 (unreleased)
+2.0 (2015-03-13)
 ----------------
 
 - For full-size (non-scaled) plone.app.contenttypes images,
