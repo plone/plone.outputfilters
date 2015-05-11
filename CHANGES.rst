@@ -4,7 +4,8 @@ Changelog
 1.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Minor docstring/package cleanup.
+  [gotcha, maurits]
 
 
 1.14 (2014-04-22)
