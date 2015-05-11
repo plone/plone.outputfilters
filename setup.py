@@ -6,16 +6,16 @@ version = '1.15.dev0'
 setup(name='plone.outputfilters',
       version=version,
       description="Transformations applied to HTML in Plone text fields as they are rendered",
-      long_description=open("README.rst").read() + "\n" +
-                       open(os.path.join("plone", "outputfilters",
-                                           "README.txt")).read() + "\n" +
-                       open("CHANGES.rst").read(),
+      long_description=(open("README.rst").read() + "\n" +
+                        open(os.path.join("plone", "outputfilters",
+                                          "README.txt")).read() + "\n" +
+                        open("CHANGES.rst").read()),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Framework :: Plone",
-        "Programming Language :: Python",
-        ],
+          "Framework :: Plone",
+          "Programming Language :: Python",
+          ],
       keywords='plone transform filter uid caption',
       author='David Glick, Plone Foundation',
       author_email='davidglick@groundwire.org',
