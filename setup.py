@@ -9,7 +9,7 @@ setup(name='plone.outputfilters',
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("plone", "outputfilters",
                                            "README.txt")).read() + "\n" +
-                       open("CHANGES.txt").read(),
+                       open("CHANGES.rst").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
