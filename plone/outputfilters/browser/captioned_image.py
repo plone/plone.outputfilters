@@ -8,12 +8,7 @@ class CaptionedImageView(BrowserView):
 
     @lazy_property
     def template(self):
-        try:
-            # BBB for kupu
-            template = self.context.restrictedTraverse('kupu_captioned_image')
-        except:
-            template = self.index
-        return template
+        return self.index
 
     def __call__(self, **options):
         return self.template(**options)
