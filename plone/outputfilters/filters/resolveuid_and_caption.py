@@ -179,6 +179,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             # We have a scheme
             return None, None, src, description
 
+        src = src.rstrip('/')
         base = self.context
         subpath = src
         appendix = ''
