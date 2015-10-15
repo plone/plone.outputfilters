@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.16 (unreleased)
------------------
+1.15.1 (unreleased)
+-------------------
 
-- Nothing changed yet.
+- Declare GS dependencies.
+  [do3cc]
 
 
 1.15 (2015-05-11)
