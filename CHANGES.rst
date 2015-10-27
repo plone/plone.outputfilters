@@ -4,7 +4,10 @@ Changelog
 1.15.1 (unreleased)
 -------------------
 
-- Declare GS dependencies.
+Fixes:
+
+- Declared GenericSetup dependencies: our profile depends on
+  ``Products.MimetypesRegistry``.
   [do3cc]
 
 
@@ -47,7 +50,7 @@ Changelog
 
 - img unicode issue : fix resolve_image to avoid that it returns unicode
   [gotcha]
-  
+
 - handle possibility of img tag being unicode to prevent unicode errors
   [vangheem]
 
@@ -70,7 +73,7 @@ Changelog
 1.8 (2012-12-10)
 ----------------
 
-- Fix packaging issue. 
+- Fix packaging issue.
   [esteele]
 
 
@@ -81,7 +84,7 @@ Changelog
   image that was traversed is not a content item (i.e. is a scale).
   [davisagli, datakurre]
 
-- Also convert "resolveUid/" links (big 'U') that FCKeditor used to create. 
+- Also convert "resolveUid/" links (big 'U') that FCKeditor used to create.
   [hacklschorsch]
 
 - Also escape double quotes, fixes #13219
