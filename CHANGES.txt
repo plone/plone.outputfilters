@@ -4,7 +4,9 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix case where unicode ends up getting used when resolving
+  img tags and (un)restrictedTraverse doesn't work with unicode
+  [vangheem]
 
 
 2.1 (2015-07-18)

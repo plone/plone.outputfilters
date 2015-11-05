@@ -205,7 +205,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         # Also, if the image itself is not viewable, we rather
                         # show a broken image than hide it or raise
                         # unauthorized here (for the referring document).
-                        child = obj.unrestrictedTraverse(child_id)
+                        child = obj.unrestrictedTraverse(str(child_id))
                 except ConflictError:
                     raise
                 except (AttributeError, KeyError, NotFound, ztkNotFound):
