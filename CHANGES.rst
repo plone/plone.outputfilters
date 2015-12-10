@@ -10,8 +10,9 @@ New:
 
 Fixes:
 
-- *add item here*
-
+- Fixed error when uid resolving if object got didn't have
+  absolute_url method.
+  [Gagaro]
 
 2.1.1 (2015-11-25)
 ------------------

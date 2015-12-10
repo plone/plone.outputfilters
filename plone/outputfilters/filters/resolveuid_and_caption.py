@@ -249,7 +249,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         if image is None:
             return None, None, src, description
         
-        url = image.absolute_url()
+        try:
+            url = image.absolute_url()
+        except AttributeError:
+            return None, None, src, description
         if isinstance(url, unicode):
             url = url.encode('utf8')
         src = url + appendix
