@@ -6,7 +6,8 @@ Changelog
 
 New:
 
-- *add item here*
+- Added "tel:" to ignored link types.
+  [julianhandl]
 
 Fixes:
 
