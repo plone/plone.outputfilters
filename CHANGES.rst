@@ -6,12 +6,8 @@ Changelog
 
 New:
 
-- Added "tel:" to ignored link types.
+- Added ``tel:`` to ignored link types.
   [julianhandl]
-
-Fixes:
-
-- *add item here*
 
 
 2.1.2 (2015-12-15)
