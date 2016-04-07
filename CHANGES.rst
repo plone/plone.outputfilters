@@ -14,8 +14,11 @@ New:
 
 Fixes:
 
-- *add item here*
+- Explicitly exclude ``mailto:`` links from being UID-resolved.
+  [thet]
 
+- Fix test isolation problem.
+  [thet]
 
 2.1.3 (2016-03-07)
 ------------------

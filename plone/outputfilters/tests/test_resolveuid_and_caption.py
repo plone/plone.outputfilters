@@ -1,14 +1,18 @@
-from doctest import REPORT_NDIFF, OutputChecker, _ellipsis_match
-from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
-from Products.PortalTransforms.tests.utils import normalize_html
-from plone.outputfilters.filters.resolveuid_and_caption import \
-    ResolveUIDAndCaptionFilter
+from doctest import _ellipsis_match
+from doctest import OutputChecker
+from doctest import REPORT_NDIFF
+from os.path import abspath
+from os.path import dirname
+from os.path import join
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing.bbb import PloneTestCase
+from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter  # noqa
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
+from Products.PortalTransforms.tests.utils import normalize_html
 
-import re
 import pkg_resources
+
 
 # plone.namedfile is not part of coredev (yet) as such
 # it is not hard dependency
@@ -18,13 +22,12 @@ except pkg_resources.DistributionNotFound:
     HAS_NAMEDFILE = False
 else:
     from plone.namedfile.file import NamedImage
-    from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
+    from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent  # noqa
     HAS_NAMEDFILE = True
 
 
-
-from os.path import join, abspath, dirname
 PREFIX = abspath(dirname(__file__))
+
 
 def dummy_image():
     from plone.namedfile.file import NamedBlobImage
@@ -32,9 +35,10 @@ def dummy_image():
     data = open(filename, 'rb').read()
     return NamedBlobImage(data=data, filename=filename)
 
+
 class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
 
-    layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+    layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
     image_id = 'image.jpg'
 
@@ -88,14 +92,13 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
             class wrapper(object):
                 want = expected
             raise AssertionError(self.outputchecker.output_difference(
-                    wrapper, out, REPORT_NDIFF))
+                wrapper, out, REPORT_NDIFF))
 
     def afterSetUp(self):
         # create an image and record its UID
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-        data = open(join(PREFIX, self.image_id), 'rb').read()
-        if not self.image_id in self.portal:
+        if self.image_id not in self.portal:
             self.portal.invokeFactory(
                 'Image', id=self.image_id, title='Image')
         image = self.portal[self.image_id]
@@ -195,11 +198,11 @@ alert(1);
 </map>"""
         self._assertTransformsTo(text_in, text_out)
 
-    def test_resolve_uids_ignores_mailto(self):
+    def test_resolve_uids_handles_mailto(self):
         text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
-    
-    def test_resolve_uids_ignores_tel(self):
+
+    def test_resolve_uids_handles_tel(self):
         text_in = """<a href="tel:+1234567890">+12 345 67890</a>"""
         self._assertTransformsTo(text_in, text_in)
 
