@@ -20,6 +20,9 @@ Fixes:
 - Fix test isolation problem.
   [thet]
 
+- Fix UnicodeDecodeError in resolveuid_and_caption
+  [martior]
+
 2.1.3 (2016-03-07)
 ------------------
 
