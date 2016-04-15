@@ -366,7 +366,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
         # Add the tag to the result
         strattrs = "".join([' %s="%s"'
-                               % (key, escape(value, quote=True))
+                               % (key.decode("utf-8"), escape(value.decode("utf-8"), quote=True))
                                     for key, value in attrs])
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
