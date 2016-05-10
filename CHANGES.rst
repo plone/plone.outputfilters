@@ -4,14 +4,6 @@ Changelog
 2.1.4 (unreleased)
 ------------------
 
-Incompatibilities:
-
-- *add item here*
-
-New:
-
-- *add item here*
-
 Fixes:
 
 - Explicitly exclude ``mailto:`` links from being UID-resolved.
