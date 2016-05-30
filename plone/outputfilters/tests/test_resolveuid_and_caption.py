@@ -269,10 +269,10 @@ alert(1);
 
         # Test captioning
         output = news_item.text.output
-        self.assertRegexpMatches(output, r"""<p><dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
+        self.assertRegexpMatches(output, r"""<span><dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500"( ?)/></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
-</dl></p>""")
+</dl></span>""")
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
