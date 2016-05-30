@@ -10,7 +10,8 @@ Incompatibilities:
 
 New:
 
-- *add item here*
+- Make tests work with old and new safe HTML transform
+  [tomgross]
 
 Fixes:
 
@@ -19,6 +20,7 @@ Fixes:
 
 - Fix test isolation problem.
   [thet]
+
 
 2.1.3 (2016-03-07)
 ------------------
