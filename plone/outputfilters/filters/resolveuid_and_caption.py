@@ -245,10 +245,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     if hasattr(aq_base(parent), 'tag'):
                         fullimage = parent
                         break
-        
+
         if image is None:
             return None, None, src, description
-        
+
         try:
             url = image.absolute_url()
         except AttributeError:
@@ -365,9 +365,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                     attrs = attributes.iteritems()
 
         # Add the tag to the result
-        strattrs = "".join([' %s="%s"'
-                               % (key, escape(value, quote=True))
-                                    for key, value in attrs])
+        strattrs = ""
+        for key, value in attrs:
+            try:
+                strattrs += ' %s="%s"' % (key, escape(value, quote=True))
+            except UnicodeDecodeError:
+                pass
+
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
