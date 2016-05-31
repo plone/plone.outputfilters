@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Make tests work with old and new safe HTML transform
+  [tomgross]
 
 
 2.1.4 (2016-05-10)
@@ -27,6 +28,7 @@ Fixes:
 
 - Fix test isolation problem.
   [thet]
+
 
 2.1.3 (2016-03-07)
 ------------------

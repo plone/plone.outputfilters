@@ -263,16 +263,16 @@ alert(1);
         news_item = self.portal['a-news-item']
         from plone.app.textfield.value import RichTextValue
         news_item.text = RichTextValue(
-            '<p><img class="captioned" src="image.jpg"/></p>',
+            '<span><img class="captioned" src="image.jpg"/></span>',
             'text/html', 'text/x-html-safe')
         news_item.setDescription("Description.")
 
         # Test captioning
         output = news_item.text.output
-        self.assertRegexpMatches(output, r"""<p><dl style="width:500px;" class="captioned">
-<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
+        self.assertRegexpMatches(output, r"""<span><dl style="width:500px;" class="captioned">
+<dt><img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500"( ?)/></dt>
  <dd class="image-caption" style="width:500px;">My caption</dd>
-</dl></p>""")
+</dl></span>""")
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
