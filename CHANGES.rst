@@ -4,14 +4,6 @@ Changelog
 2.1.5 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Make tests work with old and new safe HTML transform
