@@ -16,6 +16,8 @@ Bug fixes:
 
 - Handle unicode errors in img attributes
   [vangheem]
+- Use zope.interface decorator.
+  [gforcada]
 
 
 2.1.5 (2016-06-07)

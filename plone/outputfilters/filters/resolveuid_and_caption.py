@@ -9,7 +9,7 @@ from zope.component.hooks import getSite
 from Products.CMFCore.interfaces import IContentish
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
-from zope.interface import implements, Interface, Attribute
+from zope.interface import implementer, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
 
 import re
@@ -42,8 +42,8 @@ class IResolveUidsEnabler(Interface):
         "Boolean indicating whether UID links should be resolved.")
 
 
+@implementer(IResolveUidsEnabler)
 class ResolveUidsAlwaysEnabled(object):
-    implements(IResolveUidsEnabler)
 
     available = True
 
@@ -53,9 +53,9 @@ def tag(img, **attributes):
         return img.tag(**attributes)
 
 
+@implementer(IFilter)
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
-    implements(IFilter)
 
     singleton_tags = set([
       'area', 'base', 'basefont', 'br', 'col', 'command', 'embed', 'frame',

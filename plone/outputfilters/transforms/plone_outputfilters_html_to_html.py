@@ -1,4 +1,4 @@
-from zope.interface import implements
+from zope.interface import implementer
 
 try:
     try:

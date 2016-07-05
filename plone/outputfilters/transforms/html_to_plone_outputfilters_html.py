@@ -1,5 +1,5 @@
 from zope.component import getAdapters
-from zope.interface import implements
+from zope.interface import implementer
 try:
     from zope.component.hooks import getSite
 except ImportError:

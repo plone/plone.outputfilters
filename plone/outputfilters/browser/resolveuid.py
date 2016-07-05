@@ -1,6 +1,6 @@
 from Acquisition import aq_base
 from zExceptions import NotFound
-from zope.interface import implements
+from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.browser import BrowserView
 try:
@@ -41,10 +41,10 @@ else:
         return uuid
 
 
+@implementer(IPublishTraverse)
 class ResolveUIDView(BrowserView):
     """Resolve a URL like /resolveuid/<uuid> to a normalized URL.
     """
-    implements(IPublishTraverse)
 
     subpath = None
 

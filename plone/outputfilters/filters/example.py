@@ -1,10 +1,10 @@
 import re
-from zope.interface import implements
+from zope.interface import implementer
 from plone.outputfilters.interfaces import IFilter
 
 
+@implementer(IFilter)
 class EmDashAdder(object):
-    implements(IFilter)
     order = 1000
 
     def __init__(self, context, request):
