@@ -35,6 +35,7 @@ setup(name='plone.outputfilters',
           'Products.GenericSetup',
           'Products.MimetypesRegistry',
           'Products.PortalTransforms',
+          'unidecode'
       ],
       extras_require={
           'test': [
