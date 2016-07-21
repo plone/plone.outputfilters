@@ -1,3 +1,4 @@
+from unidecode import unidecode
 from ZODB.POSException import ConflictError
 from Acquisition import aq_base, aq_acquire, aq_parent
 from zExceptions import NotFound
@@ -358,7 +359,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 if fullimage is not None:
                     # Check to see if the alt / title tags need setting
                     title = aq_acquire(fullimage, 'Title')()
-                    if 'alt' not in attributes:
+                    if not attributes.get('alt'):
                         attributes['alt'] = description or title
                     if 'title' not in attributes:
                         attributes['title'] = title
@@ -370,7 +371,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             try:
                 strattrs += ' %s="%s"' % (key, escape(value, quote=True))
             except UnicodeDecodeError:
-                pass
+                strattrs += ' %s="%s"' % (unidecode(key), escape(unidecode(value), quote=True))
 
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
