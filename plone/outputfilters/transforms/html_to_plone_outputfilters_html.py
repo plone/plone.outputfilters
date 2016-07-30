@@ -1,29 +1,15 @@
-from zope.component import getAdapters
-from zope.interface import implementer
-try:
-    from zope.component.hooks import getSite
-except ImportError:
-    from zope.app.component.hooks import getSite
-
-try:
-    try:
-        from Products.PortalTransforms.interfaces import ITransform
-    except ImportError:
-        from Products.PortalTransforms.z3.interfaces import ITransform
-except ImportError:
-    ITransform = None
-from Products.PortalTransforms.interfaces import itransform
-
-
-from plone.outputfilters.interfaces import IFilter
+# -*- coding: utf-8 -*-
 from plone.outputfilters import apply_filters
+from plone.outputfilters.interfaces import IFilter
+from Products.PortalTransforms.interfaces import ITransform
+from zope.component import getAdapters
+from zope.component.hooks import getSite
+from zope.interface import implementer
 
 
+@implementer(ITransform)
 class html_to_plone_outputfilters_html:
     """ transform which applies output filters"""
-    if ITransform is not None:
-        implements(ITransform)
-    __implements__ = itransform
     __name__ = "html_to_plone_outputfilters_html"
     inputs = ('text/html',)
     output = "text/x-plone-outputfilters-html"

@@ -1,19 +1,10 @@
+# -*- coding: utf-8 -*-
 from zope.interface import implementer
+from Products.PortalTransforms.interfaces import ITransform
 
-try:
-    try:
-        from Products.PortalTransforms.interfaces import ITransform
-    except ImportError:
-        from Products.PortalTransforms.z3.interfaces import ITransform
-except ImportError:
-    ITransform = None
-from Products.PortalTransforms.interfaces import itransform
-
-
-class plone_outputfilters_html_to_html:
-    if ITransform is not None:
-        implements(ITransform)
-    __implements__ = itransform
+@implementer(ITransform)
+class plone_outputfilters_html_to_html(object):
+    
     __name__ = "plone_outputfilters_html_to_html"
     inputs = ('text/x-plone-outputfilters-html',)
     output = "text/html"
