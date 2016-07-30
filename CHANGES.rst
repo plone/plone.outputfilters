@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Handle unicode errors in img attributes
+  [vangheem]
 
 
 2.1.5 (2016-06-07)
