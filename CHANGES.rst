@@ -1,12 +1,13 @@
 Changelog
 =========
 
-2.1.6 (unreleased)
+3.0.0 (unreleased)
 ------------------
 
 Breaking changes:
 
-- *add item here*
+- Give up support of PortalTransforms 1.x with old style interfaces.
+  [jensens]
 
 New features:
 
@@ -16,6 +17,9 @@ Bug fixes:
 
 - Handle unicode errors in img attributes
   [vangheem]
+- Cleanup: utf8-headers, isort, pep8
+  [jensens]
+
 - Use zope.interface decorator.
   [gforcada]
 

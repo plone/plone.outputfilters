@@ -5,7 +5,7 @@ from setuptools import setup
 import os
 
 
-version = '2.1.6.dev0'
+version = '3.0.0.dev0'
 
 setup(name='plone.outputfilters',
       version=version,
@@ -35,12 +35,12 @@ setup(name='plone.outputfilters',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
           'Products.CMFCore',
           'Products.GenericSetup',
           'Products.MimetypesRegistry',
-          'Products.PortalTransforms',
-          'unidecode'
+          'Products.PortalTransforms>=2.0a1',
+          'setuptools',
+          'unidecode',
       ],
       extras_require={
           'test': [
