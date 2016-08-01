@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def apply_filters(filters, data):
     by_order = lambda x: x.order
     filters = sorted(filters, key=by_order)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from plone.outputfilters.interfaces import IFilter
 from zope.interface import implementer
 

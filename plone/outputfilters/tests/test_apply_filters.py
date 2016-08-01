@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from plone.outputfilters import apply_filters
 
 import unittest

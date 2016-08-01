@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_base, aq_acquire, aq_parent
+from Acquisition import aq_acquire
+from Acquisition import aq_base
+from Acquisition import aq_parent
 from cgi import escape
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br

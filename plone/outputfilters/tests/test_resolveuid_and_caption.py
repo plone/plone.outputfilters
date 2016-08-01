@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from doctest import _ellipsis_match
 from doctest import OutputChecker
 from doctest import REPORT_NDIFF

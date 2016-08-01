@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.Five import BrowserView
 from zope.cachedescriptors.property import Lazy as lazy_property
 
