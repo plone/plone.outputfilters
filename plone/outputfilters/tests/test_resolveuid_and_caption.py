@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from doctest import _ellipsis_match
 from doctest import OutputChecker
 from doctest import REPORT_NDIFF
@@ -300,9 +301,9 @@ alert(1);
         # traversal to them must not raise an error!
         self.loginAsPortalOwner()
         self.portal.invokeFactory('Folder', id='private',
-            title='Private Folder')
+                                  title='Private Folder')
         self.portal.private.invokeFactory('Image', id='image.jpg',
-            title='Image')
+                                          title='Image')
         image = getattr(self.portal.private, 'image.jpg')
         image.setDescription('My private image caption')
         image.image = dummy_image()
@@ -415,7 +416,8 @@ alert(1);
 
     def test_image_captioning_handles_non_ascii(self):
         self.portal['image.jpg'].setTitle(u'Kupu Test Image \xe5\xe4\xf6')
-        self.portal['image.jpg'].setDescription(u'Kupu Test Image \xe5\xe4\xf6')
+        self.portal['image.jpg'].setDescription(
+            u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<dl style="width:500px;" class="captioned">
 <dt><img src="http://nohost/plone/image.jpg/@@images/...jpeg" alt="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" title="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" height="331" width="500" /></dt>
@@ -429,4 +431,5 @@ alert(1);
         self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
 
     def test_singleton_elements(self):
-        self._assertTransformsTo('<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')
+        self._assertTransformsTo(
+            '<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')

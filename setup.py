@@ -1,7 +1,11 @@
-from setuptools import setup, find_packages
+# -*- coding: utf-8 -*-
+from setuptools import find_packages
+from setuptools import setup
+
 import os
 
-version = '2.1.6.dev0'
+
+version = '3.0.0.dev0'
 
 setup(name='plone.outputfilters',
       version=version,
@@ -10,13 +14,14 @@ setup(name='plone.outputfilters',
       long_description=(
           open("README.rst").read() + "\n" +
           open(os.path.join("plone", "outputfilters",
-                            "README.txt")).read() + "\n" +
+                            "README.rst")).read() + "\n" +
           open("CHANGES.rst").read()),
       # Get more strings from
       # https://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           "Framework :: Plone",
           "Framework :: Plone :: 5.0",
+          "Framework :: Plone :: 5.1",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2.7",
       ],
@@ -30,12 +35,12 @@ setup(name='plone.outputfilters',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
           'Products.CMFCore',
           'Products.GenericSetup',
           'Products.MimetypesRegistry',
-          'Products.PortalTransforms',
-          'unidecode'
+          'Products.PortalTransforms>=2.0a1',
+          'setuptools',
+          'unidecode',
       ],
       extras_require={
           'test': [

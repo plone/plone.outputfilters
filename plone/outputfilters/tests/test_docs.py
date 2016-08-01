@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import doctest
-
-import unittest2 as unittest
-import pprint
-
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from plone.testing import layered
 
-from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
+import doctest
+import pprint
+import unittest2 as unittest
 
 
 optionflags = (
@@ -15,7 +13,7 @@ optionflags = (
     doctest.REPORT_ONLY_FIRST_FAILURE
 )
 normal_testfiles = [
-    '../README.txt'
+    '../README.rst'
 ]
 
 

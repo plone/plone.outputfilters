@@ -35,34 +35,34 @@ applied (higher values run later). The is_enabled method should return a boolean
 indicating whether the filter should be applied.
 
 Filters are registered in ZCML as a named multi-adapter of the context and
-request to IFilter.
+request to IFilter::
 
- >>> from Zope2.App import zcml
- >>> import Products.Five
- >>> configure = """
- ... <configure
- ...     xmlns="http://namespaces.zope.org/zope">
- ...
- ...   <adapter
- ...     name="em_dash_adder"
- ...     provides="plone.outputfilters.interfaces.IFilter"
- ...     for="* *"
- ...     factory="plone.outputfilters.filters.example.EmDashAdder"
- ...     />
- ...
- ... </configure>
- ... """
- >>> zcml.load_config("configure.zcml", Products.Five)
- >>> zcml.load_string(configure)
+    >>> from Zope2.App import zcml
+    >>> import Products.Five
+    >>> configure = """
+    ... <configure
+    ...     xmlns="http://namespaces.zope.org/zope">
+    ...
+    ...   <adapter
+    ...     name="em_dash_adder"
+    ...     provides="plone.outputfilters.interfaces.IFilter"
+    ...     for="* *"
+    ...     factory="plone.outputfilters.filters.example.EmDashAdder"
+    ...     />
+    ...
+    ... </configure>
+    ... """
+    >>> zcml.load_config("configure.zcml", Products.Five)
+    >>> zcml.load_string(configure)
 
 Now when text is transformed from text/html to text/x-html-safe, the filter will
-be applied.
+be applied::
 
- >>> app = layer['app']
- >>> portal = layer['portal']
- >>> str(portal.portal_transforms.convertTo('text/x-html-safe',
- ...     'test--test', mimetype='text/html', context=portal))
- 'test\xe2\x80\x94test'
+    >>> app = layer['app']
+    >>> portal = layer['portal']
+    >>> str(portal.portal_transforms.convertTo('text/x-html-safe',
+    ...     'test--test', mimetype='text/html', context=portal))
+    'test\xe2\x80\x94test'
 
 
 How it works

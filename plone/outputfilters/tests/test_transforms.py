@@ -1,7 +1,9 @@
-import unittest
-from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+# -*- coding: utf-8 -*-
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
+from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+
+import unittest
 
 
 class TransformsTestCase(unittest.TestCase):

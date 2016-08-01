@@ -1,22 +1,31 @@
-from unidecode import unidecode
-from ZODB.POSException import ConflictError
-from Acquisition import aq_base, aq_acquire, aq_parent
-from zExceptions import NotFound
-from zope.publisher.interfaces import NotFound as ztkNotFound
+# -*- coding: utf-8 -*-
+from Acquisition import aq_acquire
+from Acquisition import aq_base
+from Acquisition import aq_parent
+from cgi import escape
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
-from zope.component.hooks import getSite
-from Products.CMFCore.interfaces import IContentish
-from zope.cachedescriptors.property import Lazy as lazy_property
-from zope.component import getAllUtilitiesRegisteredFor
-from zope.interface import implements, Interface, Attribute
 from plone.outputfilters.browser.resolveuid import uuidToObject
-
-import re
+from plone.outputfilters.interfaces import IFilter
+from Products.CMFCore.interfaces import IContentish
+from sgmllib import SGMLParseError
+from sgmllib import SGMLParser
+from unidecode import unidecode
 from urllib import unquote
 from urlparse import urljoin
 from urlparse import urlsplit
-from sgmllib import SGMLParser, SGMLParseError
+from zExceptions import NotFound
+from ZODB.POSException import ConflictError
+from zope.cachedescriptors.property import Lazy as lazy_property
+from zope.component import getAllUtilitiesRegisteredFor
+from zope.component.hooks import getSite
+from zope.interface import Attribute
+from zope.interface import implementer
+from zope.interface import Interface
+from zope.publisher.interfaces import NotFound as ztkNotFound
+
+import re
+
 
 HAS_LINGUAPLONE = True
 try:
@@ -24,12 +33,9 @@ try:
 except ImportError:
     HAS_LINGUAPLONE = False
 
-from plone.outputfilters.interfaces import IFilter
 
 appendix_re = re.compile('^(.*)([\?#].*)$')
 resolveuid_re = re.compile('^[./]*resolve[Uu]id/([^/]*)/?(.*)$')
-
-from cgi import escape
 
 
 class IImageCaptioningEnabler(Interface):
@@ -42,8 +48,8 @@ class IResolveUidsEnabler(Interface):
         "Boolean indicating whether UID links should be resolved.")
 
 
+@implementer(IResolveUidsEnabler)
 class ResolveUidsAlwaysEnabled(object):
-    implements(IResolveUidsEnabler)
 
     available = True
 
@@ -53,14 +59,14 @@ def tag(img, **attributes):
         return img.tag(**attributes)
 
 
+@implementer(IFilter)
 class ResolveUIDAndCaptionFilter(SGMLParser):
     """ Parser to convert UUID links and captioned images """
-    implements(IFilter)
 
     singleton_tags = set([
-      'area', 'base', 'basefont', 'br', 'col', 'command', 'embed', 'frame',
-      'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param',
-      'source', 'track', 'wbr'])
+        'area', 'base', 'basefont', 'br', 'col', 'command', 'embed', 'frame',
+        'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param',
+        'source', 'track', 'wbr'])
 
     def __init__(self, context=None, request=None):
         SGMLParser.__init__(self)
@@ -76,7 +82,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
     @lazy_property
     def captioned_image_template(self):
         return self.context.restrictedTraverse(
-                    'plone.outputfilters_captioned_image')
+            'plone.outputfilters_captioned_image')
 
     @lazy_property
     def captioned_images(self):
@@ -295,10 +301,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             'fullimage': fullimage,
             'tag': tag(**attributes),
             'isfullsize': image is fullimage or (
-                          image.width == original_width and
-                          image.height == original_height),
+                image.width == original_width and
+                image.height == original_height),
             'width': attributes.get('width', width),
-            }
+        }
         if self.in_link:
             # Must preserve original link, don't overwrite
             # with a link to the image
@@ -339,7 +345,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         # being rendered in the context where it was stored
                         relative_root = self.context
                         if not getattr(
-                            self.context, 'isPrincipiaFolderish', False):
+                                self.context, 'isPrincipiaFolderish', False):
                             relative_root = aq_parent(self.context)
                         actual_url = relative_root.absolute_url()
                         href = urljoin(actual_url + '/', subpath) + appendix
@@ -351,8 +357,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 attributes["src"] = src
                 caption = description
                 # Check if the image needs to be captioned
-                if (self.captioned_images and image is not None and caption
-                    and 'captioned' in attributes.get('class', '').split(' ')):
+                if (
+                    self.captioned_images and
+                    image is not None and
+                    caption and
+                    'captioned' in attributes.get('class', '').split(' ')
+                ):
                     self.handle_captioned_image(attributes, image, fullimage,
                                                 caption)
                     return True
@@ -371,7 +381,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             try:
                 strattrs += ' %s="%s"' % (key, escape(value, quote=True))
             except UnicodeDecodeError:
-                strattrs += ' %s="%s"' % (unidecode(key), escape(unidecode(value), quote=True))
+                strattrs += ' %s="%s"' % (unidecode(key),
+                                          escape(unidecode(value), quote=True))
 
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))

@@ -1,6 +1,7 @@
-import unittest
-
+# -*- coding: utf-8 -*-
 from plone.outputfilters import apply_filters
+
+import unittest
 
 
 class DummyFilter(object):
@@ -46,6 +47,7 @@ class FilterTestCase(unittest.TestCase):
 
     def test_apply_filters_handles_return_none(self):
         class DummyFilterReturningNone(DummyFilter):
+
             def __call__(self, data):
                 return None
         filter = DummyFilterReturningNone()

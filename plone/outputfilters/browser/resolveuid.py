@@ -1,13 +1,16 @@
+# -*- coding: utf-8 -*-
 from Acquisition import aq_base
+from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
-from zope.interface import implements
-from zope.publisher.interfaces import IPublishTraverse
+from zope.interface import implementer
 from zope.publisher.browser import BrowserView
+from zope.publisher.interfaces import IPublishTraverse
+
+
 try:
     from zope.component.hooks import getSite
 except ImportError:
     from zope.app.component.hooks import getSite
-from Products.CMFCore.utils import getToolByName
 
 
 def uuidToURL(uuid):
@@ -41,10 +44,10 @@ else:
         return uuid
 
 
+@implementer(IPublishTraverse)
 class ResolveUIDView(BrowserView):
     """Resolve a URL like /resolveuid/<uuid> to a normalized URL.
     """
-    implements(IPublishTraverse)
 
     subpath = None
 
