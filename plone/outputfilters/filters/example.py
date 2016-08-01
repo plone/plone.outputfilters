@@ -1,6 +1,7 @@
-import re
-from zope.interface import implementer
 from plone.outputfilters.interfaces import IFilter
+from zope.interface import implementer
+
+import re
 
 
 @implementer(IFilter)

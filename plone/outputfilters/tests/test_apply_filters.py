@@ -1,6 +1,6 @@
-import unittest
-
 from plone.outputfilters import apply_filters
+
+import unittest
 
 
 class DummyFilter(object):

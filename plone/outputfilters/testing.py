@@ -1,11 +1,11 @@
-from plone.app.testing import IntegrationTesting
-from plone.app.testing import FunctionalTesting
-from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
-
+from plone.app.testing import applyProfile
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PloneSandboxLayer
 from plone.outputfilters.filters.resolveuid_and_caption import IImageCaptioningEnabler  # noqa
 from zope.interface import implementer
+
 import zope.component
 
 

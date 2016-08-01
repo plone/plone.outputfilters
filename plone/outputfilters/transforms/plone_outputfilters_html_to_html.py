@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-from zope.interface import implementer
 from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implementer
+
 
 @implementer(ITransform)
 class plone_outputfilters_html_to_html(object):
-    
+
     __name__ = "plone_outputfilters_html_to_html"
     inputs = ('text/x-plone-outputfilters-html',)
     output = "text/html"
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs': ('list', 'Inputs',
-                       'Input(s) MIME type. Change with care.'),
-            }
+            'inputs': (
+                'list',
+                'Inputs',
+                'Input(s) MIME type. Change with care.'
+            ),
+        }
         if name:
             self.__name__ = name
 

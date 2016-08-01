@@ -1,5 +1,5 @@
-from zope.cachedescriptors.property import Lazy as lazy_property
 from Products.Five import BrowserView
+from zope.cachedescriptors.property import Lazy as lazy_property
 
 
 class CaptionedImageView(BrowserView):
