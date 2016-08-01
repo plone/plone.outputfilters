@@ -47,6 +47,7 @@ class FilterTestCase(unittest.TestCase):
 
     def test_apply_filters_handles_return_none(self):
         class DummyFilterReturningNone(DummyFilter):
+
             def __call__(self, data):
                 return None
         filter = DummyFilterReturningNone()
