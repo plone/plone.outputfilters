@@ -9,10 +9,6 @@ Breaking changes:
 - Give up support of PortalTransforms 1.x with old style interfaces.
   [jensens]
 
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Handle unicode errors in img attributes
