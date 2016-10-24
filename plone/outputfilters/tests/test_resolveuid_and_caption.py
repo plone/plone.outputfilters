@@ -173,8 +173,12 @@ alert(1);
 </map>"""
         self._assertTransformsTo(text_in, text_out)
 
-    def test_resolve_uids_ignores_mailto(self):
+    def test_resolve_uids_handles_mailto(self):
         text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
+        self._assertTransformsTo(text_in, text_in)
+
+    def test_resolve_uids_handles_tel(self):
+        text_in = """<a href="tel:+1234567890">+12 345 67890</a>"""
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_handles_junk(self):

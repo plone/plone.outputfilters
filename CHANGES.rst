@@ -6,12 +6,13 @@ Changelog
 
 New:
 
-- *add item here*
+- Added ``tel:`` to ignored link types.
+  [julianhandl]
 
 Fixes:
 
-- *add item here*
-
+- Explicitly exclude ``mailto:`` links from being UID-resolved.
+  [thet]
 
 1.15.1 (2015-10-28)
 -------------------
