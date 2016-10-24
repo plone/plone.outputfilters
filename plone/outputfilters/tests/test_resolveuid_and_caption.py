@@ -177,6 +177,10 @@ alert(1);
         text_in = """<a href="mailto:foo@example.com">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
 
+    def test_resolve_uids_handles_tel(self):
+        text_in = """<a href="tel:+1234567890">+12 345 67890</a>"""
+        self._assertTransformsTo(text_in, text_in)
+
     def test_resolve_uids_handles_junk(self):
         text_in = """<a class="external-link" href="mailto&lt;foo@example.com&gt;">foo@example.com</a>"""
         self._assertTransformsTo(text_in, text_in)
