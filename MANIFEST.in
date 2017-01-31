@@ -4,3 +4,5 @@ graft docs
 graft plone
 
 global-exclude *pyc
+exclude bootstrap.py
+exclude buildout.cfg
