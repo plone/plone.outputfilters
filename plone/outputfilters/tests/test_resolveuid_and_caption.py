@@ -424,5 +424,13 @@ alert(1);
     def test_singleton_elements(self):
         self._assertTransformsTo('<hr/>\r\n<p>foo</p><br/>', '<hr />\r\n<p>foo</p><br />')
 
+    def test_no_change_when_a_in_script(self):
+        text_in = """<script>a='<a href="">test</a>';</script>"""
+        self._assertTransformsTo(text_in, text_in)
+
+    def test_no_change_when_img_in_script(self):
+        text_in = """<script>a='<img src="image.jpg" />';</script>"""
+        self._assertTransformsTo(text_in, text_in)
+
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)

@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Do not transform a and img tags when inside script tag.
+  [gotcha]
 
 
 1.15.2 (2016-11-09)

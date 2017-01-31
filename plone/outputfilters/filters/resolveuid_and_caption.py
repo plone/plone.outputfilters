@@ -79,6 +79,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         self.request = request
         self.pieces = []
         self.in_link = False
+        self.in_script = False
 
     # IFilter implementation
     order = 800
@@ -317,7 +318,9 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
         Convert UUID's to absolute URLs, and process captioned images to HTML.
         """
-        if tag in ['a', 'img', 'area']:
+        if tag == 'script':
+            self.in_script = True
+        if tag in ['a', 'img', 'area'] and not self.in_script:
             # Only do something if tag is a link, image, or image map area.
 
             attributes = dict(attrs)
@@ -381,6 +384,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         """Add the endtag unmodified"""
         if tag == 'a':
             self.in_link = False
+        if tag == 'script':
+            self.in_script = False
         self.append_data("</%s>" % tag)
 
     def parse_declaration(self, i):
