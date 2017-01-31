@@ -3,3 +3,9 @@
 *.pyo
 build
 dist
+bin/
+lib/
+include/
+parts/
+.installed.cfg
+develop-eggs/
