@@ -1,16 +1,8 @@
 Changelog
 =========
 
-1.15.3 (unreleased)
+1.15.3 (2017-01-31)
 -------------------
-
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
 
 Bug fixes:
 
