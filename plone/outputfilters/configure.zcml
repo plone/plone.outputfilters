@@ -1,10 +1,13 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
     i18n_domain="plone.outputfilters">
 
   <include package=".browser"/>
   <include package=".filters"/>
+
+  <include zcml:condition="installed plone.namedfile" package="plone.namedfile" /> 
 
   <gs:registerProfile
       name="default"
