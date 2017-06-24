@@ -319,9 +319,9 @@ alert(1);
 
     def test_image_captioning_relative_path_scale(self):
         text_in = """<img class="captioned" src="image.jpg/@@images/image/thumb"/>"""
-        text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
- <dd class="image-caption" style="width:128px;">My caption</dd>
+        text_out = """<dl style="width:200px;" class="captioned">
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="132" width="200" /></a></dt>
+ <dd class="image-caption" style="width:200px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
@@ -335,17 +335,17 @@ alert(1);
 
     def test_image_captioning_resolveuid_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
-        text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
- <dd class="image-caption" style="width:128px;">My caption</dd>
+        text_out = """<dl style="width:200px;" class="captioned">
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="132" width="200" /></a></dt>
+ <dd class="image-caption" style="width:200px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_new_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
-        text_out = """<dl style="width:128px;" class="captioned">
-<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></a></dt>
- <dd class="image-caption" style="width:128px;">My caption</dd>
+        text_out = """<dl style="width:200px;" class="captioned">
+<dt><a rel="lightbox" href="/plone/image.jpg"><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="132" width="200" /></a></dt>
+ <dd class="image-caption" style="width:200px;">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
@@ -407,9 +407,9 @@ alert(1);
 
     def test_image_captioning_preserves_existing_links(self):
         text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/@@images/image/thumb"/></a>"""
-        text_out = """<a href="/xyzzy" class="link"><dl style="width:128px;" class="image-left captioned">
-<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="84" width="128" /></dt>
- <dd class="image-caption" style="width:128px;">My caption</dd>
+        text_out = """<a href="/xyzzy" class="link"><dl style="width:200px;" class="image-left captioned">
+<dt><img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="132" width="200" /></dt>
+ <dd class="image-caption" style="width:200px;">My caption</dd>
 </dl>
 </a>"""
         self._assertTransformsTo(text_in, text_out)
