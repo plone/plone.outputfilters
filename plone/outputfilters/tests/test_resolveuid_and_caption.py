@@ -311,9 +311,9 @@ alert(1);
         self.logout()
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
-        text_out = """<dl style="width:500px;" class="captioned">
+        text_out = """<dl class="captioned">
 <dt><img src="http://nohost/plone/private/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="331" width="500" /></dt>
- <dd class="image-caption" style="width:500px;">My private image caption</dd>
+ <dd class="image-caption">private image caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
