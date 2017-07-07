@@ -14,8 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
-
+- update test to reflect changes in PortalTransforms
+  [MrTango]
 
 3.0.2 (2017-07-03)
 ------------------
