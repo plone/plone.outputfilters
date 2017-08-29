@@ -331,7 +331,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 self.in_link = True
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
-                scheme = urlsplit(href)[0]
+                try:
+                    scheme = urlsplit(href)[0]
+                except:
+                    # href might be anything and can cause exceptions from urlsplit.
+                    # Example: http://www.google.com]
+                    # So, just leave scheme as None, and href will be used as it is
+                    scheme = None
                 if not scheme and not href.startswith('/') \
                         and not href.startswith('mailto<') \
                         and not href.startswith('mailto:') \
@@ -351,7 +357,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                                 self.context, 'isPrincipiaFolderish', False):
                             relative_root = aq_parent(self.context)
                         actual_url = relative_root.absolute_url()
-                        href = urljoin(actual_url + '/', subpath) + appendix
+                        try:
+                            href = urljoin(actual_url + '/', subpath) + appendix
+                        except:
+                            # If original href was invalid, then "subpath" will be invalid as well
+                            # So we just pass and leave href as it was originally
+                            pass
                     attributes['href'] = href
                     attrs = attributes.iteritems()
             elif tag == 'img':
