@@ -40,6 +40,7 @@ setup(name='plone.outputfilters',
           'Products.MimetypesRegistry',
           'Products.PortalTransforms>=2.0a1',
           'setuptools',
+          'six',
           'unidecode',
       ],
       extras_require={
