@@ -10,10 +10,10 @@ from plone.outputfilters.interfaces import IFilter
 from Products.CMFCore.interfaces import IContentish
 from sgmllib import SGMLParseError
 from sgmllib import SGMLParser
+from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import urljoin
+from six.moves.urllib.parse import urlsplit
 from unidecode import unidecode
-from urllib import unquote
-from urlparse import urljoin
-from urlparse import urlsplit
 from zExceptions import NotFound
 from ZODB.POSException import ConflictError
 from zope.cachedescriptors.property import Lazy as lazy_property
@@ -25,6 +25,7 @@ from zope.interface import Interface
 from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
+import six
 
 
 HAS_LINGUAPLONE = True
@@ -261,7 +262,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             url = image.absolute_url()
         except AttributeError:
             return None, None, src, description
-        if isinstance(url, unicode):
+        if isinstance(url, six.text_type):
             url = url.encode('utf8')
         src = url + appendix
         description = aq_acquire(fullimage, 'Description')()
@@ -312,7 +313,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             options['isfullsize'] = True
 
         captioned_html = self.captioned_image_template(**options)
-        if isinstance(captioned_html, unicode):
+        if isinstance(captioned_html, six.text_type):
             captioned_html = captioned_html.encode('utf8')
         self.append_data(captioned_html)
 
@@ -353,7 +354,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         actual_url = relative_root.absolute_url()
                         href = urljoin(actual_url + '/', subpath) + appendix
                     attributes['href'] = href
-                    attrs = attributes.iteritems()
+                    attrs = six.iteritems(attributes)
             elif tag == 'img':
                 src = attributes.get('src', '')
                 image, fullimage, src, description = self.resolve_image(src)
@@ -376,7 +377,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         attributes['alt'] = description or title
                     if 'title' not in attributes:
                         attributes['title'] = title
-                    attrs = attributes.iteritems()
+                    attrs = six.iteritems(attributes)
 
         # Add the tag to the result
         strattrs = ""
