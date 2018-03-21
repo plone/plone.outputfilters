@@ -8,8 +8,6 @@ from DocumentTemplate.DT_Var import newline_to_br
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from Products.CMFCore.interfaces import IContentish
-from sgmllib import SGMLParseError
-from sgmllib import SGMLParser
 from six.moves.urllib.parse import unquote
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
@@ -27,6 +25,20 @@ from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
 import six
+
+try:
+    from sgmllib import SGMLParseError
+    from sgmllib import SGMLParser
+except ImportError:
+    # This is probably Python 3, which doesn't include sgmllib anymore
+    _SGML_AVAILABLE = 0
+
+    # Mock sgmllib enough to allow subclassing later on
+    class SGMLParser(object):
+        pass
+
+    class SGMLParseError(object):
+        pass
 
 
 HAS_LINGUAPLONE = True
