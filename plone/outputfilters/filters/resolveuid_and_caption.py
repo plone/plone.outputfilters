@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# reimplementation, based on lxml instead of SGMLParser
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_parent
@@ -8,6 +9,8 @@ from DocumentTemplate.DT_Var import newline_to_br
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from Products.CMFCore.interfaces import IContentish
+from bs4 import BeautifulSoup
+# ... import exception class 
 from six.moves.urllib.parse import unquote
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
@@ -73,7 +76,7 @@ def tag(img, **attributes):
 
 
 @implementer(IFilter)
-class ResolveUIDAndCaptionFilter(SGMLParser):
+class ResolveUIDAndCaptionFilter(HTMLParser):
     """ Parser to convert UUID links and captioned images """
 
     singleton_tags = set([
@@ -82,13 +85,9 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         'source', 'track', 'wbr'])
 
     def __init__(self, context=None, request=None):
-        SGMLParser.__init__(self)
         self.current_status = None
         self.context = context
         self.request = request
-        self.pieces = []
-        self.in_link = False
-        self.in_script = False
 
     # IFilter implementation
     order = 800
@@ -126,43 +125,70 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             return '<' + tag + '></' + tag + '>'
 
     def __call__(self, data):
+        # from SGMLParser implementation; still necessary?
         data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
-        self.feed(data)
-        self.close()
-        return self.getResult()
+        soup = BeautifulSoup(data, 'lxml')
 
-    # SGMLParser implementation
+        for elem in soup.find_all(['a', 'area'], 'href'):
+            attributes = elem.attrs
+            href = attributes['href']
+            changed = False
+            if 1:
+                scheme = urlsplit(href)[0]
+                if not scheme and not href.startswith('/') \
+                        and not href.startswith('mailto<') \
+                        and not href.startswith('mailto:') \
+                        and not href.startswith('tel:') \
+                        and not href.startswith('#'):
+                    obj, subpath, appendix = self.resolve_link(href)
+                    if obj is not None:
+                        href = obj.absolute_url()
+                        if subpath:
+                            href += '/' + subpath
+                        href += appendix
+                        changed = True
+                    elif resolveuid_re.match(href) is None:
+                        # absolutize relative URIs; this text isn't necessarily
+                        # being rendered in the context where it was stored
+                        relative_root = self.context
+                        if not getattr(
+                                self.context, 'isPrincipiaFolderish', False):
+                            relative_root = aq_parent(self.context)
+                        actual_url = relative_root.absolute_url()
+                        href = urljoin(actual_url + '/', subpath) + appendix
+                        changed = True
+                    if not changed:
+                        continue
+                    attributes['href'] = href
+        for elem in soup.find_all('img', 'src'):
+            attributes = elem.attrs
+            if 1:
+                src = attributes.get('src', '')
+                image, fullimage, src, description = self.resolve_image(src)
+                attributes["src"] = src
 
-    def append_data(self, data, add_eol=0):
-        """Append data unmodified to self.data, add_eol adds a newline
-        character"""
-        if add_eol:
-            data += '\n'
-        self.pieces.append(data)
+                if fullimage is not None:
+                    # Check to see if the alt / title tags need setting
+                    title = aq_acquire(fullimage, 'Title')()
+                    if not attributes.get('alt'):
+                        # XXX alt attribute contains *alternate* text 
+                        attributes['alt'] = description or title
+                    if 'title' not in attributes:
+                        attributes['title'] = title
 
-    def handle_charref(self, ref):
-        """ Handle characters, just add them again """
-        self.append_data("&#%s;" % ref)
+                caption = description
+                # Check if the image needs to be captioned
+                if (
+                    self.captioned_images and
+                    image is not None and
+                    caption and
+                    'captioned' in attributes.get('class', '').split(' ')
+                ):
+                    self.handle_captioned_image(attributes, image, fullimage,
+                                                elem, soup,
+                                                caption)
 
-    def handle_entityref(self, ref):
-        """ Handle html entities, put them back as we get them """
-        self.append_data("&%s;" % ref)
-
-    def handle_data(self, text):
-        """ Add data unmodified """
-        self.append_data(text)
-
-    def handle_comment(self, text):
-        """ Handle comments unmodified """
-        self.append_data("<!--%s-->" % text)
-
-    def handle_pi(self, text):
-        """ Handle processing instructions unmodified"""
-        self.append_data("<?%s>" % text)
-
-    def handle_decl(self, text):
-        """Handle declarations unmodified """
-        self.append_data("<!%s>" % text)
+        return six.text_type(soup)
 
     def lookup_uid(self, uid):
         context = self.context
@@ -280,8 +306,13 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         description = aq_acquire(fullimage, 'Description')()
         return image, fullimage, src, description
 
-    def handle_captioned_image(self, attributes, image, fullimage, caption):
+    def handle_captioned_image(self, attributes, image, fullimage,
+                               elem, soup,
+                               caption):
         """Handle captioned image.
+
+        The img element is replaced by a definition list
+        as created by the template ../browser/captioned_image.pt
         """
         klass = attributes['class']
         del attributes['class']
@@ -325,9 +356,16 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             options['isfullsize'] = True
 
         captioned_html = self.captioned_image_template(**options)
-        if isinstance(captioned_html, six.text_type):
-            captioned_html = captioned_html.encode('utf8')
-        self.append_data(captioned_html)
+        new_elem = soup.new_tag
+        if not options['isfullsize']:
+            a_elem = soup.new_tag('a',
+                                  rel='lightbox',
+                                  href=options['url_path'])
+            elem = elem.wrap(a_elem)
+        dt = elem.wrap(soup.new_tag('dt')
+        dl = dt.wrap(soup.new_tag('dl', class_=klass))
+        dl.append(soup.new_tag('dd', options['caption'])
+        elem.replace_with(dl)
 
     def unknown_starttag(self, tag, attrs):
         """Here we've got the actual conversion of links and images.
@@ -426,8 +464,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             self.append_data("<![CDATA[%s]]>" % data)
         else:
             try:
-                j = SGMLParser.parse_declaration(self, i)
-            except SGMLParseError:
+                j = HTMLParser.parse_declaration(self, i)
+            except HTMLParseError:
                 toHandle = self.rawdata[i:]
                 self.handle_data(toHandle)
                 j = i + len(toHandle)
