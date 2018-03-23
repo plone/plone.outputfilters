@@ -43,6 +43,8 @@ setup(name='plone.outputfilters',
           'setuptools',
           'six',
           'unidecode',
+          'beautifulsoup4',
+          'lxml',
       ],
       extras_require={
           'test': [
