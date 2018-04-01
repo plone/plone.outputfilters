@@ -126,7 +126,10 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             return '<' + tag + '></' + tag + '>'
 
     def __call__(self, data):
-        data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
+        if six.PY3:
+            # FIXME: See https://github.com/plone/plone.outputfilters/issues/27
+            return data
+        data = re.sub(br'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
         self.feed(data)
         self.close()
         return self.getResult()
