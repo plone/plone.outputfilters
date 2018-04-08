@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Allow resolving of links with absolute path
+  [tomgross]
 
 
 3.0.4 (2018-02-02)
