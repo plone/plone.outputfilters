@@ -344,7 +344,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         if subpath:
                             href += '/' + subpath
                         href += appendix
-                    elif resolveuid_re.match(href) is None:
+                    elif resolveuid_re.match(href) is None \
+                            and not href.startswith('/'):
                         # absolutize relative URIs; this text isn't necessarily
                         # being rendered in the context where it was stored
                         relative_root = self.context

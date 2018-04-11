@@ -49,6 +49,7 @@ setup(name='plone.outputfilters',
               'plone.app.contenttypes',
               'plone.app.testing',
               'plone.app.robotframework',
+              'plone.namedfile',
           ],
       },
       entry_points="""

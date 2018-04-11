@@ -8,30 +8,18 @@ from os.path import join
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing.bbb import PloneTestCase
+from plone.namedfile.file import NamedBlobImage
+from plone.namedfile.file import NamedImage
+from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
 from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter  # noqa
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
-
-import pkg_resources
-
-
-# plone.namedfile is not part of coredev (yet) as such
-# it is not hard dependency
-try:
-    pkg_resources.get_distribution('plone.namedfile')
-except pkg_resources.DistributionNotFound:
-    HAS_NAMEDFILE = False
-else:
-    from plone.namedfile.file import NamedImage
-    from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent  # noqa
-    HAS_NAMEDFILE = True
 
 
 PREFIX = abspath(dirname(__file__))
 
 
 def dummy_image():
-    from plone.namedfile.file import NamedBlobImage
     filename = join(PREFIX, u'image.jpg')
     data = open(filename, 'rb').read()
     return NamedBlobImage(data=data, filename=filename)
@@ -62,23 +50,21 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
 
             allowedRolesAndUsers = ('Anonymous',)
 
-        if HAS_NAMEDFILE:
-            class DummyContent2(NFDummyContent):
-                id = __name__ = title = 'foo2'
+        class DummyContent2(NFDummyContent):
+            id = __name__ = title = 'foo2'
 
-                def UID(self):
-                    return 'foo2'
+            def UID(self):
+                return 'foo2'
 
         dummy = DummyContent('foo')
         self.portal._setObject('foo', dummy)
         self.portal.portal_catalog.catalog_object(self.portal.foo)
 
-        if HAS_NAMEDFILE:
-            dummy2 = DummyContent2('foo2')
-            data = open(join(PREFIX, self.image_id), 'rb').read()
-            dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
-            self.portal._setObject('foo2', dummy2)
-            self.portal.portal_catalog.catalog_object(self.portal.foo2)
+        dummy2 = DummyContent2('foo2')
+        data = open(join(PREFIX, self.image_id), 'rb').read()
+        dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
+        self.portal._setObject('foo2', dummy2)
+        self.portal.portal_catalog.catalog_object(self.portal.foo2)
 
     def _assertTransformsTo(self, input, expected):
         # compare two chunks of HTML ignoring whitespace differences,
@@ -356,8 +342,6 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_new_scale_plone_namedfile(self):
-        if not HAS_NAMEDFILE:
-            return
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image/thumb"/>"""
         text_out = """<img src="http://nohost/plone/foo2/@@images/....jpeg" alt="foo2" class="captioned" title="foo2" />"""
@@ -372,8 +356,6 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_no_scale_plone_namedfile(self):
-        if not HAS_NAMEDFILE:
-            return
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image"/>"""
         text_out = """<img src="http://nohost/plone/foo2/@@images/....jpeg" alt="foo2" class="captioned" title="foo2" />"""
