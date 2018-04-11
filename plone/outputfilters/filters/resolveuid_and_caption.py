@@ -333,7 +333,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
                 scheme = urlsplit(href)[0]
-                if not scheme and not href.startswith('/') \
+                if not scheme \
                         and not href.startswith('mailto<') \
                         and not href.startswith('mailto:') \
                         and not href.startswith('tel:') \
@@ -344,7 +344,8 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                         if subpath:
                             href += '/' + subpath
                         href += appendix
-                    elif resolveuid_re.match(href) is None:
+                    elif resolveuid_re.match(href) is None \
+                            and not href.startswith('/'):
                         # absolutize relative URIs; this text isn't necessarily
                         # being rendered in the context where it was stored
                         relative_root = self.context
