@@ -14,7 +14,7 @@ New features:
 
 Bug fixes:
 
-- Allow resolving of links with absolute path
+- Allow resolving of links with absolute path and host
   [tomgross]
 
 - Make plone.namedfile hard testing dependency
