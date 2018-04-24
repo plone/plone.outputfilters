@@ -333,7 +333,6 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 self.in_link = True
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
-                scheme = urlsplit(href)[0]
                 url_parts = urlsplit(href)
                 scheme = url_parts[0]
                 # we are only interested in path and beyond /foo/bar?x=2#abc
