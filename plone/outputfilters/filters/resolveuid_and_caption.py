@@ -13,6 +13,7 @@ from sgmllib import SGMLParser
 from six.moves.urllib.parse import unquote
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
+from six.moves.urllib.parse import urlunsplit
 from unidecode import unidecode
 from zExceptions import NotFound
 from ZODB.POSException import ConflictError
@@ -332,19 +333,22 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
                 self.in_link = True
             if (tag == 'a' or tag == 'area') and 'href' in attributes:
                 href = attributes['href']
-                scheme = urlsplit(href)[0]
-                if not scheme \
-                        and not href.startswith('mailto<') \
+                url_parts = urlsplit(href)
+                scheme = url_parts[0]
+                # we are only interested in path and beyond /foo/bar?x=2#abc
+                path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
+                if not href.startswith('mailto<') \
                         and not href.startswith('mailto:') \
                         and not href.startswith('tel:') \
                         and not href.startswith('#'):
-                    obj, subpath, appendix = self.resolve_link(href)
+                    obj, subpath, appendix = self.resolve_link(path_parts)
                     if obj is not None:
                         href = obj.absolute_url()
                         if subpath:
                             href += '/' + subpath
                         href += appendix
                     elif resolveuid_re.match(href) is None \
+                            and not scheme \
                             and not href.startswith('/'):
                         # absolutize relative URIs; this text isn't necessarily
                         # being rendered in the context where it was stored

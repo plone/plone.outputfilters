@@ -136,10 +136,9 @@ alert(1);
     <a class="internal-link" href="resolveuid/%s#named-anchor">Some anchored link</a>
   </body>
 </html>""" % (self.UID, self.UID)
-        res = self.parser(text)
-        self.assertTrue('href="http://nohost/plone/image.jpg"' in str(res))
-        self.assertTrue('href="http://nohost/plone/image.jpg#named-anchor"'
-                        in str(res))
+        res = str(self.parser(text))
+        self.assertIn('href="http://nohost/plone/image.jpg"', res)
+        self.assertIn('href="http://nohost/plone/image.jpg#named-anchor"', res)
 
     def test_resolve_uids_relative_link(self):
         text_in = """<a href="../resolveuid/%s">foo</a>""" % self.UID
@@ -203,7 +202,7 @@ alert(1);
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_entities(self):
-        text_in = """<a class="external-link" href="http://www.example.org/foo?a=1&amp;b=2">example.org</a>"""
+        text_in = """<a href="http://www.example.org/foo?a=1&amp;b=2" class="external-link">example.org</a>"""
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolveuid_view(self):
