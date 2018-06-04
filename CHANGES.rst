@@ -4,14 +4,6 @@ Changelog
 3.0.5 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Allow resolving of links with absolute path and host
