@@ -21,7 +21,10 @@ PREFIX = abspath(dirname(__file__))
 
 def dummy_image():
     filename = join(PREFIX, u'image.jpg')
-    data = open(filename, 'rb').read()
+    data = None
+    with open(filename, 'rb') as fd:
+        data = fd.read()
+        fd.close()
     return NamedBlobImage(data=data, filename=filename)
 
 
@@ -61,7 +64,9 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         self.portal.portal_catalog.catalog_object(self.portal.foo)
 
         dummy2 = DummyContent2('foo2')
-        data = open(join(PREFIX, self.image_id), 'rb').read()
+        with open(join(PREFIX, self.image_id), 'rb') as fd:
+            data = fd.read()
+            fd.close()
         dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
         self.portal._setObject('foo2', dummy2)
         self.portal.portal_catalog.catalog_object(self.portal.foo2)
