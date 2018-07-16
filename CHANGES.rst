@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- remove deprecated sgmllib and move to BeautifulSoup4
+  [tobiasherp, petschki]
 
 Bug fixes:
 
