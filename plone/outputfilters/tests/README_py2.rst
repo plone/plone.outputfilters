@@ -28,7 +28,7 @@ Example::
         pattern = re.compile(r'--')
 
         def __call__(self, data):
-            return self.pattern.sub('—', data)
+            return self.pattern.sub(u'\xe2\x80\x94', data)
 
 The ``order`` attribute may be used to affect the order in which filters are
 applied (higher values run later). The is_enabled method should return a boolean
@@ -62,7 +62,7 @@ be applied::
     >>> portal = layer['portal']
     >>> str(portal.portal_transforms.convertTo('text/x-html-safe',
     ...     'test--test', mimetype='text/html', context=portal))
-    'test—test'
+    'test\xe2\x80\x94test'
 
 
 How it works
