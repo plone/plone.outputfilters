@@ -18,4 +18,4 @@ class EmDashAdder(object):
     pattern = re.compile(r'--')
 
     def __call__(self, data):
-        return self.pattern.sub(u'—', data)
+        return self.pattern.sub(u'\xe2\x80\x94', data)
