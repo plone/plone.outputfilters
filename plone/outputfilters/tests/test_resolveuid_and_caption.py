@@ -395,10 +395,11 @@ alert(1);
 
     def test_image_captioning_preserves_existing_links(self):
         text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/@@images/image/thumb"/></a>"""
-        text_out = """<a href="/xyzzy" class="link"><dl class="image-left captioned">
+        text_out = """<a class="link" href="/xyzzy"><dl class="image-left captioned">
 <dt><img alt="My caption" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/></dt>
 <dd class="image-caption">My caption</dd>
-</dl></a>"""
+</dl>
+</a>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_handles_non_ascii(self):
@@ -407,8 +408,8 @@ alert(1);
             u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = u"""<dl class="captioned">
-<dt><img alt="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6" width="500" /></dt>
-<dd class="image-caption">Kupu Test Image \xc3\xa5\xc3\xa4\xc3\xb6</dd>
+<dt><img alt="Kupu Test Image \xe5\xe4\xf6" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/></dt>
+<dd class="image-caption">Kupu Test Image \xe5\xe4\xf6</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
