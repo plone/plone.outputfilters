@@ -9,3 +9,6 @@ include/
 parts/
 .installed.cfg
 develop-eggs/
+eggs/
+local/
+pip-selfcheck.json
