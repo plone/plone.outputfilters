@@ -12,6 +12,7 @@ from ZODB.POSException import ConflictError
 from six.moves.urllib.parse import unquote
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
+from six.moves.urllib.parse import urlunsplit
 from zExceptions import NotFound
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
@@ -112,26 +113,24 @@ class ResolveUIDAndCaptionFilter(object):
 
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
-            href = attributes.get('href')
-            if href is None:
-                continue
-            changed = False
-            scheme = urlsplit(href)[0]
-            if (
-                not scheme
-                and not href.startswith('mailto<')
-                and not href.startswith('mailto:')
-                and not href.startswith('tel:')
-                and not href.startswith('#')
-            ):
-                obj, subpath, appendix = self.resolve_link(href)
+            href = attributes['href']
+            url_parts = urlsplit(href)
+            scheme = url_parts[0]
+            # we are only interested in path and beyond /foo/bar?x=2#abc
+            path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
+            if not href.startswith('mailto<') \
+                    and not href.startswith('mailto:') \
+                    and not href.startswith('tel:') \
+                    and not href.startswith('#'):
+                obj, subpath, appendix = self.resolve_link(path_parts)
                 if obj is not None:
                     href = obj.absolute_url()
                     if subpath:
                         href += '/' + subpath
                     href += appendix
-                    changed = True
-                elif resolveuid_re.match(href) is None:
+                elif resolveuid_re.match(href) is None \
+                        and not scheme \
+                        and not href.startswith('/'):
                     # absolutize relative URIs; this text isn't necessarily
                     # being rendered in the context where it was stored
                     relative_root = self.context
@@ -140,9 +139,6 @@ class ResolveUIDAndCaptionFilter(object):
                         relative_root = aq_parent(self.context)
                     actual_url = relative_root.absolute_url()
                     href = urljoin(actual_url + '/', subpath) + appendix
-                    changed = True
-                if not changed:
-                    continue
                 attributes['href'] = href
         for elem in soup.find_all('img'):
             attributes = elem.attrs
