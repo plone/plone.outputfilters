@@ -17,7 +17,7 @@ setup(name='plone.outputfilters',
                             "README.rst")).read() + "\n" +
           open("CHANGES.rst").read()),
       # Get more strings from
-      # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+      # https://pypi.org/classifiers/
       classifiers=[
           "Framework :: Plone",
           "Framework :: Plone :: 5.0",
