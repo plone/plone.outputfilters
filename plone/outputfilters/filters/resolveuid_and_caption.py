@@ -2,24 +2,25 @@
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_parent
+from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
-from Products.CMFCore.interfaces import IContentish
-from bs4 import BeautifulSoup
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
-from ZODB.POSException import ConflictError
+from Products.CMFCore.interfaces import IContentish
+from Products.CMFPlone.utils import safe_unicode
 from six.moves.urllib.parse import unquote
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.parse import urlunsplit
 from zExceptions import NotFound
+from ZODB.POSException import ConflictError
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
 from zope.component.hooks import getSite
 from zope.interface import Attribute
-from zope.interface import Interface
 from zope.interface import implementer
+from zope.interface import Interface
 from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
@@ -109,7 +110,7 @@ class ResolveUIDAndCaptionFilter(object):
 
     def __call__(self, data):
         data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
-        soup = BeautifulSoup(data, 'html.parser')
+        soup = BeautifulSoup(safe_unicode(data), 'html.parser')
 
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
@@ -165,7 +166,6 @@ class ResolveUIDAndCaptionFilter(object):
             ):
                 self.handle_captioned_image(
                     attributes, image, fullimage, elem, caption)
-
         return six.text_type(soup)
 
     def lookup_uid(self, uid):
