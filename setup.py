@@ -21,8 +21,7 @@ setup(
         + "\n"
         + open("CHANGES.rst").read()
     ),
-    # Get more strings from
-    # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    # Get more strings from https://pypi.org/classifiers/
     classifiers=[
         "Framework :: Plone",
         "Framework :: Plone :: 5.2",
@@ -36,7 +35,7 @@ setup(
     author_email='davidglick@groundwire.org',
     url='http://github.com/plone/plone.outputfilters',
     license='GPL',
-    packages=find_packages(exclude=['ez_setup']),
+    packages=find_packages(),
     namespace_packages=['plone'],
     include_package_data=True,
     zip_safe=False,
