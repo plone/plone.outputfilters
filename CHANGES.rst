@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.6 (unreleased)
+3.1.x (unreleased)
 ------------------
 
 Breaking changes:
@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- remove deprecated sgmllib and move to BeautifulSoup4
+  [tobiasherp, petschki]
 
 Bug fixes:
 
