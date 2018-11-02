@@ -4,18 +4,10 @@ Changelog
 3.1.x (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - remove deprecated sgmllib and move to BeautifulSoup4
   [tobiasherp, petschki]
-
-Bug fixes:
-
-- *add item here*
 
 
 3.0.5 (2018-06-04)
