@@ -114,7 +114,10 @@ class ResolveUIDAndCaptionFilter(object):
 
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
-            href = attributes['href']
+            href = attributes.get('href')
+            # an 'a' anchor element has no href
+            if not href:
+                continue
             url_parts = urlsplit(href)
             scheme = url_parts[0]
             # we are only interested in path and beyond /foo/bar?x=2#abc
