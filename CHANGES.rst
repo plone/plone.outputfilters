@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- bugfix for KeyError caused by <a> elements without href attribute
+  [ajung] 
 
 
 3.1.0 (2018-11-02)
