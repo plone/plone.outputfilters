@@ -4,14 +4,6 @@ Changelog
 3.1.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - bugfix for KeyError caused by <a> elements without href attribute
