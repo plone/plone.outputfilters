@@ -54,7 +54,8 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
             allowedRolesAndUsers = ('Anonymous',)
 
         class DummyContent2(NFDummyContent):
-            id = __name__ = title = 'foo2'
+            id = __name__ = 'foo2'
+            title = u'Schönes Bild'
 
             def UID(self):
                 return 'foo2'
@@ -349,7 +350,7 @@ alert(1);
     def test_image_captioning_resolveuid_new_scale_plone_namedfile(self):
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image/thumb"/>"""
-        text_out = """<img alt="foo2" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="foo2"/>"""
+        text_out = u"""<img alt="Schönes Bild" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_no_scale(self):
@@ -363,7 +364,7 @@ alert(1);
     def test_image_captioning_resolveuid_no_scale_plone_namedfile(self):
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image"/>"""
-        text_out = """<img alt="foo2" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="foo2"/>"""
+        text_out = u"""<img alt="Schönes Bild" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_bad_uid(self):

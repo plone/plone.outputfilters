@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- fix UnicodeDecodeError in Python 2 when uid-linked image has
+  non-ascii characters in title or description
+  [petschki]
 
 
 3.1.1 (2019-01-07)
@@ -23,7 +25,7 @@ Bug fixes:
 Bug fixes:
 
 - bugfix for KeyError caused by <a> elements without href attribute
-  [ajung] 
+  [ajung]
 
 
 3.1.0 (2018-11-02)
