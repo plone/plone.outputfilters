@@ -152,7 +152,7 @@ class ResolveUIDAndCaptionFilter(object):
 
             if fullimage is not None:
                 # Check to see if the alt / title tags need setting
-                title = aq_acquire(fullimage, 'Title')()
+                title = safe_unicode(aq_acquire(fullimage, 'Title')())
                 if not attributes.get('alt'):
                     # XXX alt attribute contains *alternate* text
                     attributes['alt'] = description or title
@@ -282,7 +282,7 @@ class ResolveUIDAndCaptionFilter(object):
         except AttributeError:
             return None, None, src, description
         src = url + appendix
-        description = aq_acquire(fullimage, 'Description')()
+        description = safe_unicode(aq_acquire(fullimage, 'Description')())
         return image, fullimage, src, description
 
     def handle_captioned_image(self, attributes, image, fullimage,
