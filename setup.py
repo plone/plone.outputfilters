@@ -5,7 +5,7 @@ from setuptools import setup
 import os
 
 
-version = '3.1.2.dev0'
+version = '3.1.2'
 
 setup(
     name='plone.outputfilters',
