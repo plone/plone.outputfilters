@@ -267,7 +267,7 @@ alert(1);
         # Test captioning
         output = news_item.text.output
         text_out = """<span><dl class="captioned">
-<dt><img alt="My caption" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>
 </span>"""
@@ -281,7 +281,7 @@ alert(1);
     def test_image_captioning_absolute_path(self):
         text_in = """<img class="captioned" src="/image.jpg"/>"""
         text_out = """<dl class="captioned">
-<dt><img alt="My caption" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -289,7 +289,7 @@ alert(1);
     def test_image_captioning_relative_path(self):
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<dl class="captioned">
-<dt><img alt="My caption" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -310,7 +310,7 @@ alert(1);
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
         text_out = """<dl class="captioned">
-<dt><img alt="My private image caption" height="..." src="http://nohost/plone/private/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My private image caption" height="331" src="http://nohost/plone/private/image.jpg/@@images/...jpeg" title="Image" width="500"/></dt>
 <dd class="image-caption">My private image caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -326,7 +326,7 @@ alert(1);
     def test_image_captioning_resolveuid(self):
         text_in = """<img class="captioned" src="resolveuid/%s"/>""" % self.UID
         text_out = """<dl class="captioned">
-<dt><img alt="My caption" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -368,7 +368,7 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_bad_uid(self):
-        text_in = """<img alt="Duncan's picture" class="image-left captioned" height="..." loop="1" src="resolveuid/notauid" start="fileopen" width="..."/>"""
+        text_in = """<img alt="Duncan's picture" class="image-left captioned" height="144" loop="1" src="resolveuid/notauid" start="fileopen" width="120"/>"""
         self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_unknown_scale(self):
@@ -384,17 +384,17 @@ alert(1);
         self._assertTransformsTo(text_in, text_in)
 
     def test_image_captioning_preserves_custom_attributes(self):
-        text_in = """<img class="captioned" width="..." height="..." foo="bar" src="image.jpg"/>"""
+        text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
         text_out = """<dl class="captioned">
-<dt><img alt="My caption" foo="bar" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="My caption" foo="bar" height="42" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="42"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_handles_unquoted_attributes(self):
-        text_in = """<img class=captioned height=... alt="picture alt text" src="resolveuid/%s" width=... />""" % self.UID
+        text_in = """<img class=captioned height=144 alt="picture alt text" src="resolveuid/%s" width=120 />""" % self.UID
         text_out = """<dl class="captioned">
-<dt><img alt="picture alt text" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/></dt>
+<dt><img alt="picture alt text" height="144" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="120"/></dt>
 <dd class="image-caption">My caption</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
@@ -414,7 +414,7 @@ alert(1);
             u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = u"""<dl class="captioned">
-<dt><img alt="Kupu Test Image \xe5\xe4\xf6" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="..."/></dt>
+<dt><img alt="Kupu Test Image \xe5\xe4\xf6" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/></dt>
 <dd class="image-caption">Kupu Test Image \xe5\xe4\xf6</dd>
 </dl>"""
         self._assertTransformsTo(text_in, text_out)
