@@ -7,6 +7,7 @@ from DocumentTemplate.DT_Util import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
 from Products.CMFPlone.utils import safe_unicode
 from six.moves.urllib.parse import unquote
@@ -17,6 +18,7 @@ from zExceptions import NotFound
 from ZODB.POSException import ConflictError
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.component import getAllUtilitiesRegisteredFor
+from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.interface import Attribute
 from zope.interface import implementer
@@ -48,9 +50,20 @@ class IResolveUidsEnabler(Interface):
         "Boolean indicating whether UID links should be resolved.")
 
 
+@implementer(IImageCaptioningEnabler)
+class ImageCaptioningEnabler(object):
+
+    @property
+    def available(self):
+        name = 'plone.image_captioning'
+        registry = getUtility(IRegistry)
+        if name in registry:
+            return registry[name]
+        return False
+
+
 @implementer(IResolveUidsEnabler)
 class ResolveUidsAlwaysEnabled(object):
-
     available = True
 
 
@@ -295,9 +308,9 @@ class ResolveUIDAndCaptionFilter(object):
         klass = ' '.join(attributes['class'])
         del attributes['class']
         del attributes['src']
-        if 'width' in attributes:
+        if 'width' in attributes and attributes['width']:
             attributes['width'] = int(attributes['width'])
-        if 'height' in attributes:
+        if 'height' in attributes and attributes['height']:
             attributes['height'] = int(attributes['height'])
         view = fullimage.unrestrictedTraverse('@@images', None)
         if view is not None:

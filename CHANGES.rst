@@ -11,7 +11,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Add an ``ImageCaptioningEnabler`` utility which can be enabled via the portal registry setting ``plone.image_captioning``.
+  [thet]
 
 Bug fixes:
 
