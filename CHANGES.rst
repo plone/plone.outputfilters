@@ -1,12 +1,13 @@
 Changelog
 =========
 
-3.1.3 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
 
 Breaking changes:
 
-- *add item here*
+- Change the image caption template to use ``<figure>`` and ``<figcaption>``.
+  [thet]
 
 New features:
 
