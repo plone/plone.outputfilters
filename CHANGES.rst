@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Don't check for hard coded image size in test.
+  [agitator]
 
 
 3.1.2 (2019-03-21)
