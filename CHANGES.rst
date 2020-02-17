@@ -1,16 +1,18 @@
 Changelog
 =========
 
-3.1.3 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
 
 Breaking changes:
 
-- *add item here*
+- Change the image caption template to use ``<figure>`` and ``<figcaption>``.
+  [thet]
 
 New features:
 
-- *add item here*
+- Add an ``ImageCaptioningEnabler`` utility which can be enabled via the portal registry setting ``plone.image_captioning``.
+  [thet]
 
 Bug fixes:
 
