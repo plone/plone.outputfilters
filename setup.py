@@ -7,6 +7,29 @@ import os
 
 version = '4.0.dev0'
 
+
+def read(filename):
+    with open(filename) as myfile:
+        try:
+            return myfile.read()
+        except UnicodeDecodeError:
+            # Happens on one Jenkins node on Python 3.6,
+            # so maybe it happens for users too.
+            pass
+    # Opening and reading as text failed, so retry opening as bytes.
+    with open(filename, "rb") as myfile:
+        contents = myfile.read()
+        return contents.decode("utf-8")
+
+
+long_description = "\n".join(
+    [
+        read("README.rst"),
+        read(os.path.join("plone", "outputfilters", "README.rst")),
+        read("CHANGES.rst"),
+    ]
+)
+
 setup(
     name='plone.outputfilters',
     version=version,
@@ -14,13 +37,7 @@ setup(
         "Transformations applied to HTML in "
         "Plone text fields as they are rendered"
     ),
-    long_description=(
-        open("README.rst").read()
-        + "\n"
-        + open(os.path.join("plone", "outputfilters", "README.rst")).read()
-        + "\n"
-        + open("CHANGES.rst").read()
-    ),
+    long_description=long_description,
     # Get more strings from https://pypi.org/classifiers/
     classifiers=[
         "Development Status :: 5 - Production/Stable",

@@ -16,7 +16,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fixed possible package install error with Python 3.6 when no system locale is set.
+  See `coredev issue 642 <https://github.com/plone/buildout.coredev/issues/642#issuecomment-597008272>`_.
+  [maurits]
 
 
 3.1.2 (2019-03-21)
