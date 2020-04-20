@@ -6,3 +6,6 @@ recursive-include plone *
 global-exclude *pyc
 exclude bootstrap.py
 exclude buildout.cfg
+include pyproject.toml
+recursive-exclude news *
+exclude news
