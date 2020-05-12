@@ -1,21 +1,43 @@
 Changelog
 =========
 
-3.1.3 (unreleased)
+.. You should *NOT* be adding new change log entries to this file.
+   You should create a file in the news directory instead.
+   For helpful instructions, please see:
+   https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
+
+.. towncrier release notes start
+
+4.0.1 (2020-04-21)
+------------------
+
+Bug fixes:
+
+
+- Minor packaging updates. (#1)
+
+
+4.0.0 (2020-03-13)
 ------------------
 
 Breaking changes:
 
-- *add item here*
+- Change the image caption template to use ``<figure>`` and ``<figcaption>``.
+  [thet]
 
 New features:
 
-- *add item here*
+- Add an ``ImageCaptioningEnabler`` utility which can be enabled via the portal registry setting ``plone.image_captioning``.
+  [thet]
 
 Bug fixes:
 
 - Don't check for hard coded image size in test.
   [agitator]
+
+- Fixed possible package install error with Python 3.6 when no system locale is set.
+  See `coredev issue 642 <https://github.com/plone/buildout.coredev/issues/642#issuecomment-597008272>`_.
+  [maurits]
 
 
 3.1.2 (2019-03-21)

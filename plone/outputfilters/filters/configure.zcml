@@ -15,4 +15,7 @@
            name="plone5-always-enabled"
            zcml:condition="have plone-5" />
 
+  <utility factory=".resolveuid_and_caption.ImageCaptioningEnabler"
+           name="image-captioning-enabler" />
+
 </configure>
