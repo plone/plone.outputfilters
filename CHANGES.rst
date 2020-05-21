@@ -8,6 +8,14 @@ Changelog
 
 .. towncrier release notes start
 
+X (2020-05-21)
+--------------
+
+New features:
+
+
+- - Change the image caption template to use ``<figure>`` and ``<figcaption>``. (#37)
+
 
 3.0.5 (2018-06-04)
 ------------------

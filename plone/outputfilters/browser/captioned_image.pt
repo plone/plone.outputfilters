@@ -1,8 +1,6 @@
-<dl tal:attributes="class options/class;">
-<dt><a tal:omit-tag="options/isfullsize" rel="lightbox"
-   tal:attributes="href options/url_path;"
-   tal:content="structure options/tag">[image goes here]</a></dt>
- <dd class="image-caption"
-     tal:content="options/caption|nothing">
- </dd>
-</dl>
+<figure tal:attributes="class options/class;">
+  <a tal:omit-tag="options/isfullsize" rel="lightbox"
+      tal:attributes="href options/url_path;"
+      tal:content="structure options/tag">[image goes here]</a>
+  <figcaption class="image-caption" tal:content="options/caption|nothing"></figcaption>
+</figure>
