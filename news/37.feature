@@ -1,0 +1,1 @@
+- Change the image caption template to use ``<figure>`` and ``<figcaption>``.
