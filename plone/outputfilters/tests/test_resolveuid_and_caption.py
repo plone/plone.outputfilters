@@ -274,7 +274,7 @@ alert(1);
     def test_image_captioning_absolute_path(self):
         text_in = """<img class="captioned" src="/image.jpg"/>"""
         text_out = """<figure  class="captioned">
-<img src="http://nohost/plone/image.jpg/@@images/...jpeg" alt="Image" title="Image" height="331" width="500"/>
+<img src="http://nohost/plone/image.jpg/@@images/....jpeg" alt="Image" title="Image" height="331" width="500" />
  <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
