@@ -248,24 +248,6 @@ alert(1);
         self.assertTrue(page.aq_base
                         is uuidToObject(page.UID()).aq_base)
 
-    def test_image_captioning_in_news_item(self):
-        # Create a news item with a relative unscaled image
-        self.portal.invokeFactory('News Item', id='a-news-item', title='Title')
-        news_item = self.portal['a-news-item']
-        from plone.app.textfield.value import RichTextValue
-        news_item.text = RichTextValue(
-            '<span><img class="captioned" src="image.jpg"/></span>',
-            'text/html', 'text/x-html-safe')
-        news_item.setDescription("Description.")
-
-        # Test captioning
-        output = news_item.text.output
-        self.assertRegexpMatches(output, r"""<span><figure class="captioned">
-<img src="http://nohost/plone/image.jpg/@@images/(.*?)\.jpeg" alt="Image" title="Image" height="331" width="500"( ?)/>
- <figcaption class="image-caption">My caption</figcaption>
-</figure>
-</span>""")
-
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
         text_out = """<img src="http://nohost/plone/image.jpg" alt="My caption" title="Image" />"""
