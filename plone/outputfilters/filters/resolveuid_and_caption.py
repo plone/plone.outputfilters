@@ -347,7 +347,8 @@ class ResolveUIDAndCaptionFilter(object):
 
         # if we are a captioned image within a link, remove and occurrences
         # of a tags inside caption template to preserve the outer link
-        if bool(elem.find_parent('a')):
+        if bool(elem.find_parent('a')) and \
+           bool(captioned.find('a')):
             captioned.a.unwrap()
 
         elem.replace_with(captioned)
