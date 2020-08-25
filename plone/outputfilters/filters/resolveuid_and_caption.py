@@ -3,7 +3,7 @@ from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.html_quote import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
