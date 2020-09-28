@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.2 (2020-09-28)
+------------------
+
+Bug fixes:
+
+
+- fix AttributeError: 'NoneType' object has no attribute 'unwrap' exception when a fullsize image is wrapped in an <a> tag. [flipmcf] (#39)
+- Fixed deprecation warning for html_quote.
+  [maurits] (#3130)
+
+
 4.0.1 (2020-04-21)
 ------------------
 
