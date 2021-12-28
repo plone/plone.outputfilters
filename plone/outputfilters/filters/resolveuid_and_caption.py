@@ -157,7 +157,9 @@ class ResolveUIDAndCaptionFilter(object):
                     actual_url = relative_root.absolute_url()
                     href = urljoin(actual_url + '/', subpath) + appendix
                 attributes['href'] = href
-        for elem in soup.find_all(['source']):
+        for elem in soup.find_all(['source', 'iframe']):
+            # SOURCE is used for video and audio.
+            # IFRAME is used to embed PDFs.
             attributes = elem.attrs
             attrn = 'src'
             src = attributes.get(attrn)
