@@ -173,28 +173,24 @@ class ResolveUIDAndCaptionFilter(object):
             scheme = url_parts[0]
             # we are only interested in path and beyond /foo/bar?x=2#abc
             path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
-            if not src.startswith('mailto<') \
-                    and not src.startswith('mailto:') \
-                    and not src.startswith('tel:') \
-                    and not src.startswith('#'):
-                obj, subpath, appendix = self.resolve_link(path_parts)
-                if obj is not None:
-                    src = obj.absolute_url()
-                    if subpath:
-                        src += '/' + subpath
-                    src += appendix
-                elif resolveuid_re.match(src) is None \
-                        and not scheme \
-                        and not src.startswith('/'):
-                    # absolutize relative URIs; this text isn't necessarily
-                    # being rendered in the context where it was stored
-                    relative_root = self.context
-                    if not getattr(
-                            self.context, 'isPrincipiaFolderish', False):
-                        relative_root = aq_parent(self.context)
-                    actual_url = relative_root.absolute_url()
-                    src = urljoin(actual_url + '/', subpath) + appendix
-                attributes[attrn] = src
+            obj, subpath, appendix = self.resolve_link(path_parts)
+            if obj is not None:
+                src = obj.absolute_url()
+                if subpath:
+                    src += '/' + subpath
+                src += appendix
+            elif resolveuid_re.match(src) is None \
+                    and not scheme \
+                    and not src.startswith('/'):
+                # absolutize relative URIs; this text isn't necessarily
+                # being rendered in the context where it was stored
+                relative_root = self.context
+                if not getattr(
+                        self.context, 'isPrincipiaFolderish', False):
+                    relative_root = aq_parent(self.context)
+                actual_url = relative_root.absolute_url()
+                src = urljoin(actual_url + '/', subpath) + appendix
+            attributes[attrn] = src
         for elem in soup.find_all('img'):
             attributes = elem.attrs
             src = attributes.get('src', '')
