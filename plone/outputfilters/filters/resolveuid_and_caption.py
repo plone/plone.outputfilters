@@ -125,81 +125,61 @@ class ResolveUIDAndCaptionFilter(object):
         data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
         soup = BeautifulSoup(safe_unicode(data), 'html.parser')
 
+        def r(href):
+            url_parts = urlsplit(href)
+            scheme = url_parts[0]
+            path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
+            obj, subpath, appendix = self.resolve_link(path_parts)
+            if obj is not None:
+                href = obj.absolute_url()
+                if subpath:
+                    href += '/' + subpath
+                href += appendix
+            elif resolveuid_re.match(href) is None \
+                    and not scheme \
+                    and not href.startswith('/'):
+                # absolutize relative URIs; this text isn't necessarily
+                # being rendered in the context where it was stored
+                relative_root = self.context
+                if not getattr(
+                        self.context, 'isPrincipiaFolderish', False):
+                    relative_root = aq_parent(self.context)
+                actual_url = relative_root.absolute_url()
+                href = urljoin(actual_url + '/', subpath) + appendix
+            return href
+
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
             href = attributes.get('href')
             # an 'a' anchor element has no href
             if not href:
                 continue
-            url_parts = urlsplit(href)
-            scheme = url_parts[0]
-            # we are only interested in path and beyond /foo/bar?x=2#abc
-            path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
             if not href.startswith('mailto<') \
                     and not href.startswith('mailto:') \
                     and not href.startswith('tel:') \
                     and not href.startswith('#'):
-                obj, subpath, appendix = self.resolve_link(path_parts)
-                if obj is not None:
-                    href = obj.absolute_url()
-                    if subpath:
-                        href += '/' + subpath
-                    href += appendix
-                elif resolveuid_re.match(href) is None \
-                        and not scheme \
-                        and not href.startswith('/'):
-                    # absolutize relative URIs; this text isn't necessarily
-                    # being rendered in the context where it was stored
-                    relative_root = self.context
-                    if not getattr(
-                            self.context, 'isPrincipiaFolderish', False):
-                        relative_root = aq_parent(self.context)
-                    actual_url = relative_root.absolute_url()
-                    href = urljoin(actual_url + '/', subpath) + appendix
-                attributes['href'] = href
+                attributes['href'] = r(href)
+        for elem in soup.find_all(['source', 'iframe', 'img']):
+            # SOURCE is used for video and audio.
+            # IFRAME is used to embed PDFs.
+            attributes = elem.attrs
+            srcset = attributes.get('srcset')
+            if not srcset:
+                continue
+            # https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
+            # [(src1, 480w), (src2, 360w)]
+            srcs += [['srcset'] + s.strip().split() for s in srcset.strip().split(',') if s.strip()]
+            for n, elm in enumerate(srcs):
+                srcs[n][1] = r(elm[1])
+            attributes['srcset'] = ','.join(' '.join(s[1:]) for s in srcs)
         for elem in soup.find_all(['source', 'iframe']):
             # SOURCE is used for video and audio.
             # IFRAME is used to embed PDFs.
             attributes = elem.attrs
             src = attributes.get('src')
-            srcs = [('src', src)] if src else []
-            srcset = attributes.get('srcset')
-            if srcset:
-                # https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
-                # [(src1, 480w), (src2, 360w)]
-                srcs += [['srcset'] + s.strip().split() for s in srcset.strip().split(',') if s.strip()]
-            if not srcs:
+            if not src:
                 continue
-            for n, elm in enumerate(srcs):
-                src = srcs[1]
-                url_parts = urlsplit(src)
-                scheme = url_parts[0]
-                # we are only interested in path and beyond /foo/bar?x=2#abc
-                path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
-                obj, subpath, appendix = self.resolve_link(path_parts)
-                if obj is not None:
-                    src = obj.absolute_url()
-                    if subpath:
-                        src += '/' + subpath
-                    src += appendix
-                elif resolveuid_re.match(src) is None \
-                        and not scheme \
-                        and not src.startswith('/'):
-                    # absolutize relative URIs; this text isn't necessarily
-                    # being rendered in the context where it was stored
-                    relative_root = self.context
-                    if not getattr(
-                            self.context, 'isPrincipiaFolderish', False):
-                        relative_root = aq_parent(self.context)
-                    actual_url = relative_root.absolute_url()
-                    src = urljoin(actual_url + '/', subpath) + appendix
-                srcs[n][1] = src
-            src = [s[1] for s in srcs if s[0] == "src"]
-            if src:
-                attributes['src'] = src[0]
-            srcset = ",".join(" ".join(s[1:]) for s in srcs if s[0] == "srcset")
-            if srcset:
-                attributes['srcset'] = srcset
+            attributes['src'] = r(src)
         for elem in soup.find_all('img'):
             attributes = elem.attrs
             src = attributes.get('src', '')
