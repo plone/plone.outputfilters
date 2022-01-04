@@ -364,7 +364,7 @@ alert(1);
     def test_image_captioning_resolveuid_with_srcset_and_src(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image" srcset="resolveuid/%s/@@images/image 480w,resolveuid/%s/@@images/image 360w"/>""" % (self.UID, self.UID, self.UID)
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" srcset="http://nohost/plone/image.jpg/@@images/...jpeg 480w,http://nohost/plone/image.jpg/@@images/...jpeg 360w" title="Image" width="500"/>
+<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" srcset="http://nohost/plone/image.jpg/@@images/image 480w,http://nohost/plone/image.jpg/@@images/image 360w" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
