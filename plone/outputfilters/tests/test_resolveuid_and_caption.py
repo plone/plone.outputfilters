@@ -371,17 +371,17 @@ alert(1);
 
     def test_iframe_resolveuid(self):
         text_in = """<iframe src="resolveuid/%s"/>""" % self.UID
-        text_out = """<iframe src="http://nohost/plone/image.jpg"/>"""
+        text_out = """<iframe src="http://nohost/plone/image.jpg"></iframe>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_video_resolveuid(self):
         text_in = """<video src="resolveuid/%s"/>""" % self.UID
-        text_out = """<video src="http://nohost/plone/image.jpg"/>"""
+        text_out = """<video src="http://nohost/plone/image.jpg"></video>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_audio_resolveuid(self):
         text_in = """<audio src="resolveuid/%s"/>""" % self.UID
-        text_out = """<audio src="http://nohost/plone/image.jpg"/>"""
+        text_out = """<audio src="http://nohost/plone/image.jpg"></audio>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_source_resolveuid(self):
@@ -390,8 +390,8 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_source_resolveuid_srcset(self):
-        text_in = """<video><source srcset="resolveuid/%s" mimetype="video/mp4"/></video>""" % self.UID
-        text_out = """<video><source srcset="http://nohost/plone/image.jpg" mimetype="video/mp4"/></video>"""
+        text_in = """<video><source mimetype="video/mp4" srcset="resolveuid/%s"/></video>""" % self.UID
+        text_out = """<video><source mimetype="video/mp4" srcset="http://nohost/plone/image.jpg"/></video>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_no_scale_plone_namedfile(self):
