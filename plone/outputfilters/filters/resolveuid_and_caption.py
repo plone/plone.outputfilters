@@ -168,7 +168,7 @@ class ResolveUIDAndCaptionFilter(object):
                 continue
             # https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
             # [(src1, 480w), (src2, 360w)]
-            srcs += [s.strip().split() for s in srcset.strip().split(',') if s.strip()]
+            srcs = [s.strip().split() for s in srcset.strip().split(',') if s.strip()]
             for n, elm in enumerate(srcs):
                 srcs[n][0] = r(elm[0])
             attributes['srcset'] = ','.join(' '.join(s) for s in srcs)
