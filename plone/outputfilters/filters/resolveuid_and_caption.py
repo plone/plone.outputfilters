@@ -159,9 +159,9 @@ class ResolveUIDAndCaptionFilter(object):
                     and not href.startswith('tel:') \
                     and not href.startswith('#'):
                 attributes['href'] = r(href)
-        for elem in soup.find_all(['source', 'iframe', 'img']):
+        for elem in soup.find_all(['source', 'img']):
             # SOURCE is used for video and audio.
-            # IFRAME is used to embed PDFs.
+            # SRCSET specified multiple images (see below).
             attributes = elem.attrs
             srcset = attributes.get('srcset')
             if not srcset:
@@ -172,8 +172,9 @@ class ResolveUIDAndCaptionFilter(object):
             for n, elm in enumerate(srcs):
                 srcs[n][1] = r(elm[1])
             attributes['srcset'] = ','.join(' '.join(s[1:]) for s in srcs)
-        for elem in soup.find_all(['source', 'iframe']):
+        for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
             # SOURCE is used for video and audio.
+            # AUDIO/VIDEO can also have src attribute.
             # IFRAME is used to embed PDFs.
             attributes = elem.attrs
             src = attributes.get('src')
