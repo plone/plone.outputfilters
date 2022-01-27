@@ -140,6 +140,18 @@ alert(1);
         self.assertIn('href="http://nohost/plone/image.jpg"', res)
         self.assertIn('href="http://nohost/plone/image.jpg#named-anchor"', res)
 
+    def test_with_unicode(self):
+        text = u"""<html>
+  <head></head>
+  <body>
+    <a class="internal-link-é" href="resolveuid/%s">Some link</a>
+    <a class="internal-link-é" href="resolveuid/%s#named-anchor">Some anchored link</a>
+  </body>
+</html>""" % (self.UID, self.UID)
+        res = self.parser(text)
+        self.assertIn('href="http://nohost/plone/image.jpg"', res)
+        self.assertIn('href="http://nohost/plone/image.jpg#named-anchor"', res)
+
     def test_resolve_uids_relative_link(self):
         text_in = """<a href="../resolveuid/%s">foo</a>""" % self.UID
         text_out = """<a href="http://nohost/plone/image.jpg">foo</a>"""
