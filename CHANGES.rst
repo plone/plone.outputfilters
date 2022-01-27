@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.6 (2022-01-27)
+------------------
+
+Bug fixes:
+
+
+- Fix unicode support in resolveuid_and_caption filter
+  [gotcha] (unicode)
+
 
 3.0.5 (2018-06-04)
 ------------------
