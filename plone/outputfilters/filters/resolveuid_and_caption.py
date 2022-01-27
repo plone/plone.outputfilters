@@ -39,6 +39,15 @@ except ImportError:
 appendix_re = re.compile('^(.*)([\?#].*)$')
 resolveuid_re = re.compile('^[./]*resolve[Uu]id/([^/]*)/?(.*)$')
 
+def safe_unicode(value):
+    if isinstance(value, six.text_type):
+        try:
+            value = value.encode('utf-8')
+        except UnicodeDecodeError:
+            value = unidecode(value)
+    assert isinstance(value, six.binary_type)
+    return value
+
 
 class IImageCaptioningEnabler(Interface):
     available = Attribute(
@@ -125,6 +134,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
     def append_data(self, data, add_eol=0):
         """Append data unmodified to self.data, add_eol adds a newline
         character"""
+        data = safe_unicode(data)
         if add_eol:
             data += '\n'
         self.pieces.append(data)
@@ -323,6 +333,7 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
 
         Convert UUID's to absolute URLs, and process captioned images to HTML.
         """
+        tag = safe_unicode(tag)
         if tag == 'script':
             self.in_script = True
         if tag in ['a', 'img', 'area'] and not self.in_script:
@@ -387,12 +398,12 @@ class ResolveUIDAndCaptionFilter(SGMLParser):
         # Add the tag to the result
         strattrs = ""
         for key, value in attrs:
-            try:
-                strattrs += ' %s="%s"' % (key, escape(value, quote=True))
-            except UnicodeDecodeError:
-                strattrs += ' %s="%s"' % (unidecode(key),
-                                          escape(unidecode(value), quote=True))
-
+            key = safe_unicode(key)
+            value = escape(safe_unicode(value), quote=True)
+            assert isinstance(value, six.binary_type)
+            newattr = ' %s="%s"' % (key, value)
+            assert isinstance(newattr, six.binary_type)
+            strattrs += newattr
         if tag in self.singleton_tags:
             self.append_data("<%s%s />" % (tag, strattrs))
         else:
