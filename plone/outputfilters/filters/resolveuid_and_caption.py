@@ -121,32 +121,31 @@ class ResolveUIDAndCaptionFilter(object):
         else:
             return '<' + tag + '></' + tag + '>'
 
+    def _render_resolveuid(href):
+        url_parts = urlsplit(href)
+        scheme = url_parts[0]
+        path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
+        obj, subpath, appendix = self.resolve_link(path_parts)
+        if obj is not None:
+            href = obj.absolute_url()
+            if subpath:
+                href += '/' + subpath
+            href += appendix
+        elif resolveuid_re.match(href) is None \
+                and not scheme \
+                and not href.startswith('/'):
+            # absolutize relative URIs; this text isn't necessarily
+            # being rendered in the context where it was stored
+            relative_root = self.context
+            if not getattr(self.context, 'isPrincipiaFolderish', False):
+                relative_root = aq_parent(self.context)
+            actual_url = relative_root.absolute_url()
+            href = urljoin(actual_url + '/', subpath) + appendix
+        return href
+
     def __call__(self, data):
         data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
         soup = BeautifulSoup(safe_unicode(data), 'html.parser')
-
-        def r(href):
-            url_parts = urlsplit(href)
-            scheme = url_parts[0]
-            path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
-            obj, subpath, appendix = self.resolve_link(path_parts)
-            if obj is not None:
-                href = obj.absolute_url()
-                if subpath:
-                    href += '/' + subpath
-                href += appendix
-            elif resolveuid_re.match(href) is None \
-                    and not scheme \
-                    and not href.startswith('/'):
-                # absolutize relative URIs; this text isn't necessarily
-                # being rendered in the context where it was stored
-                relative_root = self.context
-                if not getattr(
-                        self.context, 'isPrincipiaFolderish', False):
-                    relative_root = aq_parent(self.context)
-                actual_url = relative_root.absolute_url()
-                href = urljoin(actual_url + '/', subpath) + appendix
-            return href
 
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
@@ -158,7 +157,7 @@ class ResolveUIDAndCaptionFilter(object):
                     and not href.startswith('mailto:') \
                     and not href.startswith('tel:') \
                     and not href.startswith('#'):
-                attributes['href'] = r(href)
+                attributes['href'] = self._render_resolveuid(href)
         for elem in soup.find_all(['source', 'img']):
             # SOURCE is used for video and audio.
             # SRCSET specified multiple images (see below).
@@ -168,10 +167,10 @@ class ResolveUIDAndCaptionFilter(object):
                 continue
             # https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
             # [(src1, 480w), (src2, 360w)]
-            srcs = [s.strip().split() for s in srcset.strip().split(',') if s.strip()]
-            for n, elm in enumerate(srcs):
-                srcs[n][0] = r(elm[0])
-            attributes['srcset'] = ','.join(' '.join(s) for s in srcs)
+            srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
+            for idx, elm in enumerate(srcs):
+                srcs[idx][0] = self._render_resolveuid(elm[0])
+            attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
             # SOURCE is used for video and audio.
             # AUDIO/VIDEO can also have src attribute.
@@ -180,7 +179,7 @@ class ResolveUIDAndCaptionFilter(object):
             src = attributes.get('src')
             if not src:
                 continue
-            attributes['src'] = r(src)
+            attributes['src'] = self._render_resolveuid(src)
         for elem in soup.find_all('img'):
             attributes = elem.attrs
             src = attributes.get('src', '')
