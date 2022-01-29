@@ -121,7 +121,7 @@ class ResolveUIDAndCaptionFilter(object):
         else:
             return '<' + tag + '></' + tag + '>'
 
-    def _render_resolveuid(href):
+    def _render_resolveuid(self, href):
         url_parts = urlsplit(href)
         scheme = url_parts[0]
         path_parts = urlunsplit(['', ''] + list(url_parts[2:]))
