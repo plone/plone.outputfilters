@@ -361,6 +361,39 @@ alert(1);
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
 
+    def test_image_captioning_resolveuid_with_srcset_and_src(self):
+        text_in = """<img class="captioned" src="resolveuid/%s/@@images/image" srcset="resolveuid/%s/@@images/image 480w,resolveuid/%s/@@images/image 360w"/>""" % (self.UID, self.UID, self.UID)
+        text_out = """<figure class="captioned">
+<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" srcset="http://nohost/plone/image.jpg/@@images/image 480w,http://nohost/plone/image.jpg/@@images/image 360w" title="Image" width="500"/>
+<figcaption class="image-caption">My caption</figcaption>
+</figure>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_iframe_resolveuid(self):
+        text_in = """<iframe src="resolveuid/%s"/>""" % self.UID
+        text_out = """<iframe src="http://nohost/plone/image.jpg"></iframe>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_video_resolveuid(self):
+        text_in = """<video src="resolveuid/%s"/>""" % self.UID
+        text_out = """<video src="http://nohost/plone/image.jpg"></video>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_audio_resolveuid(self):
+        text_in = """<audio src="resolveuid/%s"/>""" % self.UID
+        text_out = """<audio src="http://nohost/plone/image.jpg"></audio>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_source_resolveuid(self):
+        text_in = """<video><source src="resolveuid/%s"/></video>""" % self.UID
+        text_out = """<video><source src="http://nohost/plone/image.jpg"/></video>"""
+        self._assertTransformsTo(text_in, text_out)
+
+    def test_source_resolveuid_srcset(self):
+        text_in = """<video><source mimetype="video/mp4" srcset="resolveuid/%s"/></video>""" % self.UID
+        text_out = """<video><source mimetype="video/mp4" srcset="http://nohost/plone/image.jpg"/></video>"""
+        self._assertTransformsTo(text_in, text_out)
+
     def test_image_captioning_resolveuid_no_scale_plone_namedfile(self):
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image"/>"""
