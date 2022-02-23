@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.1.0 (2022-02-23)
+------------------
+
+New features:
+
+
+- Resolve UIDs in SRC= attribute of of SOURCE and IFRAME elements. (#47)
+
+
 4.0.2 (2020-09-28)
 ------------------
 
