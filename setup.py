@@ -50,6 +50,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     keywords='plone transform filter uid caption',
     author='David Glick, Plone Foundation',
@@ -64,7 +65,7 @@ setup(
         'Products.CMFCore',
         'Products.GenericSetup',
         'Products.MimetypesRegistry',
-        'Products.PortalTransforms>=2.0a1',
+        'Products.PortalTransforms>=2.0',
         'setuptools',
         'six',
         'unidecode',
@@ -80,8 +81,6 @@ setup(
         ]
     },
     entry_points="""
-      # -*- Entry points: -*-
-
       [z3c.autoinclude.plugin]
       target = plone
       """,
