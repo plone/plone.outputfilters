@@ -10,6 +10,13 @@
     factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
     />
 
+  <adapter
+    provides="..interfaces.IFilter"
+    name="image_srcset"
+    for="* *"
+    factory=".image_srcset.ImageSrcsetFilter"
+    />
+
   <!-- in Plone 5, we always resolve uids -->
   <utility factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
            name="plone5-always-enabled"

@@ -159,8 +159,9 @@ class ResolveUIDAndCaptionFilter(object):
                     and not href.startswith('#'):
                 attributes['href'] = self._render_resolveuid(href)
         for elem in soup.find_all(['source', 'img']):
-            # SOURCE is used for video and audio.
-            # SRCSET specified multiple images (see below).
+            # handles srcset attributes, not src
+            # parent of SOURCE is picture here.
+            # SRCSET on source/img specifies one or more images (see below).
             attributes = elem.attrs
             srcset = attributes.get('srcset')
             if not srcset:
@@ -169,10 +170,11 @@ class ResolveUIDAndCaptionFilter(object):
             # [(src1, 480w), (src2, 360w)]
             srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
             for idx, elm in enumerate(srcs):
-                srcs[idx][0] = self._render_resolveuid(elm[0])
+                image, fullimage, src, description = self.resolve_image(elm[0])
+                srcs[idx][0] = src
             attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
-            # SOURCE is used for video and audio.
+            # parent of SOURCE is video or audio here.
             # AUDIO/VIDEO can also have src attribute.
             # IFRAME is used to embed PDFs.
             attributes = elem.attrs
@@ -181,6 +183,7 @@ class ResolveUIDAndCaptionFilter(object):
                 continue
             attributes['src'] = self._render_resolveuid(src)
         for elem in soup.find_all('img'):
+            # handles src attribute
             attributes = elem.attrs
             src = attributes.get('src', '')
             image, fullimage, src, description = self.resolve_image(src)
@@ -325,7 +328,7 @@ class ResolveUIDAndCaptionFilter(object):
                                elem, caption):
         """Handle captioned image.
 
-        The img element is replaced by a definition list
+        The img element is replaced by figure
         as created by the template ../browser/captioned_image.pt
         """
         klass = ' '.join(attributes['class'])

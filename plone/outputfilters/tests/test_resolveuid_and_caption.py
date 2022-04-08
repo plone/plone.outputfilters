@@ -115,6 +115,71 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         res = self.parser(text)
         self.assertEqual(text, str(res))
 
+    def test_parsing_long_doc(self):
+        text = """<div class="hero">
+<h1>Welcome!</h1>
+<p><a href="https://plone.com" class="btn btn-primary" target="_blank" rel="noopener">Learn more about Plone</a></p>
+</div>
+<p class="discreet">If you're seeing this instead of the web site you were expecting, the owner of this web site has just installed Plone. Do not contact the Plone Team or the Plone support channels about this.</p>
+<p class="discreet"><img class="image-richtext image-inline image-size-small" src="resolveuid/{uid}/@@images/image/preview" alt="" data-linktype="image" data-srcset="small" data-scale="preview" data-val="{uid}" /></p>
+<h2>Get started</h2>
+<p>Before you start exploring your newly created Plone site, please do the following:</p>
+<ol>
+<li>Make sure you are logged in as an admin/manager user. <span class="discreet">(You should have a Site Setup entry in the user menu)</span></li>
+<li><a href="@@mail-controlpanel" target="_blank" rel="noopener">Set up your mail server</a>. <span class="discreet">(Plone needs a valid SMTP server to verify users and send out password reminders)</span></li>
+<li><a href="@@security-controlpanel" target="_blank" rel="noopener">Decide what security level you want on your site</a>. <span class="discreet">(Allow self registration, password policies, etc)</span></li>
+</ol>
+<h2>Get comfortable</h2>
+<p>After that, we suggest you do one or more of the following:</p>
+<ul>
+<li>Find out <a href="https://plone.com/features/" class="link-plain" target="_blank" rel="noopener">What's new in Plone</a>.</li>
+<li>Read the <a href="https://docs.plone.org" class="link-plain" target="_blank" rel="noopener">documentation</a>.</li>
+<li>Follow a <a href="https://training.plone.org" class="link-plain" target="_blank" rel="noopener">training</a>.</li>
+<li>Explore the <a href="https://plone.org/download/add-ons" class="link-plain" target="_blank" rel="noopener">available add-ons</a> for Plone.</li>
+<li>Read and/or subscribe to the <a href="https://plone.org/support" class="link-plain" target="_blank" rel="noopener">support channels</a>.</li>
+<li>Find out <a href="https://plone.com/success-stories/" class="link-plain" target="_blank" rel="noopener">how others are using Plone</a>.</li>
+</ul>
+<p><img class="image-richtext image-left image-size-medium captioned zoomable" src="resolveuid/{uid}/@@images/image/larger" alt="" data-linktype="image" data-srcset="medium" data-scale="larger" data-val="{uid}" /></p>
+<h2>Make it your own</h2>
+<p>Plone has a lot of different settings that can be used to make it do what you want it to. Some examples:</p>
+<ul>
+<li>Try out a different theme, either pick from <a href="@@theming-controlpanel" target="_blank" rel="noopener">the included ones</a>, or one of the <a href="https://plone.org/download/add-ons" class="link-plain" target="_blank" rel="noopener">available themes from plone.org</a>. <span class="discreet">(Make sure the theme is compatible with the version of Plone you are currently using)</span></li>
+<li><a href="@@content-controlpanel" target="_blank" rel="noopener"> Decide what kind of workflow you want in your site.</a> <span class="discreet">(The default is typical for a public web site; if you want to use Plone as a closed intranet or extranet, you can choose a different workflow.)</span></li>
+<li>By default, Plone uses a visual editor for content. <span class="discreet">(If you prefer text-based syntax and/or wiki syntax, you can change this in the <a href="@@markup-controlpanel" target="_blank" rel="noopener">markup control panel</a>)</span></li>
+<li>…and many more settings are available in the <a href="@@overview-controlpanel" target="_blank" rel="noopener">Site Setup</a>.</li>
+</ul>
+<h2>Tell us how you use it</h2>
+<p>Are you doing something interesting with Plone? Big site deployments, interesting use cases? Do you have a company that delivers Plone-based solutions?</p>
+<ul>
+<li>Add your company as a <a href="https://plone.com/providers/" class="link-plain" target="_blank" rel="noopener">Plone provider</a>.</li>
+<li>Add a <a href="https://plone.com/success-stories/" class="link-plain" target="_blank" rel="noopener">success story</a> describing your deployed project and customer.</li>
+</ul>
+<h2>Find out more about Plone</h2>
+<p>Plone is a powerful content management system built on a rock-solid application stack written using the Python programming language. More about these technologies:</p>
+<ul>
+<li>The <a href="https://plone.com" class="link-plain" target="_blank" rel="noopener">Plone open source Content Management System</a> web site for evaluators and decision makers.</li>
+<li>The <a href="https://plone.org" class="link-plain" target="_blank" rel="noopener">Plone community </a> web site for developers.</li>
+<li>The <a href="https://www.python.org" class="link-plain" target="_blank" rel="noopener">Python programming language</a> web site.</li>
+</ul>
+<h2><img class="image-richtext image-inline image-size-large" src="resolveuid/{uid}/@@images/image/huge" alt="" data-linktype="image" data-srcset="large" data-scale="huge" data-val="{uid}" /></h2>
+<h2>Support the Plone Foundation</h2>
+<p>Plone is made possible only through the efforts of thousands of dedicated individuals and hundreds of companies. The Plone Foundation:</p>
+<ul>
+<li>…protects and promotes Plone.</li>
+<li>…is a registered 501(c)(3) charitable organization.</li>
+<li>…donations are tax-deductible.</li>
+<li><a href="https://plone.org/sponsors/be-a-hero" target="_blank" rel="noopener">Support the Foundation and help make Plone better!</a></li>
+</ul>
+<p>Thanks for using our product; we hope you like it!</p>
+<p>—The Plone Team</p>
+        """.format(uid=self.UID)
+        import time
+        startTime = time.time()
+        res = self.parser(text)
+        executionTime = (time.time() - startTime)
+        print(executionTime)
+        self.assertTrue(res)
+
     def test_parsing_preserves_newlines(self):
         # Test if it preserves newlines which should not be filtered out
         text = """<pre>This is line 1
