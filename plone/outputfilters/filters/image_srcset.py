@@ -85,6 +85,9 @@ class ImageSrcsetFilter(object):
         for i, source in enumerate(sourceset):
             scale = source["scale"]
             media = source.get("media")
+            sizes = source.get("sizes")
+            if sizes is None:
+                sizes = srcset_config.get("sizes")
             title = elem.attrs.get("title")
             alt = elem.attrs.get("alt")
             klass = elem.attrs.get("class")
@@ -93,10 +96,14 @@ class ImageSrcsetFilter(object):
                     "img", src=self.update_src_scale(src=src, scale=scale)
                 )
             else:
+                # If sizes are defined, we add a width to the source.
+                add_width = bool(sizes)
                 # TODO guess type:
                 source_tag = soup.new_tag(
-                    "source", srcset=self.update_src_scale(src=src, scale=scale)
+                    "source", srcset=self.update_src_scale(src=src, scale=scale, add_width=add_width)
                 )
+                if sizes:
+                    source_tag["sizes"] = sizes
             source_tag["loading"] = "lazy"
             if media:
                 source_tag["media"] = media
@@ -109,6 +116,25 @@ class ImageSrcsetFilter(object):
             picture_tag.append(source_tag)
         return picture_tag
 
-    def update_src_scale(self, src, scale):
+    def update_src_scale(self, src, scale, add_width=False):
         parts = src.split("/")
-        return "/".join(parts[:-1]) + "/{}".format(scale)
+        srcset = "/".join(parts[:-1]) + "/{}".format(scale)
+        if add_width:
+            # add_width should only be try for source tags, not img tags.
+            width = self._scale_width(scale)
+            if width:
+                srcset += " {}w".format(width)
+        return srcset
+
+    def _scale_width(self, scale):
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(IImagingSchema, prefix="plone", check=False)
+        for line in settings.allowed_sizes:
+            try:
+                name, size = line.split()
+            except (ValueError, IndexError):
+                continue
+            if name != scale:
+                continue
+            return size.split(":")[0]
+        return ""
