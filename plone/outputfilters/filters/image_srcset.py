@@ -1,3 +1,4 @@
+import logging
 import re
 
 from bs4 import BeautifulSoup
@@ -7,6 +8,8 @@ from plone.registry.interfaces import IRegistry
 from Products.CMFPlone.utils import safe_nativestring
 from zope.component import getUtility
 from zope.interface import implementer
+
+logger = logging.getLogger("plone.outputfilter.image_srcset")
 
 
 @implementer(IFilter)
@@ -47,10 +50,15 @@ class ImageSrcsetFilter(object):
         self.context = context
         self.request = request
 
+    @property
+    def image_srcsets(self):
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(IImagingSchema, prefix="plone", check=False)
+        return settings.image_srcsets
+
     def __call__(self, data):
         data = re.sub(r"<([^<>\s]+?)\s*/>", self._shorttag_replace, data)
         soup = BeautifulSoup(safe_nativestring(data), "html.parser")
-        self.image_srcsets = self.image_srcsets()
 
         for elem in soup.find_all("img"):
             srcset_name = elem.attrs.get("data-srcset", "")
@@ -59,31 +67,36 @@ class ImageSrcsetFilter(object):
             elem.replace_with(self.convert_to_srcset(srcset_name, elem, soup))
         return str(soup)
 
-    def image_srcsets(self):
-        registry = getUtility(IRegistry)
-        settings = registry.forInterface(IImagingSchema, prefix="plone", check=False)
-        return settings.image_srcsets
-
     def convert_to_srcset(self, srcset_name, elem, soup):
-        """Converts the element to a srcset definition
-        """
+        """Converts the element to a srcset definition"""
         srcset_config = self.image_srcsets.get(srcset_name)
-        sourceset = srcset_config.get('sourceset')
+        if not srcset_config:
+            logger.warn(
+                "Could not find the given srcset_name {0}, leave tag untouched!".format(
+                    srcset_name
+                )
+            )
+            return elem
+        sourceset = srcset_config.get("sourceset")
         if not sourceset:
             return elem
         src = elem.attrs.get("src")
         picture_tag = soup.new_tag("picture")
         for i, source in enumerate(sourceset):
-            scale = source['scale']
-            media = source.get('media')
-            title = elem.attrs.get('title')
-            alt = elem.attrs.get('alt')
-            klass = elem.attrs.get('class')
+            scale = source["scale"]
+            media = source.get("media")
+            title = elem.attrs.get("title")
+            alt = elem.attrs.get("alt")
+            klass = elem.attrs.get("class")
             if i == len(sourceset) - 1:
-                source_tag = soup.new_tag("img", src=self.update_src_scale(src=src, scale=scale))
+                source_tag = soup.new_tag(
+                    "img", src=self.update_src_scale(src=src, scale=scale)
+                )
             else:
                 # TODO guess type:
-                source_tag = soup.new_tag("source", srcset=self.update_src_scale(src=src, scale=scale))
+                source_tag = soup.new_tag(
+                    "source", srcset=self.update_src_scale(src=src, scale=scale)
+                )
             source_tag["loading"] = "lazy"
             if media:
                 source_tag["media"] = media
