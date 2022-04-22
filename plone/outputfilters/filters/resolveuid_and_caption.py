@@ -171,7 +171,9 @@ class ResolveUIDAndCaptionFilter(object):
             srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
             for idx, elm in enumerate(srcs):
                 image, fullimage, src, description = self.resolve_image(elm[0])
-                srcs[idx][0] = src
+                # attributes["width"] = image.width
+                # attributes["height"] = image.height
+                srcs[idx][0] = "{0} {1}w".format(src, image.width)
             attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
             # parent of SOURCE is video or audio here.
@@ -188,6 +190,9 @@ class ResolveUIDAndCaptionFilter(object):
             src = attributes.get('src', '')
             image, fullimage, src, description = self.resolve_image(src)
             attributes["src"] = src
+            attributes["width"] = image.width
+            attributes["height"] = image.height
+
 
             if fullimage is not None:
                 # Check to see if the alt / title tags need setting
@@ -198,7 +203,11 @@ class ResolveUIDAndCaptionFilter(object):
                 if 'title' not in attributes:
                     attributes['title'] = title
 
+            # captioning
             caption = description
+            caption_manual_override = attributes.get("data-captiontext", "")
+            if caption_manual_override:
+                caption = caption_manual_override
             # Check if the image needs to be captioned
             if (
                 self.captioned_images and
@@ -245,7 +254,6 @@ class ResolveUIDAndCaptionFilter(object):
         if urlsplit(src)[0]:
             # We have a scheme
             return None, None, src, description
-
         base = self.context
         subpath = src
         appendix = ''
@@ -328,7 +336,7 @@ class ResolveUIDAndCaptionFilter(object):
                                elem, caption):
         """Handle captioned image.
 
-        The img element is replaced by figure
+        The img/picture element is replaced by figure
         as created by the template ../browser/captioned_image.pt
         """
         klass = ' '.join(attributes['class'])
