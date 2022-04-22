@@ -85,9 +85,6 @@ class ImageSrcsetFilter(object):
         for i, source in enumerate(sourceset):
             scale = source["scale"]
             media = source.get("media")
-            title = elem.attrs.get("title")
-            alt = elem.attrs.get("alt")
-            klass = elem.attrs.get("class")
             if i == len(sourceset) - 1:
                 source_tag = soup.new_tag(
                     "img", src=self.update_src_scale(src=src, scale=scale)
@@ -97,15 +94,13 @@ class ImageSrcsetFilter(object):
                 source_tag = soup.new_tag(
                     "source", srcset=self.update_src_scale(src=src, scale=scale)
                 )
+            for k, attr in elem.attrs.items():
+                if k in ["src", "srcset"]:
+                    continue
+                source_tag.attrs[k] = attr
             source_tag["loading"] = "lazy"
             if media:
                 source_tag["media"] = media
-            if title:
-                source_tag["title"] = title
-            if alt:
-                source_tag["alt"] = alt
-            if klass:
-                source_tag["class"] = klass
             picture_tag.append(source_tag)
         return picture_tag
 
