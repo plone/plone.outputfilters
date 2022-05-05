@@ -171,9 +171,7 @@ class ResolveUIDAndCaptionFilter(object):
             srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
             for idx, elm in enumerate(srcs):
                 image, fullimage, src, description = self.resolve_image(elm[0])
-                # attributes["width"] = image.width
-                # attributes["height"] = image.height
-                srcs[idx][0] = "{0} {1}w".format(src, image.width)
+                srcs[idx][0] = src
             attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
             # parent of SOURCE is video or audio here.
@@ -190,8 +188,6 @@ class ResolveUIDAndCaptionFilter(object):
             src = attributes.get('src', '')
             image, fullimage, src, description = self.resolve_image(src)
             attributes["src"] = src
-            attributes["width"] = image.width
-            attributes["height"] = image.height
 
 
             if fullimage is not None:

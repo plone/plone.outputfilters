@@ -51,6 +51,12 @@ class ImageSrcsetFilter(object):
         self.request = request
 
     @property
+    def image_scales(self):
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(IImagingSchema, prefix="plone", check=False)
+        return settings.allowed_sizes
+
+    @property
     def image_srcsets(self):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IImagingSchema, prefix="plone", check=False)
@@ -77,6 +83,10 @@ class ImageSrcsetFilter(object):
                 )
             )
             return elem
+        images_scales = self.image_scales
+        excluded_scales = srcset_config.get("excludedScales")
+        if excluded_scales:
+            images_scales = [scale for scale in self.image_scales if not scale in excluded_scales]
         sourceset = srcset_config.get("sourceset")
         if not sourceset:
             return elem
@@ -85,9 +95,13 @@ class ImageSrcsetFilter(object):
         for i, source in enumerate(sourceset):
             scale = source["scale"]
             media = source.get("media")
+            additional_scales = source.get("additionalScales", None)
+            if additional_scales is None:
+                additional_scales = [s for s in images_scales if s != scale]
             if i == len(sourceset) - 1:
                 source_tag = soup.new_tag(
-                    "img", src=self.update_src_scale(src=src, scale=scale)
+                    "img", src=self.update_src_scale(src=src, scale=scale),
+
                 )
             else:
                 # TODO guess type:
