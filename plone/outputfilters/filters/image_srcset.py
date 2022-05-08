@@ -127,7 +127,6 @@ class ImageSrcsetFilter(object):
                 source_tag["media"] = media
             picture_tag.append(source_tag)
             if i == len(sourceset) - 1:
-                scale_width = self.get_scale_width(target_scale)
                 img_tag = soup.new_tag(
                     "img", src=self.update_src_scale(src=src, scale=target_scale),
                 )
@@ -135,7 +134,6 @@ class ImageSrcsetFilter(object):
                     if k in ["src", "srcset"]:
                         continue
                     img_tag.attrs[k] = attr
-                img_tag["width"] = scale_width
                 img_tag["loading"] = "lazy"
                 picture_tag.append(img_tag)
         return picture_tag

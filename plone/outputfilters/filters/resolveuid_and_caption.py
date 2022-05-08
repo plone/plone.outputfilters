@@ -188,6 +188,10 @@ class ResolveUIDAndCaptionFilter(object):
             src = attributes.get('src', '')
             image, fullimage, src, description = self.resolve_image(src)
             attributes["src"] = src
+            if not attributes.get("width"):
+                attributes["width"] = image.width
+            if not attributes.get("height"):
+                attributes["height"] = image.height
 
 
             if fullimage is not None:
