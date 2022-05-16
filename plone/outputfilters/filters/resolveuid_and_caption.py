@@ -170,7 +170,8 @@ class ResolveUIDAndCaptionFilter(object):
             # [(src1, 480w), (src2, 360w)]
             srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
             for idx, elm in enumerate(srcs):
-                image, fullimage, src, description = self.resolve_image(elm[0])
+                image_url = elm[0]
+                src = self.resolve_scale_data(image_url)
                 srcs[idx][0] = src
             attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
@@ -188,12 +189,11 @@ class ResolveUIDAndCaptionFilter(object):
             src = attributes.get('src', '')
             image, fullimage, src, description = self.resolve_image(src)
             attributes["src"] = src
-            if not attributes.get("width"):
-                attributes["width"] = image.width
-            if not attributes.get("height"):
-                attributes["height"] = image.height
-
-
+            # we could get the width/height (aspect ratio) without the scale
+            # from the image field: width, height = fullimage.get("image").getImageSize()
+            # XXX: refacture resolve_image to not create scales
+            attributes["width"] = image.width
+            attributes["height"] = image.height
             if fullimage is not None:
                 # Check to see if the alt / title tags need setting
                 title = safe_unicode(aq_acquire(fullimage, 'Title')())
@@ -228,6 +228,16 @@ class ResolveUIDAndCaptionFilter(object):
             if len(uids) > 0:
                 uid = uids[0]
         return uuidToObject(uid)
+
+    def resolve_scale_data(self, url):
+        """ return scale url, width and height
+        """
+        url_parts = url.split("/")
+        field_name = url_parts[-2]
+        scale_name = url_parts[-1]
+        obj, subpath, appendix = self.resolve_link(url)
+        scale_view = obj.unrestrictedTraverse('@@images', None)
+        return scale_view.url(field=field_name, scale=scale_name)
 
     def resolve_link(self, href):
         obj = None
@@ -270,9 +280,9 @@ class ResolveUIDAndCaptionFilter(object):
                 try:
                     if hasattr(aq_base(obj), 'scale'):
                         if components:
-                            child = obj.scale(child_id, components.pop())
+                            child = obj.url(child_id, components.pop())
                         else:
-                            child = obj.scale(child_id)
+                            child = obj.url(child_id)
                     else:
                         # Do not use restrictedTraverse here; the path to the
                         # image may lead over containers that lack the View
@@ -323,7 +333,6 @@ class ResolveUIDAndCaptionFilter(object):
 
         if image is None:
             return None, None, src, description
-
         try:
             url = image.absolute_url()
         except AttributeError:
