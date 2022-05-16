@@ -171,7 +171,7 @@ class ResolveUIDAndCaptionFilter(object):
             srcs = [src.strip().split() for src in srcset.strip().split(',') if src.strip()]
             for idx, elm in enumerate(srcs):
                 image_url = elm[0]
-                src = self.resolve_scale_data(image_url)
+                image, fullimage, src, description = self.resolve_image(image_url)
                 srcs[idx][0] = src
             attributes['srcset'] = ','.join(' '.join(src) for src in srcs)
         for elem in soup.find_all(['source', 'iframe', 'audio', 'video']):
@@ -237,7 +237,7 @@ class ResolveUIDAndCaptionFilter(object):
         scale_name = url_parts[-1]
         obj, subpath, appendix = self.resolve_link(url)
         scale_view = obj.unrestrictedTraverse('@@images', None)
-        return scale_view.url(field=field_name, scale=scale_name)
+        return scale_view.scale(field_name, scale_name, pre=True)
 
     def resolve_link(self, href):
         obj = None
@@ -280,9 +280,9 @@ class ResolveUIDAndCaptionFilter(object):
                 try:
                     if hasattr(aq_base(obj), 'scale'):
                         if components:
-                            child = obj.url(child_id, components.pop())
+                            child = obj.scale(child_id, components.pop(), pre=True)
                         else:
-                            child = obj.url(child_id)
+                            child = obj.scale(child_id, pre=True)
                     else:
                         # Do not use restrictedTraverse here; the path to the
                         # image may lead over containers that lack the View
