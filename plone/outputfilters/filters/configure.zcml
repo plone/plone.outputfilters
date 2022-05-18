@@ -5,16 +5,16 @@
 
   <adapter
     provides="..interfaces.IFilter"
-    name="resolveuid_and_caption"
+    name="image_srcset"
     for="* *"
-    factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
+    factory=".image_srcset.ImageSrcsetFilter"
     />
 
   <adapter
     provides="..interfaces.IFilter"
-    name="image_srcset"
+    name="resolveuid_and_caption"
     for="* *"
-    factory=".image_srcset.ImageSrcsetFilter"
+    factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
     />
 
   <!-- in Plone 5, we always resolve uids -->

@@ -203,20 +203,36 @@ class ResolveUIDAndCaptionFilter(object):
                 if 'title' not in attributes:
                     attributes['title'] = title
 
-            # captioning
+        for picture_elem in soup.find_all('picture'):
+            if 'captioned' not in picture_elem.attrs.get('class', []):
+                continue
+            elem = picture_elem.find("img")
+            attributes = elem.attrs
+            src = attributes.get('src', '')
+            image, fullimage, src, description = self.resolve_image(src)
+            attributes["src"] = src
             caption = description
             caption_manual_override = attributes.get("data-captiontext", "")
             if caption_manual_override:
                 caption = caption_manual_override
             # Check if the image needs to be captioned
-            if (
-                self.captioned_images and
-                image is not None and
-                caption and
-                'captioned' in attributes.get('class', [])
-            ):
-                self.handle_captioned_image(
-                    attributes, image, fullimage, elem, caption)
+            if (self.captioned_images and caption):
+                options = {}
+                options["tag"] = picture_elem.prettify()
+                options["caption"] = newline_to_br(html_quote(caption))
+                options["class"] = ' '.join(attributes['class'])
+                del attributes['class']
+                picture_elem.append(elem)
+                captioned = BeautifulSoup(
+                    self.captioned_image_template(**options), 'html.parser')
+
+                # if we are a captioned image within a link, remove and occurrences
+                # of a tags inside caption template to preserve the outer link
+                if bool(elem.find_parent('a')) and bool(captioned.find('a')):
+                    captioned.a.unwrap()
+                del captioned.picture.img["class"]
+                picture_elem.replace_with(captioned)
+
         return six.text_type(soup)
 
     def lookup_uid(self, uid):
@@ -340,58 +356,3 @@ class ResolveUIDAndCaptionFilter(object):
         src = url + appendix
         description = safe_unicode(aq_acquire(fullimage, 'Description')())
         return image, fullimage, src, description
-
-    def handle_captioned_image(self, attributes, image, fullimage,
-                               elem, caption):
-        """Handle captioned image.
-
-        The img/picture element is replaced by figure
-        as created by the template ../browser/captioned_image.pt
-        """
-        klass = ' '.join(attributes['class'])
-        del attributes['class']
-        del attributes['src']
-        if 'width' in attributes and attributes['width']:
-            attributes['width'] = int(attributes['width'])
-        if 'height' in attributes and attributes['height']:
-            attributes['height'] = int(attributes['height'])
-        view = fullimage.unrestrictedTraverse('@@images', None)
-        if view is not None:
-            original_width, original_height = view.getImageSize()
-        else:
-            original_width, original_height = fullimage.width, fullimage.height
-        if image is not fullimage:
-            # image is a scale object
-            tag = image.tag
-            width = image.width
-        else:
-            if hasattr(aq_base(image), 'tag'):
-                tag = image.tag
-            else:
-                tag = view.scale().tag
-            width = original_width
-        options = {
-            'class': klass,
-            'originalwidth': attributes.get('width', None),
-            'originalalt': attributes.get('alt', None),
-            'url_path': fullimage.absolute_url_path(),
-            'caption': newline_to_br(html_quote(caption)),
-            'image': image,
-            'fullimage': fullimage,
-            'tag': tag(**attributes),
-            'isfullsize': image is fullimage or (
-                image.width == original_width and
-                image.height == original_height),
-            'width': attributes.get('width', width),
-        }
-
-        captioned = BeautifulSoup(
-            self.captioned_image_template(**options), 'html.parser')
-
-        # if we are a captioned image within a link, remove and occurrences
-        # of a tags inside caption template to preserve the outer link
-        if bool(elem.find_parent('a')) and \
-           bool(captioned.find('a')):
-            captioned.a.unwrap()
-
-        elem.replace_with(captioned)

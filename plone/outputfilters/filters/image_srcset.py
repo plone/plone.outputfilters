@@ -107,6 +107,9 @@ class ImageSrcsetFilter(object):
             return elem
         src = elem.attrs.get("src")
         picture_tag = soup.new_tag("picture")
+        css_classes = elem.attrs.get("class")
+        if "captioned" in css_classes:
+            picture_tag["class"] = "captioned"
         for i, source in enumerate(sourceset):
             target_scale = source["scale"]
             media = source.get("media")
