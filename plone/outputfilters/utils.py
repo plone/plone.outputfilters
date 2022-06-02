@@ -82,7 +82,9 @@ class Img2PictureTag(object):
 
     def update_src_scale(self, src, scale):
         parts = src.split("/")
-        if "." in src:
+        if "." in parts[-1]:
             field_name = parts[-1].split("-")[0]
-            return "/".join(parts[:-1]) + "/{0}/{1}".format(field_name, scale)
-        return "/".join(parts[:-1]) + "/{}".format(scale)
+            src_scale =  "/".join(parts[:-1]) + "/{0}/{1}".format(field_name, scale)
+            return src_scale
+        src_scale = "/".join(parts[:-1]) + "/{}".format(scale)
+        return src_scale

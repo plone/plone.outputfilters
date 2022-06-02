@@ -192,6 +192,8 @@ class ResolveUIDAndCaptionFilter(object):
             # we could get the width/height (aspect ratio) without the scale
             # from the image field: width, height = fullimage.get("image").getImageSize()
             # XXX: refacture resolve_image to not create scales
+            if not image:
+                return
             attributes["width"] = image.width
             attributes["height"] = image.height
             if fullimage is not None:
