@@ -327,7 +327,7 @@ alert(1);
         news_item = self.portal['a-news-item']
         from plone.app.textfield.value import RichTextValue
         news_item.text = RichTextValue(
-            '<span><img class="captioned" src="image.jpg"/></span>',
+            '<span><picture class="captioned"><img src="image.jpg"/></picture></span>',
             'text/html', 'text/x-html-safe')
         news_item.setDescription("Description.")
 
