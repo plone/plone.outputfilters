@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from plone.outputfilters.interfaces import IFilter
 from Products.CMFPlone.utils import safe_nativestring
 from zope.interface import implementer
-from plone.outputfilters.utils import Img2PictureTag
+from plone.namedfile.picture import Img2PictureTag
 
 logger = logging.getLogger("plone.outputfilter.image_srcset")
 
