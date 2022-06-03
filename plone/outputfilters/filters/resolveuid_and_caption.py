@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_acquire
 from Acquisition import aq_base
+from Acquisition import aq_inner
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
 from DocumentTemplate.html_quote import html_quote
@@ -27,13 +28,6 @@ from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
 import six
-
-
-HAS_LINGUAPLONE = True
-try:
-    from Products.LinguaPlone.utils import translated_references
-except ImportError:
-    HAS_LINGUAPLONE = False
 
 
 appendix_re = re.compile('^(.*)([?#].*)$')
@@ -146,7 +140,6 @@ class ResolveUIDAndCaptionFilter(object):
     def __call__(self, data):
         data = re.sub(r'<([^<>\s]+?)\s*/>', self._shorttag_replace, data)
         soup = BeautifulSoup(safe_unicode(data), 'html.parser')
-
         for elem in soup.find_all(['a', 'area']):
             attributes = elem.attrs
             href = attributes.get('href')
@@ -192,10 +185,9 @@ class ResolveUIDAndCaptionFilter(object):
             # we could get the width/height (aspect ratio) without the scale
             # from the image field: width, height = fullimage.get("image").getImageSize()
             # XXX: refacture resolve_image to not create scales
-            if not image:
-                return
-            attributes["width"] = image.width
-            attributes["height"] = image.height
+            if image and hasattr(image, "width"):
+                attributes["width"] = image.width
+                attributes["height"] = image.height
             if fullimage is not None:
                 # Check to see if the alt / title tags need setting
                 title = safe_unicode(aq_acquire(fullimage, 'Title')())
@@ -204,7 +196,6 @@ class ResolveUIDAndCaptionFilter(object):
                     attributes['alt'] = description or ""
                 if 'title' not in attributes:
                     attributes['title'] = title
-
         for picture_elem in soup.find_all('picture'):
             if 'captioned' not in picture_elem.attrs.get('class', []):
                 continue
@@ -237,16 +228,6 @@ class ResolveUIDAndCaptionFilter(object):
 
         return six.text_type(soup)
 
-    def lookup_uid(self, uid):
-        context = self.context
-        if HAS_LINGUAPLONE:
-            # If we have LinguaPlone installed, add support for language-aware
-            # references
-            uids = translated_references(context, context.Language(), uid)
-            if len(uids) > 0:
-                uid = uids[0]
-        return uuidToObject(uid)
-
     def resolve_scale_data(self, url):
         """ return scale url, width and height
         """
@@ -271,7 +252,7 @@ class ResolveUIDAndCaptionFilter(object):
             match = resolveuid_re.match(subpath)
             if match is not None:
                 uid, _subpath = match.groups()
-                obj = self.lookup_uid(uid)
+                obj = uuidToObject(uid)
                 if obj is not None:
                     subpath = _subpath
 
