@@ -57,4 +57,4 @@ class ImageSrcsetFilter(object):
             if not sourceset:
                 continue
             elem.replace_with(self.img2picturetag.create_picture_tag(sourceset, elem.attrs))
-        return str(soup)
+        return soup.prettify()
