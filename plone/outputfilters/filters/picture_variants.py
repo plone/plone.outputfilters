@@ -7,12 +7,12 @@ from Products.CMFPlone.utils import safe_nativestring
 from zope.interface import implementer
 from plone.namedfile.picture import Img2PictureTag
 
-logger = logging.getLogger("plone.outputfilter.image_srcset")
+logger = logging.getLogger("plone.outputfilter.picture_variants")
 
 
 @implementer(IFilter)
-class ImageSrcsetFilter(object):
-    """Converts img tags with a data-srcset attribute into picture tag with srcset definition.
+class PictureVariantsFilter(object):
+    """Converts img tags with a data-picturevariant attribute into picture/source tag's with srcset definitions.
     """
 
     order = 700
@@ -42,18 +42,18 @@ class ImageSrcsetFilter(object):
         soup = BeautifulSoup(safe_nativestring(data), "html.parser")
 
         for elem in soup.find_all("img"):
-            srcset_name = elem.attrs.get("data-srcset", "")
-            if not srcset_name:
+            picture_variant_name = elem.attrs.get("data-picturevariant", "")
+            if not picture_variant_name:
                 continue
-            srcset_config = self.img2picturetag.image_srcsets.get(srcset_name)
-            if not srcset_config:
+            picture_variants_config = self.img2picturetag.picture_variants.get(picture_variant_name)
+            if not picture_variants_config:
                 logger.warn(
-                    "Could not find the given srcset_name {0}, leave tag untouched!".format(
-                        srcset_name
+                    "Could not find the given picture_variant_name {0}, leave tag untouched!".format(
+                        picture_variant_name
                     )
                 )
                 continue
-            sourceset = srcset_config.get("sourceset")
+            sourceset = picture_variants_config.get("sourceset")
             if not sourceset:
                 continue
             elem.replace_with(self.img2picturetag.create_picture_tag(sourceset, elem.attrs))

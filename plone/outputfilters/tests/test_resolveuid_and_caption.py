@@ -72,14 +72,17 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         self.portal._setObject('foo2', dummy2)
         self.portal.portal_catalog.catalog_object(self.portal.foo2)
 
-    def _assertTransformsTo(self, input, expected):
+    def _assertTransformsTo(self, input, expected, parsing=True):
         # compare two chunks of HTML ignoring whitespace differences,
         # and with a useful diff on failure
-        out = self.parser(input)
+        if parsing:
+            out = self.parser(input)
+        else:
+            out = input
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
-        # print("e: {}".format(normalized_expected))
-        # print("o: {}".format(normalized_out))
+        print("e: {}".format(normalized_expected))
+        print("o: {}".format(normalized_out))
         try:
             self.assertTrue(_ellipsis_match(normalized_expected,
                                             normalized_out))
@@ -327,10 +330,9 @@ alert(1);
         news_item = self.portal['a-news-item']
         from plone.app.textfield.value import RichTextValue
         news_item.text = RichTextValue(
-            '<span><picture class="captioned"><img src="image.jpg"/></picture></span>',
-            'text/html', 'text/x-html-safe')
+            '<span><img class="captioned" src="image.jpg"/></span>',
+            'text/html', 'text/html')
         news_item.setDescription("Description.")
-
         # Test captioning
         output = news_item.text.output
         text_out = """<span><figure class="captioned">

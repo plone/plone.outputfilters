@@ -5,9 +5,9 @@
 
   <adapter
     provides="..interfaces.IFilter"
-    name="image_srcset"
+    name="picture_variants"
     for="* *"
-    factory=".image_srcset.ImageSrcsetFilter"
+    factory=".picture_variants.PictureVariantsFilter"
     />
 
   <adapter

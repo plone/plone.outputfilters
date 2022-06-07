@@ -11,7 +11,7 @@ from plone.app.testing.bbb import PloneTestCase
 from plone.namedfile.file import NamedBlobImage
 from plone.namedfile.file import NamedImage
 from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
-from plone.outputfilters.filters.image_srcset import ImageSrcsetFilter
+from plone.outputfilters.filters.picture_variants import PictureVariantsFilter
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 
@@ -28,14 +28,14 @@ def dummy_image():
     return NamedBlobImage(data=data, filename=filename)
 
 
-class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
+class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 
     layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
     image_id = 'image.jpg'
 
     def _makeParser(self, **kw):
-        parser = ImageSrcsetFilter(context=self.portal)
+        parser = PictureVariantsFilter(context=self.portal)
         for k, v in kw.items():
             setattr(parser, k, v)
         return parser
@@ -78,8 +78,8 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
         out = self.parser(input)
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
-        # print("e: {}".format(normalized_expected))
-        # print("o: {}".format(normalized_out))
+        print("\n e: {}".format(expected))
+        print("\n o: {}".format(out))
         try:
             self.assertTrue(_ellipsis_match(normalized_expected,
                                             normalized_out))
@@ -113,7 +113,9 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
         del self.portal[self.image_id]
 
     def test_parsing_minimal(self):
-        text = '<div>Some simple text.</div>'
+        text = """<div>
+ Some simple text.
+</div>"""
         res = self.parser(text)
         self.assertEqual(text, str(res))
 
@@ -122,7 +124,7 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">If you're seeing this instead of the web site you were expecting, the owner of this web site has
     just installed Plone. Do not contact the Plone Team or the Plone support channels about this.</p>
 <p class="discreet"><img class="image-richtext image-inline image-size-small"
-        src="resolveuid/{uid}/@@images/image/preview" alt="" data-linktype="image" data-srcset="small"
+        src="resolveuid/{uid}/@@images/image/preview" alt="" data-linktype="image" data-picturevariant="small"
         data-scale="preview" data-val="{uid}" /></p>
 <h2>Get started</h2>
 <p>Before you start exploring your newly created Plone site, please do the following:</p>
@@ -133,7 +135,7 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <h2>Get comfortable</h2>
 <p>After that, we suggest you do one or more of the following:</p>
 <p><img class="image-richtext image-left image-size-medium captioned zoomable"
-        src="resolveuid/{uid}/@@images/image/larger" alt="" data-linktype="image" data-srcset="medium"
+        src="resolveuid/{uid}/@@images/image/larger" alt="" data-linktype="image" data-picturevariant="medium"
         data-scale="larger" data-val="{uid}" /></p>
 <h2>Make it your own</h2>
 <p>Plone has a lot of different settings that can be used to make it do what you want it to. Some examples:</p>
@@ -142,11 +144,11 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
     that delivers Plone-based solutions?</p>
 <h2>Find out more about Plone</h2>
 <p class="discreet"><img class="image-richtext image-right image-size-large" src="resolveuid/{uid}/@@images/image/huge"
-        alt="" data-linktype="image" data-srcset="large" data-scale="huge" data-val="{uid}" /></p>
+        alt="" data-linktype="image" data-picturevariant="large" data-scale="huge" data-val="{uid}" /></p>
 <p>Plone is a powerful content management system built on a rock-solid application stack written using the Python
     programming language. More about these technologies:</p>
 <h2><img class="image-richtext image-inline image-size-large" src="resolveuid/{uid}/@@images/image/huge" alt=""
-        data-linktype="image" data-srcset="large" data-scale="huge" data-val="{uid}" /></h2>
+        data-linktype="image" data-picturevariant="large" data-scale="huge" data-val="{uid}" /></h2>
 <h2>Support the Plone Foundation</h2>
 <p>Plone is made possible only through the efforts of thousands of dedicated individuals and hundreds of companies. The
     Plone Foundation:</p>
@@ -171,10 +173,10 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
-            srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w" />
-        <img alt="" class="image-richtext image-inline image-size-small" data-linktype="image" data-scale="preview"
-            data-srcset="small" data-val="{uid}" loading="lazy"
-            src="resolveuid/{uid}/@@images/image/preview" />
+            srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w"/>
+        <img alt="" class="image-richtext image-inline image-size-small" data-linktype="image"
+            data-picturevariant="small" data-scale="preview" data-val="{uid}" loading="lazy"
+            src="resolveuid/{uid}/@@images/image/preview"/>
     </picture>
 </p>
 <h2>Get started</h2>
@@ -188,10 +190,10 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <p>
     <picture class="captioned">
         <source
-            srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w" />
+            srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w"/>
         <img alt="" class="image-richtext image-left image-size-medium captioned zoomable" data-linktype="image"
-            data-scale="larger" data-srcset="medium" data-val="{uid}" loading="lazy"
-            src="resolveuid/{uid}/@@images/image/teaser" />
+            data-picturevariant="medium" data-scale="larger" data-val="{uid}" loading="lazy"
+            src="resolveuid/{uid}/@@images/image/teaser"/>
     </picture>
 </p>
 <h2>Make it your own</h2>
@@ -203,10 +205,10 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
-            srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w" />
-        <img alt="" class="image-richtext image-right image-size-large" data-linktype="image" data-scale="huge"
-            data-srcset="large" data-val="{uid}" loading="lazy"
-            src="resolveuid/{uid}/@@images/image/larger" />
+            srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
+        <img alt="" class="image-richtext image-right image-size-large" data-linktype="image"
+            data-picturevariant="large" data-scale="huge" data-val="{uid}" loading="lazy"
+            src="resolveuid/{uid}/@@images/image/larger"/>
     </picture>
 </p>
 <p>Plone is a powerful content management system built on a rock-solid application stack written using the Python
@@ -214,10 +216,10 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <h2>
     <picture>
         <source
-            srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w" />
-        <img alt="" class="image-richtext image-inline image-size-large" data-linktype="image" data-scale="huge"
-            data-srcset="large" data-val="{uid}" loading="lazy"
-            src="resolveuid/{uid}/@@images/image/larger" />
+            srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
+        <img alt="" class="image-richtext image-inline image-size-large" data-linktype="image"
+            data-picturevariant="large" data-scale="huge" data-val="{uid}" loading="lazy"
+            src="resolveuid/{uid}/@@images/image/larger"/>
     </picture>
 </h2>
 <h2>Support the Plone Foundation</h2>
@@ -231,16 +233,16 @@ class ImageSrcsetFilterIntegrationTestCase(PloneTestCase):
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
         """.format(uid=self.UID)
-        # self._assertTransformsTo(text, text_out)
+        self._assertTransformsTo(text, text_out)
 
     def test_parsing_with_nonexisting_srcset(self):
         text = """
-<p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-srcset="thumb" data-scale="thumb" data-val="{uid}" /></p>
+<p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
         """.format(uid=self.UID)
         res = self.parser(text)
         self.assertTrue(res)
         text_out = """
-<p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-srcset="thumb" data-scale="thumb" data-val="{uid}" /></p>
+<p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
         """.format(uid=self.UID)
         # verify that tag was not converted:
-        self.assertTrue("data-srcset" in res)
+        self.assertTrue("data-picturevariant" in res)
