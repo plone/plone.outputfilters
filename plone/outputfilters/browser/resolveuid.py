@@ -1,47 +1,33 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
+from plone.app.uuid.utils import uuidToURL
+from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
+from zope.component.hooks import getSite
+from zope.deprecation import deprecate
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
 
-
-try:
-    from zope.component.hooks import getSite
-except ImportError:
-    from zope.app.component.hooks import getSite
+import zope.deferredimport
 
 
-def uuidToURL(uuid):
-    """Resolves a UUID to a URL via the UID index of portal_catalog.
-    """
-    catalog = getToolByName(getSite(), 'portal_catalog')
-    res = catalog.unrestrictedSearchResults(UID=uuid)
-    if res:
-        return res[0].getURL()
+zope.deferredimport.initialize()
+zope.deferredimport.deprecated(
+    "Import from plone.app.uuid.utils instead",
+    uuidToObject='plone.app.uuid:utils.uuidToObject',
+    # This does not seem to work, since we need it ourselves in this file:
+    # uuidToURL='plone.app.uuid:utils.uuidToURL',
+)
 
 
-def uuidToObject(uuid):
-    """Resolves a UUID to an object via the UID index of portal_catalog.
-    """
-    catalog = getToolByName(getSite(), 'portal_catalog')
-    res = catalog.unrestrictedSearchResults(UID=uuid)
-    if res:
-        return res[0]._unrestrictedGetObject()
-
-
-try:
-    from plone.uuid.interfaces import IUUID
-except ImportError:
-    def uuidFor(obj):
-        return obj.UID()
-else:
-    def uuidFor(obj):
-        uuid = IUUID(obj, None)
-        if uuid is None and hasattr(aq_base(obj), 'UID'):
-            uuid = obj.UID()
-        return uuid
+@deprecate('uuidFor is no longer used and supported, will be removed in Plone 7.')
+def uuidFor(obj):
+    uuid = IUUID(obj, None)
+    if uuid is None and hasattr(aq_base(obj), 'UID'):
+        uuid = obj.UID()
+    return uuid
 
 
 @implementer(IPublishTraverse)

@@ -73,6 +73,8 @@ setup(
         'unidecode',
         'beautifulsoup4',
         'lxml',
+        'zope.deferredimport',
+        'zope.deprecation',
     ],
     extras_require={
         'test': [
