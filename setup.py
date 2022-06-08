@@ -66,6 +66,7 @@ setup(
         'Products.GenericSetup',
         'Products.MimetypesRegistry',
         'Products.PortalTransforms>=2.0',
+        'plone.namedfile',
         'setuptools',
         'six',
         'unidecode',
