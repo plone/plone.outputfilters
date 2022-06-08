@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from plone.outputfilters.interfaces import IFilter
 from Products.CMFPlone.utils import safe_nativestring
 from zope.interface import implementer
-from plone.namedfile.picture import Img2PictureTag
+from plone.namedfile.picture import Img2PictureTag, get_picture_variants
 
 logger = logging.getLogger("plone.outputfilter.picture_variants")
 
@@ -45,7 +45,7 @@ class PictureVariantsFilter(object):
             picture_variant_name = elem.attrs.get("data-picturevariant", "")
             if not picture_variant_name:
                 continue
-            picture_variants_config = self.img2picturetag.picture_variants.get(picture_variant_name)
+            picture_variants_config = get_picture_variants().get(picture_variant_name)
             if not picture_variants_config:
                 logger.warn(
                     "Could not find the given picture_variant_name {0}, leave tag untouched!".format(

@@ -227,6 +227,8 @@ class ResolveUIDAndCaptionFilter(object):
                         captioned.a.unwrap()
                     if elem.name == "picture":
                         del captioned.picture.img["class"]
+                    else:
+                        del captioned.img["class"]
                     elem.replace_with(captioned)
 
         # # captioning must hapen before resolving uid's
