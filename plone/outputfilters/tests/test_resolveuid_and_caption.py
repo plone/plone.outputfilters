@@ -81,8 +81,8 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
             out = input
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
-        print("e: {}".format(normalized_expected))
-        print("o: {}".format(normalized_out))
+        # print("e: {}".format(normalized_expected))
+        # print("o: {}".format(normalized_out))
         try:
             self.assertTrue(_ellipsis_match(normalized_expected,
                                             normalized_out))

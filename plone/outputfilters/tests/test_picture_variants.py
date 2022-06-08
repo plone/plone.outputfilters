@@ -78,8 +78,8 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         out = self.parser(input)
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
-        print("\n e: {}".format(expected))
-        print("\n o: {}".format(out))
+        # print("\n e: {}".format(expected))
+        # print("\n o: {}".format(out))
         try:
             self.assertTrue(_ellipsis_match(normalized_expected,
                                             normalized_out))
