@@ -349,7 +349,11 @@ class ResolveUIDAndCaptionFilter(object):
         if obj is not None:
             # resolved uid
             fullimage = obj
-            image = traverse_path(fullimage, subpath)
+            image = None
+            if not subpath:
+                image = traverse_path(fullimage, "@@images/image")
+            if image is None:
+                image = traverse_path(fullimage, subpath)
         elif '/@@' in subpath:
             # split on view
             pos = subpath.find('/@@')

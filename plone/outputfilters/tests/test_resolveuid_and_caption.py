@@ -392,7 +392,7 @@ alert(1);
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
 
-    def test_image_captioning_resolveuid(self):
+    def test_image_captioning_resolveuid_bare(self):
         text_in = """<img class="captioned" src="resolveuid/%s"/>""" % self.UID
         text_out = """<figure class="captioned">
 <img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
