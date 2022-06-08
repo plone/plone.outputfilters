@@ -344,7 +344,7 @@ alert(1);
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
-        text_out = """<img alt="" height="331" src="http://nohost/plone/image.jpg" title="Image" width="500"/>"""
+        text_out = """<img alt="" height="331" src="http://nohost/plone/....jpg" title="Image" width="500"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_absolute_path(self):
