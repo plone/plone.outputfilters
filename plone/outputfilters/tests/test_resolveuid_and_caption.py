@@ -344,7 +344,7 @@ alert(1);
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
-        text_out = """<img alt="" src="http://nohost/plone/image.jpg" title="Image"/>"""
+        text_out = """<img alt="" height="331" src="http://nohost/plone/image.jpg" title="Image" width="500"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_absolute_path(self):
@@ -356,7 +356,7 @@ alert(1);
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_relative_path(self):
-        text_in = """<img class="captioned" src="./image.jpg"/>"""
+        text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<figure class="captioned">
 <img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
@@ -506,7 +506,7 @@ alert(1);
             u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = u"""<figure class="captioned">
-<img alt="Kupu Test Image \xe5\xe4\xf6" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/>
 <figcaption class="image-caption">Kupu Test Image \xe5\xe4\xf6</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
