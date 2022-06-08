@@ -181,7 +181,6 @@ class ResolveUIDAndCaptionFilter(object):
                 img_elem = elem.find("img")
             else:
                 img_elem = elem
-
             # handle src attribute
             attributes = img_elem.attrs
             src = attributes.get('src', '')
@@ -230,41 +229,6 @@ class ResolveUIDAndCaptionFilter(object):
                     else:
                         del captioned.img["class"]
                     elem.replace_with(captioned)
-
-        # # captioning must hapen before resolving uid's
-        # for cap_elem in soup.find_all(['picture', 'img']):
-        #     if 'captioned' in cap_elem.attrs.get('class', []):
-        #         if cap_elem.name == "picture":
-        #             img_elem = cap_elem.find("img")
-        #         else:
-        #             img_elem = cap_elem
-        #         attributes = img_elem.attrs
-        #         src = attributes.get('src', '')
-        #         image, fullimage, src, description = self.resolve_image(src)
-        #         attributes["src"] = src
-        #         caption = description
-        #         caption_manual_override = attributes.get("data-captiontext", "")
-        #         if caption_manual_override:
-        #             caption = caption_manual_override
-        #         # Check if the image needs to be captioned
-        #         if (self.captioned_images and caption):
-        #             options = {}
-        #             options["tag"] = cap_elem.prettify()
-        #             options["caption"] = newline_to_br(html_quote(caption))
-        #             options["class"] = ' '.join(attributes['class'])
-        #             del attributes['class']
-        #             if cap_elem.name == "picture":
-        #                 cap_elem.append(img_elem)
-        #             captioned = BeautifulSoup(
-        #                 self.captioned_image_template(**options), 'html.parser')
-
-        #             # if we are a captioned image within a link, remove and occurrences
-        #             # of a tags inside caption template to preserve the outer link
-        #             if bool(cap_elem.find_parent('a')) and bool(captioned.find('a')):
-        #                 captioned.a.unwrap()
-        #             if cap_elem.name == "picture":
-        #                 del captioned.picture.img["class"]
-        #             cap_elem.replace_with(captioned)
         return six.text_type(soup)
 
     def resolve_scale_data(self, url):
@@ -374,6 +338,10 @@ class ResolveUIDAndCaptionFilter(object):
                     if hasattr(aq_base(parent), 'tag'):
                         fullimage = parent
                         break
+            if not hasattr(image, "width"):
+                image_scale = traverse_path(image, "@@images/image")
+                if image_scale:
+                    image = image_scale
 
         if image is None:
             return None, None, src, description
