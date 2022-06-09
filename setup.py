@@ -71,6 +71,7 @@ setup(
         'setuptools',
         'six',
         'unidecode',
+        'zope.deprecation',
         'beautifulsoup4',
         'lxml',
     ],

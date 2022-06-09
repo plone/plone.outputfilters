@@ -2,6 +2,7 @@
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
+from zope.deprecation import deprecate
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
@@ -13,6 +14,7 @@ except ImportError:
     from zope.app.component.hooks import getSite
 
 
+@deprecate("Please use plone.app.uuid.utils.uuidToURL instead.")
 def uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID index of portal_catalog.
     """
@@ -22,6 +24,10 @@ def uuidToURL(uuid):
         return res[0].getURL()
 
 
+@deprecate(
+    "Please use plone.app.uuid.utils.uuidToObject instead. "
+    "But be aware that this does an extra security check."
+)
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the UID index of portal_catalog.
     """
