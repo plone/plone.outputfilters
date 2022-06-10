@@ -1,5 +1,4 @@
 import logging
-import re
 
 from bs4 import BeautifulSoup
 from plone.outputfilters.interfaces import IFilter
@@ -17,13 +16,6 @@ class PictureVariantsFilter(object):
 
     order = 700
 
-    def _shorttag_replace(self, match):
-        tag = match.group(1)
-        if tag in self.singleton_tags:
-            return "<" + tag + " />"
-        else:
-            return "<" + tag + "></" + tag + ">"
-
     def is_enabled(self):
         if self.context is None:
             return False
@@ -38,7 +30,6 @@ class PictureVariantsFilter(object):
 
 
     def __call__(self, data):
-        data = re.sub(r"<([^<>\s]+?)\s*/>", self._shorttag_replace, data)
         soup = BeautifulSoup(safe_nativestring(data), "html.parser")
 
         for elem in soup.find_all("img"):
