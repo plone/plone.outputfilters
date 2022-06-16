@@ -5,6 +5,13 @@
 
   <adapter
     provides="..interfaces.IFilter"
+    name="picture_variants"
+    for="* *"
+    factory=".picture_variants.PictureVariantsFilter"
+    />
+
+  <adapter
+    provides="..interfaces.IFilter"
     name="resolveuid_and_caption"
     for="* *"
     factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"

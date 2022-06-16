@@ -72,12 +72,17 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         self.portal._setObject('foo2', dummy2)
         self.portal.portal_catalog.catalog_object(self.portal.foo2)
 
-    def _assertTransformsTo(self, input, expected):
+    def _assertTransformsTo(self, input, expected, parsing=True):
         # compare two chunks of HTML ignoring whitespace differences,
         # and with a useful diff on failure
-        out = self.parser(input)
+        if parsing:
+            out = self.parser(input)
+        else:
+            out = input
         normalized_out = normalize_html(out)
         normalized_expected = normalize_html(expected)
+        # print("e: {}".format(normalized_expected))
+        # print("o: {}".format(normalized_out))
         try:
             self.assertTrue(_ellipsis_match(normalized_expected,
                                             normalized_out))
@@ -114,6 +119,71 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         text = '<div>Some simple text.</div>'
         res = self.parser(text)
         self.assertEqual(text, str(res))
+
+    def test_parsing_long_doc(self):
+        text = """<div class="hero">
+<h1>Welcome!</h1>
+<p><a href="https://plone.com" class="btn btn-primary" target="_blank" rel="noopener">Learn more about Plone</a></p>
+</div>
+<p class="discreet">If you're seeing this instead of the web site you were expecting, the owner of this web site has just installed Plone. Do not contact the Plone Team or the Plone support channels about this.</p>
+<p class="discreet"><img class="image-richtext image-inline image-size-small" src="resolveuid/{uid}/@@images/image/preview" alt="" data-linktype="image" data-srcset="small" data-scale="preview" data-val="{uid}" /></p>
+<h2>Get started</h2>
+<p>Before you start exploring your newly created Plone site, please do the following:</p>
+<ol>
+<li>Make sure you are logged in as an admin/manager user. <span class="discreet">(You should have a Site Setup entry in the user menu)</span></li>
+<li><a href="@@mail-controlpanel" target="_blank" rel="noopener">Set up your mail server</a>. <span class="discreet">(Plone needs a valid SMTP server to verify users and send out password reminders)</span></li>
+<li><a href="@@security-controlpanel" target="_blank" rel="noopener">Decide what security level you want on your site</a>. <span class="discreet">(Allow self registration, password policies, etc)</span></li>
+</ol>
+<h2>Get comfortable</h2>
+<p>After that, we suggest you do one or more of the following:</p>
+<ul>
+<li>Find out <a href="https://plone.com/features/" class="link-plain" target="_blank" rel="noopener">What's new in Plone</a>.</li>
+<li>Read the <a href="https://docs.plone.org" class="link-plain" target="_blank" rel="noopener">documentation</a>.</li>
+<li>Follow a <a href="https://training.plone.org" class="link-plain" target="_blank" rel="noopener">training</a>.</li>
+<li>Explore the <a href="https://plone.org/download/add-ons" class="link-plain" target="_blank" rel="noopener">available add-ons</a> for Plone.</li>
+<li>Read and/or subscribe to the <a href="https://plone.org/support" class="link-plain" target="_blank" rel="noopener">support channels</a>.</li>
+<li>Find out <a href="https://plone.com/success-stories/" class="link-plain" target="_blank" rel="noopener">how others are using Plone</a>.</li>
+</ul>
+<p><img class="image-richtext image-left image-size-medium captioned zoomable" src="resolveuid/{uid}/@@images/image/larger" alt="" data-linktype="image" data-srcset="medium" data-scale="larger" data-val="{uid}" /></p>
+<h2>Make it your own</h2>
+<p>Plone has a lot of different settings that can be used to make it do what you want it to. Some examples:</p>
+<ul>
+<li>Try out a different theme, either pick from <a href="@@theming-controlpanel" target="_blank" rel="noopener">the included ones</a>, or one of the <a href="https://plone.org/download/add-ons" class="link-plain" target="_blank" rel="noopener">available themes from plone.org</a>. <span class="discreet">(Make sure the theme is compatible with the version of Plone you are currently using)</span></li>
+<li><a href="@@content-controlpanel" target="_blank" rel="noopener"> Decide what kind of workflow you want in your site.</a> <span class="discreet">(The default is typical for a public web site; if you want to use Plone as a closed intranet or extranet, you can choose a different workflow.)</span></li>
+<li>By default, Plone uses a visual editor for content. <span class="discreet">(If you prefer text-based syntax and/or wiki syntax, you can change this in the <a href="@@markup-controlpanel" target="_blank" rel="noopener">markup control panel</a>)</span></li>
+<li>…and many more settings are available in the <a href="@@overview-controlpanel" target="_blank" rel="noopener">Site Setup</a>.</li>
+</ul>
+<h2>Tell us how you use it</h2>
+<p>Are you doing something interesting with Plone? Big site deployments, interesting use cases? Do you have a company that delivers Plone-based solutions?</p>
+<ul>
+<li>Add your company as a <a href="https://plone.com/providers/" class="link-plain" target="_blank" rel="noopener">Plone provider</a>.</li>
+<li>Add a <a href="https://plone.com/success-stories/" class="link-plain" target="_blank" rel="noopener">success story</a> describing your deployed project and customer.</li>
+</ul>
+<h2>Find out more about Plone</h2>
+<p>Plone is a powerful content management system built on a rock-solid application stack written using the Python programming language. More about these technologies:</p>
+<ul>
+<li>The <a href="https://plone.com" class="link-plain" target="_blank" rel="noopener">Plone open source Content Management System</a> web site for evaluators and decision makers.</li>
+<li>The <a href="https://plone.org" class="link-plain" target="_blank" rel="noopener">Plone community </a> web site for developers.</li>
+<li>The <a href="https://www.python.org" class="link-plain" target="_blank" rel="noopener">Python programming language</a> web site.</li>
+</ul>
+<h2><img class="image-richtext image-inline image-size-large" src="resolveuid/{uid}/@@images/image/huge" alt="" data-linktype="image" data-srcset="large" data-scale="huge" data-val="{uid}" /></h2>
+<h2>Support the Plone Foundation</h2>
+<p>Plone is made possible only through the efforts of thousands of dedicated individuals and hundreds of companies. The Plone Foundation:</p>
+<ul>
+<li>…protects and promotes Plone.</li>
+<li>…is a registered 501(c)(3) charitable organization.</li>
+<li>…donations are tax-deductible.</li>
+<li><a href="https://plone.org/sponsors/be-a-hero" target="_blank" rel="noopener">Support the Foundation and help make Plone better!</a></li>
+</ul>
+<p>Thanks for using our product; we hope you like it!</p>
+<p>—The Plone Team</p>
+        """.format(uid=self.UID)
+        import time
+        startTime = time.time()
+        res = self.parser(text)
+        executionTime = (time.time() - startTime)
+        print("\n\nresolve_uid_and_caption parsing time: {}\n".format(executionTime))
+        self.assertTrue(res)
 
     def test_parsing_preserves_newlines(self):
         # Test if it preserves newlines which should not be filtered out
@@ -261,13 +331,12 @@ alert(1);
         from plone.app.textfield.value import RichTextValue
         news_item.text = RichTextValue(
             '<span><img class="captioned" src="image.jpg"/></span>',
-            'text/html', 'text/x-html-safe')
+            'text/html', 'text/html')
         news_item.setDescription("Description.")
-
         # Test captioning
         output = news_item.text.output
         text_out = """<span><figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>
 </span>"""
@@ -275,13 +344,13 @@ alert(1);
 
     def test_image_captioning_absolutizes_uncaptioned_image(self):
         text_in = """<img src="/image.jpg" />"""
-        text_out = """<img alt="My caption" src="http://nohost/plone/image.jpg" title="Image"/>"""
+        text_out = """<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/....jpeg" title="Image" width="500"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_absolute_path(self):
         text_in = """<img class="captioned" src="/image.jpg"/>"""
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -289,7 +358,7 @@ alert(1);
     def test_image_captioning_relative_path(self):
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -310,7 +379,7 @@ alert(1);
 
         text_in = """<img class="captioned" src="private/image.jpg"/>"""
         text_out = """<figure class="captioned">
-<img alt="My private image caption" height="331" src="http://nohost/plone/private/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/private/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My private image caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -318,15 +387,15 @@ alert(1);
     def test_image_captioning_relative_path_scale(self):
         text_in = """<img class="captioned" src="image.jpg/@@images/image/thumb"/>"""
         text_out = """<figure class="captioned">
-<a href="/plone/image.jpg" rel="lightbox"><img alt="My caption" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/></a>
+<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
 
-    def test_image_captioning_resolveuid(self):
+    def test_image_captioning_resolveuid_bare(self):
         text_in = """<img class="captioned" src="resolveuid/%s"/>""" % self.UID
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -334,7 +403,7 @@ alert(1);
     def test_image_captioning_resolveuid_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
         text_out = """<figure class="captioned">
-<a href="/plone/image.jpg" rel="lightbox"><img alt="My caption" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/></a>
+<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -342,7 +411,7 @@ alert(1);
     def test_image_captioning_resolveuid_new_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image/thumb"/>""" % self.UID
         text_out = """<figure class="captioned">
-<a href="/plone/image.jpg" rel="lightbox"><img alt="My caption" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/></a>
+<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -350,13 +419,13 @@ alert(1);
     def test_image_captioning_resolveuid_new_scale_plone_namedfile(self):
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image/thumb"/>"""
-        text_out = u"""<img alt="Schönes Bild" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild"/>"""
+        text_out = u"""<img alt="" class="captioned" height="84" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild" width="128"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_resolveuid_no_scale(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image"/>""" % self.UID
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -364,7 +433,7 @@ alert(1);
     def test_image_captioning_resolveuid_with_srcset_and_src(self):
         text_in = """<img class="captioned" src="resolveuid/%s/@@images/image" srcset="resolveuid/%s/@@images/image 480w,resolveuid/%s/@@images/image 360w"/>""" % (self.UID, self.UID, self.UID)
         text_out = """<figure class="captioned">
-<img alt="My caption" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" srcset="http://nohost/plone/image.jpg/@@images/image 480w,http://nohost/plone/image.jpg/@@images/image 360w" title="Image" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" srcset="http://nohost/plone/image.jpg/@@images/...jpeg 480w,http://nohost/plone/image.jpg/@@images/...jpeg 360w" title="Image" width="500"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -384,20 +453,10 @@ alert(1);
         text_out = """<audio src="http://nohost/plone/image.jpg"></audio>"""
         self._assertTransformsTo(text_in, text_out)
 
-    def test_source_resolveuid(self):
-        text_in = """<video><source src="resolveuid/%s"/></video>""" % self.UID
-        text_out = """<video><source src="http://nohost/plone/image.jpg"/></video>"""
-        self._assertTransformsTo(text_in, text_out)
-
-    def test_source_resolveuid_srcset(self):
-        text_in = """<video><source mimetype="video/mp4" srcset="resolveuid/%s"/></video>""" % self.UID
-        text_out = """<video><source mimetype="video/mp4" srcset="http://nohost/plone/image.jpg"/></video>"""
-        self._assertTransformsTo(text_in, text_out)
-
     def test_image_captioning_resolveuid_no_scale_plone_namedfile(self):
         self._makeDummyContent()
         text_in = """<img class="captioned" src="resolveuid/foo2/@@images/image"/>"""
-        text_out = u"""<img alt="Schönes Bild" class="captioned" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild"/>"""
+        text_out = u"""<img alt="" class="captioned" height="331" src="http://nohost/plone/foo2/@@images/...jpeg" title="Schönes Bild" width="500"/>"""
         self._assertTransformsTo(text_in, text_out)
 
     def test_image_captioning_bad_uid(self):
@@ -419,7 +478,7 @@ alert(1);
     def test_image_captioning_preserves_custom_attributes(self):
         text_in = """<img class="captioned" width="42" height="42" foo="bar" src="image.jpg"/>"""
         text_out = """<figure class="captioned">
-<img alt="My caption" foo="bar" height="42" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="42"/>
+<img alt="" foo="bar" height="42" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="42"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -435,7 +494,7 @@ alert(1);
     def test_image_captioning_preserves_existing_links(self):
         text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/@@images/image/thumb"/></a>"""
         text_out = """<a class="link" href="/xyzzy"><figure class="image-left captioned">
-<img alt="My caption" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
+<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>
 </a>"""
@@ -447,7 +506,7 @@ alert(1);
             u'Kupu Test Image \xe5\xe4\xf6')
         text_in = """<img class="captioned" src="image.jpg"/>"""
         text_out = u"""<figure class="captioned">
-<img alt="Kupu Test Image \xe5\xe4\xf6" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/>
+<img alt="" height="331" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Kupu Test Image \xe5\xe4\xf6" width="500"/>
 <figcaption class="image-caption">Kupu Test Image \xe5\xe4\xf6</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
