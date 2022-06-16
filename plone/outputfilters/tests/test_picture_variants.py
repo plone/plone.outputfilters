@@ -173,7 +173,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
-            srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w"/>
+            srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w"/>
         <img alt="" class="image-richtext image-inline image-size-small" data-linktype="image"
             data-picturevariant="small" data-scale="preview" data-val="{uid}" loading="lazy"
             src="resolveuid/{uid}/@@images/image/preview"/>
