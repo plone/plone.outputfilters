@@ -1,1 +1,0 @@
-Add image_srcset output filter, to convert IMG tags into PICTURE tags with multiple source definitions as define in imaging control panel [MrTango]

@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b1 (2022-06-23)
+--------------------
+
+New features:
+
+
+- Add image_srcset output filter, to convert IMG tags into PICTURE tags with multiple source definitions as define in imaging control panel [MrTango] (#49)
+
+
 4.1.0 (2022-02-23)
 ------------------
 
