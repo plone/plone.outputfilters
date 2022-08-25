@@ -62,7 +62,7 @@ be applied::
     >>> portal = layer['portal']
     >>> str(portal.portal_transforms.convertTo('text/x-html-safe',
     ...     'test--test', mimetype='text/html', context=portal))
-    'test—test'
+    'test—test\n'
 
 
 How it works

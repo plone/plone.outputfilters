@@ -8,6 +8,35 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b1 (2022-06-23)
+--------------------
+
+New features:
+
+
+- Add image_srcset output filter, to convert IMG tags into PICTURE tags with multiple source definitions as define in imaging control panel [MrTango] (#49)
+
+
+4.1.0 (2022-02-23)
+------------------
+
+New features:
+
+
+- Resolve UIDs in SRC= attribute of of SOURCE and IFRAME elements. (#47)
+
+
+4.0.2 (2020-09-28)
+------------------
+
+Bug fixes:
+
+
+- fix AttributeError: 'NoneType' object has no attribute 'unwrap' exception when a fullsize image is wrapped in an <a> tag. [flipmcf] (#39)
+- Fixed deprecation warning for html_quote.
+  [maurits] (#3130)
+
+
 4.0.1 (2020-04-21)
 ------------------
 
