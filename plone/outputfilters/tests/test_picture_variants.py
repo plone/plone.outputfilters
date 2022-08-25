@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from doctest import _ellipsis_match
 from doctest import OutputChecker
 from doctest import REPORT_NDIFF
@@ -20,9 +19,9 @@ PREFIX = abspath(dirname(__file__))
 
 
 def dummy_image():
-    filename = join(PREFIX, u'image.jpg')
+    filename = join(PREFIX, "image.jpg")
     data = None
-    with open(filename, 'rb') as fd:
+    with open(filename, "rb") as fd:
         data = fd.read()
         fd.close()
     return NamedBlobImage(data=data, filename=filename)
@@ -32,7 +31,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 
     layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
-    image_id = 'image.jpg'
+    image_id = "image.jpg"
 
     def _makeParser(self, **kw):
         parser = PictureVariantsFilter(context=self.portal)
@@ -44,32 +43,31 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         from OFS.SimpleItem import SimpleItem
 
         class DummyContent(SimpleItem):
-
             def __init__(self, id):
                 self.id = id
 
             def UID(self):
-                return 'foo'
+                return "foo"
 
-            allowedRolesAndUsers = ('Anonymous',)
+            allowedRolesAndUsers = ("Anonymous",)
 
         class DummyContent2(NFDummyContent):
-            id = __name__ = 'foo2'
-            title = u'Schönes Bild'
+            id = __name__ = "foo2"
+            title = "Schönes Bild"
 
             def UID(self):
-                return 'foo2'
+                return "foo2"
 
-        dummy = DummyContent('foo')
-        self.portal._setObject('foo', dummy)
+        dummy = DummyContent("foo")
+        self.portal._setObject("foo", dummy)
         self.portal.portal_catalog.catalog_object(self.portal.foo)
 
-        dummy2 = DummyContent2('foo2')
-        with open(join(PREFIX, self.image_id), 'rb') as fd:
+        dummy2 = DummyContent2("foo2")
+        with open(join(PREFIX, self.image_id), "rb") as fd:
             data = fd.read()
             fd.close()
-        dummy2.image = NamedImage(data, 'image/jpeg', u'image.jpeg')
-        self.portal._setObject('foo2', dummy2)
+        dummy2.image = NamedImage(data, "image/jpeg", "image.jpeg")
+        self.portal._setObject("foo2", dummy2)
         self.portal.portal_catalog.catalog_object(self.portal.foo2)
 
     def _assertTransformsTo(self, input, expected):
@@ -81,35 +79,35 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         # print("\n e: {}".format(expected))
         # print("\n o: {}".format(out))
         try:
-            self.assertTrue(_ellipsis_match(normalized_expected,
-                                            normalized_out))
+            self.assertTrue(_ellipsis_match(normalized_expected, normalized_out))
         except AssertionError:
-            class wrapper(object):
+
+            class wrapper:
                 want = expected
-            raise AssertionError(self.outputchecker.output_difference(
-                wrapper, out, REPORT_NDIFF))
+
+            raise AssertionError(
+                self.outputchecker.output_difference(wrapper, out, REPORT_NDIFF)
+            )
 
     def afterSetUp(self):
         # create an image and record its UID
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        setRoles(self.portal, TEST_USER_ID, ["Manager"])
 
         if self.image_id not in self.portal:
-            self.portal.invokeFactory(
-                'Image', id=self.image_id, title='Image')
+            self.portal.invokeFactory("Image", id=self.image_id, title="Image")
         image = self.portal[self.image_id]
-        image.setDescription('My caption')
+        image.setDescription("My caption")
         image.image = dummy_image()
         image.reindexObject()
         self.UID = image.UID()
-        self.parser = self._makeParser(captioned_images=True,
-                                       resolve_uids=True)
+        self.parser = self._makeParser(captioned_images=True, resolve_uids=True)
         assert self.parser.is_enabled()
 
         self.outputchecker = OutputChecker()
 
     def beforeTearDown(self):
         self.login()
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        setRoles(self.portal, TEST_USER_ID, ["Manager"])
         del self.portal[self.image_id]
 
     def test_parsing_minimal(self):
@@ -159,12 +157,15 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 </ul>
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
-        """.format(uid=self.UID)
+        """.format(
+            uid=self.UID
+        )
         import time
+
         startTime = time.time()
         res = self.parser(text)
-        executionTime = (time.time() - startTime)
-        print("\n\nimage srcset parsing time: {}\n".format(executionTime))
+        executionTime = time.time() - startTime
+        print(f"\n\nimage srcset parsing time: {executionTime}\n")
         self.assertTrue(res)
 
         text_out = """<h1>Welcome!</h1>
@@ -232,17 +233,23 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 </ul>
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
-        """.format(uid=self.UID)
+        """.format(
+            uid=self.UID
+        )
         self._assertTransformsTo(text, text_out)
 
     def test_parsing_with_nonexisting_srcset(self):
         text = """
 <p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
-        """.format(uid=self.UID)
+        """.format(
+            uid=self.UID
+        )
         res = self.parser(text)
         self.assertTrue(res)
         text_out = """
 <p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
-        """.format(uid=self.UID)
+        """.format(
+            uid=self.UID
+        )
         # verify that tag was not converted:
         self.assertTrue("data-picturevariant" in res)

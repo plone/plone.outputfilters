@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from zope import schema
 from zope.interface import Interface
 
@@ -12,7 +11,7 @@ class IFilter(Interface):
     To control the order of filters, use the 'order' attribute. It may be
     positive or negative."""
 
-    order = schema.Int(title=u"Order")
+    order = schema.Int(title="Order")
 
     def is_enabled():
         """Returns a boolean indicating whether the filter should be
