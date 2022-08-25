@@ -5,6 +5,7 @@ from Acquisition import aq_parent
 from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Var import newline_to_br
 from DocumentTemplate.html_quote import html_quote
+from plone.base.utils import safe_text
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
@@ -211,7 +212,7 @@ class ResolveUIDAndCaptionFilter:
                     attributes["height"] = image.height
             if fullimage is not None:
                 # Check to see if the alt / title tags need setting
-                title = safe_unicode(aq_acquire(fullimage, "Title")())
+                title = safe_text(aq_acquire(fullimage, "Title")())
                 if not attributes.get("alt"):
                     # bettr an emty alt tag than none. This avoid's screen readers
                     # to read the file name instead. A better fallback would be
@@ -368,5 +369,5 @@ class ResolveUIDAndCaptionFilter:
         except AttributeError:
             return None, None, src, description
         src = url + appendix
-        description = safe_unicode(aq_acquire(fullimage, "Description")())
+        description = safe_text(aq_acquire(fullimage, "Description")())
         return image, fullimage, src, description
