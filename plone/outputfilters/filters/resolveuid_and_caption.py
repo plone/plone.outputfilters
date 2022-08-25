@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_inner
@@ -11,10 +10,10 @@ from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
 from Products.CMFPlone.utils import safe_unicode
-from six.moves.urllib.parse import unquote
-from six.moves.urllib.parse import urljoin
-from six.moves.urllib.parse import urlsplit
-from six.moves.urllib.parse import urlunsplit
+from urllib.parse import unquote
+from urllib.parse import urljoin
+from urllib.parse import urlsplit
+from urllib.parse import urlunsplit
 from zExceptions import NotFound
 from ZODB.POSException import ConflictError
 from zope.cachedescriptors.property import Lazy as lazy_property
@@ -45,7 +44,7 @@ class IResolveUidsEnabler(Interface):
 
 
 @implementer(IImageCaptioningEnabler)
-class ImageCaptioningEnabler(object):
+class ImageCaptioningEnabler:
     @property
     def available(self):
         name = "plone.image_captioning"
@@ -56,7 +55,7 @@ class ImageCaptioningEnabler(object):
 
 
 @implementer(IResolveUidsEnabler)
-class ResolveUidsAlwaysEnabled(object):
+class ResolveUidsAlwaysEnabled:
     available = True
 
 
@@ -66,32 +65,30 @@ def tag(img, **attributes):
 
 
 @implementer(IFilter)
-class ResolveUIDAndCaptionFilter(object):
+class ResolveUIDAndCaptionFilter:
     """Parser to convert UUID links and captioned images"""
 
-    singleton_tags = set(
-        [
-            "area",
-            "base",
-            "basefont",
-            "br",
-            "col",
-            "command",
-            "embed",
-            "frame",
-            "hr",
-            "img",
-            "input",
-            "isindex",
-            "keygen",
-            "link",
-            "meta",
-            "param",
-            "source",
-            "track",
-            "wbr",
-        ]
-    )
+    singleton_tags = {
+        "area",
+        "base",
+        "basefont",
+        "br",
+        "col",
+        "command",
+        "embed",
+        "frame",
+        "hr",
+        "img",
+        "input",
+        "isindex",
+        "keygen",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
 
     def __init__(self, context=None, request=None):
         self.current_status = None
@@ -253,7 +250,7 @@ class ResolveUIDAndCaptionFilter(object):
                     else:
                         del captioned.img["class"]
                     elem.replace_with(captioned)
-        return six.text_type(soup)
+        return str(soup)
 
     def resolve_scale_data(self, url):
         """return scale url, width and height"""

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.outputfilters.mimetype import text_plone_outputfilters_html
 from plone.outputfilters.transforms.html_to_plone_outputfilters_html import (
     html_to_plone_outputfilters_html,

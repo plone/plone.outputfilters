@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 from plone.outputfilters import apply_filters
 
 import unittest
 
 
-class DummyFilter(object):
+class DummyFilter:
     order = 500
 
     def is_enabled(self):

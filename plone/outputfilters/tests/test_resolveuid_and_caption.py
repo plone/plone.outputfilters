@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from doctest import _ellipsis_match
 from doctest import OutputChecker
 from doctest import REPORT_NDIFF
@@ -88,7 +87,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
             self.assertTrue(_ellipsis_match(normalized_expected, normalized_out))
         except AssertionError:
 
-            class wrapper(object):
+            class wrapper:
                 want = expected
 
             raise AssertionError(
@@ -186,7 +185,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
         startTime = time.time()
         res = self.parser(text)
         executionTime = time.time() - startTime
-        print("\n\nresolve_uid_and_caption parsing time: {}\n".format(executionTime))
+        print(f"\n\nresolve_uid_and_caption parsing time: {executionTime}\n")
         self.assertTrue(res)
 
     def test_parsing_preserves_newlines(self):
@@ -212,10 +211,10 @@ alert(1);
         text = """<html>
   <head></head>
   <body>
-    <a class="internal-link" href="resolveuid/%s">Some link</a>
-    <a class="internal-link" href="resolveuid/%s#named-anchor">Some anchored link</a>
+    <a class="internal-link" href="resolveuid/{}">Some link</a>
+    <a class="internal-link" href="resolveuid/{}#named-anchor">Some anchored link</a>
   </body>
-</html>""" % (
+</html>""".format(
             self.UID,
             self.UID,
         )

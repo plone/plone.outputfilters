@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from plone.testing import layered
 
@@ -12,12 +11,7 @@ optionflags = (
     doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE | doctest.REPORT_ONLY_FIRST_FAILURE
 )
 
-if six.PY3:
-    normal_testfiles = ["../README.rst"]
-else:
-    normal_testfiles = [
-        "./README_py2.rst",
-    ]
+normal_testfiles = ["../README.rst"]
 
 
 def test_suite():

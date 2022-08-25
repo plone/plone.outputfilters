@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.outputfilters import apply_filters
 from plone.outputfilters.interfaces import IFilter
 from Products.PortalTransforms.interfaces import ITransform

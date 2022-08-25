@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from doctest import _ellipsis_match
 from doctest import OutputChecker
 from doctest import REPORT_NDIFF
@@ -83,7 +82,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
             self.assertTrue(_ellipsis_match(normalized_expected, normalized_out))
         except AssertionError:
 
-            class wrapper(object):
+            class wrapper:
                 want = expected
 
             raise AssertionError(
@@ -166,7 +165,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         startTime = time.time()
         res = self.parser(text)
         executionTime = time.time() - startTime
-        print("\n\nimage srcset parsing time: {}\n".format(executionTime))
+        print(f"\n\nimage srcset parsing time: {executionTime}\n")
         self.assertTrue(res)
 
         text_out = """<h1>Welcome!</h1>

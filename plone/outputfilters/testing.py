@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
@@ -13,7 +12,7 @@ import zope.component
 
 
 @implementer(IImageCaptioningEnabler)
-class DummyImageCaptioningEnabler(object):
+class DummyImageCaptioningEnabler:
 
     available = True
 

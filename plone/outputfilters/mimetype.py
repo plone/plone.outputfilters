@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.MimetypesRegistry.MimeTypeItem import MimeTypeItem
 
 

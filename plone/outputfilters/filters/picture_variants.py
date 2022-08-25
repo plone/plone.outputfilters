@@ -12,7 +12,7 @@ logger = logging.getLogger("plone.outputfilter.picture_variants")
 
 
 @implementer(IFilter)
-class PictureVariantsFilter(object):
+class PictureVariantsFilter:
     """Converts img tags with a data-picturevariant attribute into picture/source tag's with srcset definitions."""
 
     order = 700
@@ -39,7 +39,7 @@ class PictureVariantsFilter(object):
             picture_variants_config = get_picture_variants().get(picture_variant_name)
             if not picture_variants_config:
                 logger.warn(
-                    "Could not find the given picture_variant_name {0}, leave tag untouched!".format(
+                    "Could not find the given picture_variant_name {}, leave tag untouched!".format(
                         picture_variant_name
                     )
                 )
