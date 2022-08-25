@@ -11,7 +11,9 @@ from plone.app.testing.bbb import PloneTestCase
 from plone.namedfile.file import NamedBlobImage
 from plone.namedfile.file import NamedImage
 from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
-from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDAndCaptionFilter  # noqa
+from plone.outputfilters.filters.resolveuid_and_caption import (  # noqa
+    ResolveUIDAndCaptionFilter,
+)
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 
@@ -314,8 +316,8 @@ alert(1);
                         is uuidToObject(self.UID).aq_base)
 
     def test_uuidToURL_permission(self):
-        from plone.outputfilters.browser.resolveuid import uuidToURL
         from plone.outputfilters.browser.resolveuid import uuidToObject
+        from plone.outputfilters.browser.resolveuid import uuidToURL
         self.portal.invokeFactory('Document', id='page', title='Page')
         page = self.portal['page']
         self.logout()

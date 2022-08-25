@@ -1,10 +1,12 @@
-import logging
-
 from bs4 import BeautifulSoup
+from plone.namedfile.picture import get_picture_variants
+from plone.namedfile.picture import Img2PictureTag
 from plone.outputfilters.interfaces import IFilter
 from Products.CMFPlone.utils import safe_nativestring
 from zope.interface import implementer
-from plone.namedfile.picture import Img2PictureTag, get_picture_variants
+
+import logging
+
 
 logger = logging.getLogger("plone.outputfilter.picture_variants")
 

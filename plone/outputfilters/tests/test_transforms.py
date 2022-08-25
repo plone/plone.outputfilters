@@ -14,19 +14,21 @@ class TransformsTestCase(unittest.TestCase):
         self.portal = self.layer['portal']
         self.request = self.layer['request']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        from zope.component import getUtility
         from Products.PortalTransforms.interfaces import IPortalTransformsTool
+        from zope.component import getUtility
         self.transforms = getUtility(IPortalTransformsTool)
 
     def test_instantiate_html_to_plone_outputfilters_html_transform(self):
-        from plone.outputfilters.transforms.html_to_plone_outputfilters_html \
-            import html_to_plone_outputfilters_html
+        from plone.outputfilters.transforms.html_to_plone_outputfilters_html import (
+            html_to_plone_outputfilters_html,
+        )
         transform = html_to_plone_outputfilters_html(name='transform')
         self.assertEqual('transform', transform.name())
 
     def test_instantiate_plone_outputfilters_html_to_html_transform(self):
-        from plone.outputfilters.transforms.plone_outputfilters_html_to_html \
-            import plone_outputfilters_html_to_html
+        from plone.outputfilters.transforms.plone_outputfilters_html_to_html import (
+            plone_outputfilters_html_to_html,
+        )
         transform = plone_outputfilters_html_to_html(name='transform')
         self.assertEqual('transform', transform.name())
 
@@ -39,8 +41,7 @@ class TransformsTestCase(unittest.TestCase):
         self.assertEqual(1, len(policies))
 
     def test_uninstallation(self):
-        from plone.outputfilters.setuphandlers import \
-            uninstall_mimetype_and_transforms
+        from plone.outputfilters.setuphandlers import uninstall_mimetype_and_transforms
         uninstall_mimetype_and_transforms(self.portal)
 
         policies = self.transforms.listPolicies()

@@ -4,7 +4,9 @@ from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
-from plone.outputfilters.filters.resolveuid_and_caption import IImageCaptioningEnabler  # noqa
+from plone.outputfilters.filters.resolveuid_and_caption import (  # noqa
+    IImageCaptioningEnabler,
+)
 from zope.interface import implementer
 
 import zope.component

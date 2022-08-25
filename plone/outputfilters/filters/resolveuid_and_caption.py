@@ -4,8 +4,8 @@ from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
-from DocumentTemplate.html_quote import html_quote
 from DocumentTemplate.DT_Var import newline_to_br
+from DocumentTemplate.html_quote import html_quote
 from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
