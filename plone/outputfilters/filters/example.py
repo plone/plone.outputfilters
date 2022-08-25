@@ -15,7 +15,7 @@ class EmDashAdder(object):
     def is_enabled(self):
         return True
 
-    pattern = re.compile(r'--')
+    pattern = re.compile(r"--")
 
     def __call__(self, data):
-        return self.pattern.sub(u'—', data)
+        return self.pattern.sub("—", data)

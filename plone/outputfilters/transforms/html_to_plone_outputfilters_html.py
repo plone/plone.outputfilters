@@ -9,15 +9,15 @@ from zope.interface import implementer
 
 @implementer(ITransform)
 class html_to_plone_outputfilters_html:
-    """ transform which applies output filters"""
+    """transform which applies output filters"""
+
     __name__ = "html_to_plone_outputfilters_html"
-    inputs = ('text/html',)
+    inputs = ("text/html",)
     output = "text/x-plone-outputfilters-html"
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs': ('list', 'Inputs',
-                       'Input(s) MIME type. Change with care.'),
+            "inputs": ("list", "Inputs", "Input(s) MIME type. Change with care."),
         }
         if name:
             self.__name__ = name
@@ -26,8 +26,8 @@ class html_to_plone_outputfilters_html:
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        context = kwargs.get('context')
-        request = getattr(getSite(), 'REQUEST', None)
+        context = kwargs.get("context")
+        request = getattr(getSite(), "REQUEST", None)
         filters = [f for _, f in getAdapters((context, request), IFilter)]
 
         res = apply_filters(filters, orig)

@@ -13,8 +13,7 @@ logger = logging.getLogger("plone.outputfilter.picture_variants")
 
 @implementer(IFilter)
 class PictureVariantsFilter(object):
-    """Converts img tags with a data-picturevariant attribute into picture/source tag's with srcset definitions.
-    """
+    """Converts img tags with a data-picturevariant attribute into picture/source tag's with srcset definitions."""
 
     order = 700
 
@@ -29,7 +28,6 @@ class PictureVariantsFilter(object):
         self.context = context
         self.request = request
         self.img2picturetag = Img2PictureTag()
-
 
     def __call__(self, data):
         soup = BeautifulSoup(safe_nativestring(data), "html.parser")
@@ -49,5 +47,7 @@ class PictureVariantsFilter(object):
             sourceset = picture_variants_config.get("sourceset")
             if not sourceset:
                 continue
-            elem.replace_with(self.img2picturetag.create_picture_tag(sourceset, elem.attrs))
+            elem.replace_with(
+                self.img2picturetag.create_picture_tag(sourceset, elem.attrs)
+            )
         return soup.prettify()

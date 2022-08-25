@@ -5,7 +5,7 @@ from setuptools import setup
 import os
 
 
-version = '5.0.0b2.dev0'
+version = "5.0.0b2.dev0"
 
 
 def read(filename):
@@ -31,11 +31,10 @@ long_description = "\n".join(
 )
 
 setup(
-    name='plone.outputfilters',
+    name="plone.outputfilters",
     version=version,
     description=(
-        "Transformations applied to HTML in "
-        "Plone text fields as they are rendered"
+        "Transformations applied to HTML in " "Plone text fields as they are rendered"
     ),
     long_description=long_description,
     # Get more strings from https://pypi.org/classifiers/
@@ -51,35 +50,35 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    keywords='plone transform filter uid caption',
-    author='David Glick, Plone Foundation',
-    author_email='davidglick@groundwire.org',
-    url='http://github.com/plone/plone.outputfilters',
-    license='GPL',
+    keywords="plone transform filter uid caption",
+    author="David Glick, Plone Foundation",
+    author_email="davidglick@groundwire.org",
+    url="http://github.com/plone/plone.outputfilters",
+    license="GPL",
     packages=find_packages(),
-    namespace_packages=['plone'],
+    namespace_packages=["plone"],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Products.CMFCore',
-        'Products.GenericSetup',
-        'Products.MimetypesRegistry',
-        'Products.PortalTransforms>=2.0',
-        'plone.namedfile',
-        'plone.app.uuid',
-        'setuptools',
-        'six',
-        'unidecode',
-        'zope.deprecation',
-        'beautifulsoup4',
-        'lxml',
+        "Products.CMFCore",
+        "Products.GenericSetup",
+        "Products.MimetypesRegistry",
+        "Products.PortalTransforms>=2.0",
+        "plone.namedfile",
+        "plone.app.uuid",
+        "setuptools",
+        "six",
+        "unidecode",
+        "zope.deprecation",
+        "beautifulsoup4",
+        "lxml",
     ],
     extras_require={
-        'test': [
-            'plone.app.contenttypes',
-            'plone.app.testing',
-            'plone.app.robotframework',
-            'plone.namedfile',
+        "test": [
+            "plone.app.contenttypes",
+            "plone.app.testing",
+            "plone.app.robotframework",
+            "plone.namedfile",
         ]
     },
     entry_points="""
