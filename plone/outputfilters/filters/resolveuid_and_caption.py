@@ -9,7 +9,6 @@ from plone.outputfilters.browser.resolveuid import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
-from Products.CMFPlone.utils import safe_unicode
 from urllib.parse import unquote
 from urllib.parse import urljoin
 from urllib.parse import urlsplit
@@ -26,7 +25,6 @@ from zope.interface import Interface
 from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
-import six
 
 
 appendix_re = re.compile("^(.*)([?#].*)$")
@@ -155,7 +153,7 @@ class ResolveUIDAndCaptionFilter:
 
     def __call__(self, data):
         data = re.sub(r"<([^<>\s]+?)\s*/>", self._shorttag_replace, data)
-        soup = BeautifulSoup(safe_unicode(data), "html.parser")
+        soup = BeautifulSoup(safe_text(data), "html.parser")
         for elem in soup.find_all(["a", "area"]):
             attributes = elem.attrs
             href = attributes.get("href")

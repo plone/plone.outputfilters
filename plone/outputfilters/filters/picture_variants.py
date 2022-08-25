@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
+from plone.base.utils import safe_text
 from plone.namedfile.picture import get_picture_variants
 from plone.namedfile.picture import Img2PictureTag
 from plone.outputfilters.interfaces import IFilter
-from Products.CMFPlone.utils import safe_nativestring
 from zope.interface import implementer
 
 import logging
@@ -18,10 +18,7 @@ class PictureVariantsFilter:
     order = 700
 
     def is_enabled(self):
-        if self.context is None:
-            return False
-        else:
-            return True
+        return self.context is not None
 
     def __init__(self, context=None, request=None):
         self.current_status = None
@@ -30,7 +27,7 @@ class PictureVariantsFilter:
         self.img2picturetag = Img2PictureTag()
 
     def __call__(self, data):
-        soup = BeautifulSoup(safe_nativestring(data), "html.parser")
+        soup = BeautifulSoup(safe_text(data), "html.parser")
 
         for elem in soup.find_all("img"):
             picture_variant_name = elem.attrs.get("data-picturevariant", "")
