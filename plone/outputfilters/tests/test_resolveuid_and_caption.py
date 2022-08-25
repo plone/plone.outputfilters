@@ -396,7 +396,7 @@ alert(1);
     def test_image_captioning_relative_path_scale(self):
         text_in = """<img class="captioned" src="image.jpg/@@images/image/thumb"/>"""
         text_out = """<figure class="captioned">
-<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
+<img alt="" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -415,7 +415,7 @@ alert(1);
             % self.UID
         )
         text_out = """<figure class="captioned">
-<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
+<img alt="" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -426,7 +426,7 @@ alert(1);
             % self.UID
         )
         text_out = """<figure class="captioned">
-<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
+<img alt="" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>"""
         self._assertTransformsTo(text_in, text_out)
@@ -519,7 +519,7 @@ alert(1);
     def test_image_captioning_preserves_existing_links(self):
         text_in = """<a href="/xyzzy" class="link"><img class="image-left captioned" src="image.jpg/@@images/image/thumb"/></a>"""
         text_out = """<a class="link" href="/xyzzy"><figure class="image-left captioned">
-<img alt="" height="84" src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="128"/>
+<img alt="" height="..." src="http://nohost/plone/image.jpg/@@images/...jpeg" title="Image" width="..."/>
 <figcaption class="image-caption">My caption</figcaption>
 </figure>
 </a>"""

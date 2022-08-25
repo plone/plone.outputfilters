@@ -61,6 +61,9 @@ New features:
 
 Bug fixes:
 
+- Don't check for hard coded image size in test.
+  [agitator]
+
 - Fixed possible package install error with Python 3.6 when no system locale is set.
   See `coredev issue 642 <https://github.com/plone/buildout.coredev/issues/642#issuecomment-597008272>`_.
   [maurits]
