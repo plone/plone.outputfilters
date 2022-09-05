@@ -5,7 +5,7 @@ from zope.deprecation import deprecate
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
-from plone.app.uuid.utils import uuidToObject as new_uuidToObject
+from plone.app.uuid.utils import uuidToObject
 
 
 try:
@@ -23,13 +23,10 @@ def uuidToURL(uuid):
         return res[0].getURL()
 
 
-@deprecate(
-    "Please use plone.app.uuid.utils.uuidToObject instead. "
-    "But be aware that this does an extra security check."
-)
+@deprecate("Import from plone.app.uuid.utils instead. To be removed in version 6.")
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the Physical Path"""
-    return new_uuidToObject(uuid, unrestricted=True)
+    return uuidToObject(uuid, unrestricted=True)
 
 
 try:
