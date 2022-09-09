@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Var import newline_to_br
 from DocumentTemplate.html_quote import html_quote
 from plone.base.utils import safe_text
-from plone.outputfilters.browser.resolveuid import uuidToObject
+from plone.app.uuid.utils import uuidToObject
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
@@ -274,7 +274,8 @@ class ResolveUIDAndCaptionFilter:
             match = resolveuid_re.match(subpath)
             if match is not None:
                 uid, _subpath = match.groups()
-                obj = uuidToObject(uid)
+                # Getting URL of an object from it's UUID needs no permission checks
+                obj = uuidToObject(uid, unrestricted=True)
                 if obj is not None:
                     subpath = _subpath
 
