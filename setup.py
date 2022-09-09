@@ -64,7 +64,7 @@ setup(
         "Products.MimetypesRegistry",
         "Products.PortalTransforms>=2.0",
         "plone.namedfile",
-        "plone.app.uuid>=2.2.0",
+        "plone.app.uuid",
         "setuptools",
         "unidecode",
         "zope.deprecation",
