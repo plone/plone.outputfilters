@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b2 (2022-09-10)
+--------------------
+
+Bug fixes:
+
+
+- isort, black, pyupgrade, manual six removal. 
+  [jensens] (#53)
+
+
 5.0.0b1 (2022-06-23)
 --------------------
 
