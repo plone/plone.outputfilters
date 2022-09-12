@@ -24,8 +24,7 @@ def uuidToURL(uuid):
 
 
 @deprecate(
-    "Please use plone.app.uuid.utils.uuidToObject instead. "
-    "But be aware that this does an extra security check."
+    "Import from plone.app.uuid.utils instead. To be removed in version 6"
 )
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the Physical Path"""
