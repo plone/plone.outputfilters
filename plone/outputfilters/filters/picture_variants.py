@@ -47,4 +47,4 @@ class PictureVariantsFilter:
             elem.replace_with(
                 self.img2picturetag.create_picture_tag(sourceset, elem.attrs)
             )
-        return soup.prettify()
+        return str(soup)
