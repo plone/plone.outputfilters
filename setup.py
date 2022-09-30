@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 
 
-version = "5.0.0b3.dev0"
+version = "5.0.0b3"
 
 
 def read(filename):

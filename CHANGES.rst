@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b3 (2022-09-30)
+--------------------
+
+Bug fixes:
+
+
+- Do not return prettified soup after picture variants filter.
+  This prevents adding unneeded newlines.
+  [petschki] (#56)
+
+
 5.0.0b2 (2022-09-10)
 --------------------
 

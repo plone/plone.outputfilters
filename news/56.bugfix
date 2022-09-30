@@ -1,3 +1,0 @@
-Do not return prettified soup after picture variants filter.
-This prevents adding unneeded newlines.
-[petschki]
