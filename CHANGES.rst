@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0 (2022-11-17)
+------------------
+
+Bug fixes:
+
+
+- Use our new version of uuidToObject() from plone.app.uuid.utils
+  [anirudhhkashyap] (#52)
+
+
 5.0.0b3 (2022-09-30)
 --------------------
 
