@@ -5,8 +5,8 @@ from Acquisition import aq_parent
 from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Var import newline_to_br
 from DocumentTemplate.html_quote import html_quote
-from plone.base.utils import safe_text
 from plone.app.uuid.utils import uuidToObject
+from plone.base.utils import safe_text
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
