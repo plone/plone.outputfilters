@@ -1,6 +1,5 @@
 from Acquisition import aq_acquire
 from Acquisition import aq_base
-from Acquisition import aq_inner
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Var import newline_to_br
