@@ -248,7 +248,7 @@ alert(1);
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_non_AT_content(self):
-        # UUIDs can be derefenced as long as they are in the UID index
+        # UUIDs can be dereferenced as long as they are in the UID index
         self._makeDummyContent()
         text_in = """<a href="resolveuid/foo">foo</a>"""
         text_out = """<a href="http://nohost/plone/foo">foo</a>"""
