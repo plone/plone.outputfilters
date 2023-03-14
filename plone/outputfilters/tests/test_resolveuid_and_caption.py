@@ -30,7 +30,6 @@ def dummy_image():
 
 
 class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
-
     layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
     image_id = "image.jpg"

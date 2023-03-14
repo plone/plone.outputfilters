@@ -4,7 +4,6 @@ from zope.interface import implementer
 
 @implementer(ITransform)
 class plone_outputfilters_html_to_html:
-
     __name__ = "plone_outputfilters_html_to_html"
     inputs = ("text/x-plone-outputfilters-html",)
     output = "text/html"

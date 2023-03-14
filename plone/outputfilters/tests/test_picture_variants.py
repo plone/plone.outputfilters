@@ -28,7 +28,6 @@ def dummy_image():
 
 
 class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
-
     layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
     image_id = "image.jpg"

@@ -6,7 +6,6 @@ import unittest
 
 
 class TransformsTestCase(unittest.TestCase):
-
     layer = PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 
     def setUp(self):
