@@ -14,7 +14,9 @@ except ImportError:
     from zope.app.component.hooks import getSite
 
 
-@deprecate("Please use plone.app.uuid.utils.uuidToURL instead.")
+@deprecate(
+    "Please use plone.app.uuid.utils.uuidToURL instead. Will be removed in Plone 7"
+)
 def uuidToURL(uuid):
     """Resolves a UUID to a URL via the UID index of portal_catalog."""
     catalog = getToolByName(getSite(), "portal_catalog")
@@ -23,7 +25,7 @@ def uuidToURL(uuid):
         return res[0].getURL()
 
 
-@deprecate("Import from plone.app.uuid.utils instead. To be removed in version 6")
+@deprecate("Import from plone.app.uuid.utils instead. Will be removed in Plone 7")
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the Physical Path"""
     return new_uuidToObject(uuid, unrestricted=True)
