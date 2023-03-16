@@ -1,12 +1,11 @@
 from Acquisition import aq_acquire
 from Acquisition import aq_base
-from Acquisition import aq_inner
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
 from DocumentTemplate.DT_Var import newline_to_br
 from DocumentTemplate.html_quote import html_quote
-from plone.base.utils import safe_text
 from plone.app.uuid.utils import uuidToObject
+from plone.base.utils import safe_text
 from plone.outputfilters.interfaces import IFilter
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.interfaces import IContentish
@@ -214,9 +213,9 @@ class ResolveUIDAndCaptionFilter:
                 # Check to see if the alt / title tags need setting
                 title = safe_text(aq_acquire(fullimage, "Title")())
                 if not attributes.get("alt"):
-                    # bettr an emty alt tag than none. This avoid's screen readers
+                    # better an empty alt tag than none. This avoids screen readers
                     # to read the file name instead. A better fallback would be
-                    # a fallback alt text comming from the img object.
+                    # a fallback alt text coming from the img object.
                     attributes["alt"] = ""
                 if "title" not in attributes:
                     attributes["title"] = title

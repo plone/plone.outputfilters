@@ -1,28 +1,35 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    xmlns:browser="http://namespaces.zope.org/browser">
+    >
 
   <adapter
-    provides="..interfaces.IFilter"
-    name="picture_variants"
-    for="* *"
-    factory=".picture_variants.PictureVariantsFilter"
-    />
+      factory=".picture_variants.PictureVariantsFilter"
+      provides="..interfaces.IFilter"
+      for="*
+           *"
+      name="picture_variants"
+      />
 
   <adapter
-    provides="..interfaces.IFilter"
-    name="resolveuid_and_caption"
-    for="* *"
-    factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
-    />
+      factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
+      provides="..interfaces.IFilter"
+      for="*
+           *"
+      name="resolveuid_and_caption"
+      />
 
   <!-- in Plone 5, we always resolve uids -->
-  <utility factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
-           name="plone5-always-enabled"
-           zcml:condition="have plone-5" />
+  <utility
+      factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
+      name="plone5-always-enabled"
+      zcml:condition="have plone-5"
+      />
 
-  <utility factory=".resolveuid_and_caption.ImageCaptioningEnabler"
-           name="image-captioning-enabler" />
+  <utility
+      factory=".resolveuid_and_caption.ImageCaptioningEnabler"
+      name="image-captioning-enabler"
+      />
 
 </configure>

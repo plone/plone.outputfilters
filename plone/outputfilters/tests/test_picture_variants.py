@@ -28,7 +28,6 @@ def dummy_image():
 
 
 class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
-
     layer = PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 
     image_id = "image.jpg"
@@ -246,10 +245,5 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         )
         res = self.parser(text)
         self.assertTrue(res)
-        text_out = """
-<p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
-        """.format(
-            uid=self.UID
-        )
         # verify that tag was not converted:
         self.assertTrue("data-picturevariant" in res)

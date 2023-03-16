@@ -1,25 +1,27 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
-    i18n_domain="plone.outputfilters">
+    i18n_domain="plone.outputfilters"
+    >
 
-  <include package=".browser"/>
-  <include package=".filters"/>
+  <include package=".browser" />
+  <include package=".filters" />
 
   <gs:registerProfile
       name="default"
       title="HTML Output Filters"
-      directory="profiles/default"
       description="Framework for applying filters to HTML as it is rendered."
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/default"
       />
 
   <gs:importStep
       name="plone_outputfilters_various"
       title="HTML Output Filters installation"
       description="Import various plone.outputfilters"
-      handler="plone.outputfilters.setuphandlers.importVarious">
-      <depends name="componentregistry"/>
+      handler="plone.outputfilters.setuphandlers.importVarious"
+      >
+    <depends name="componentregistry" />
   </gs:importStep>
 
 </configure>
