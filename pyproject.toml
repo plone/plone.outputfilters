@@ -56,7 +56,7 @@ Zope = [
   'zope.schema', 'zope.security', 'zope.site', 'zope.traversing', 'AccessControl',
 ]
 'plone.base' = [
-  'setuptools', 'AccessControl', 'Products.BTreeFolder2', 'Products.CMFCore',
+  'AccessControl', 'Products.BTreeFolder2', 'Products.CMFCore',
   'Products.CMFDynamicViewFTI', 'zope.deprecation',
 ]
 python-dateutil = ['dateutil']
