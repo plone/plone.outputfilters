@@ -1,5 +1,6 @@
 from Acquisition import aq_base
 from plone.app.uuid.utils import uuidToObject as new_uuidToObject
+from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
 from zope.component.hooks import getSite
@@ -26,20 +27,12 @@ def uuidToObject(uuid):
     return new_uuidToObject(uuid, unrestricted=True)
 
 
-try:
-    from plone.uuid.interfaces import IUUID
-except ImportError:
-
-    def uuidFor(obj):
-        return obj.UID()
-
-else:
-
-    def uuidFor(obj):
-        uuid = IUUID(obj, None)
-        if uuid is None and hasattr(aq_base(obj), "UID"):
-            uuid = obj.UID()
-        return uuid
+@deprecate("uuidFor is not used in core Plone. Will be removed in Plone 7")
+def uuidFor(obj):
+    uuid = IUUID(obj, None)
+    if uuid is None and hasattr(aq_base(obj), "UID"):
+        uuid = obj.UID()
+    return uuid
 
 
 @implementer(IPublishTraverse)
