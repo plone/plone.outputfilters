@@ -2,16 +2,11 @@ from Acquisition import aq_base
 from plone.app.uuid.utils import uuidToObject as new_uuidToObject
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
+from zope.component.hooks import getSite
 from zope.deprecation import deprecate
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
-
-
-try:
-    from zope.component.hooks import getSite
-except ImportError:
-    from zope.app.component.hooks import getSite
 
 
 @deprecate(
