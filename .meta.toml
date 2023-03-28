@@ -6,3 +6,8 @@ commit-id = "993150bc"
 
 [codespell]
 additional-ignores = "discreet"
+
+[dependencies]
+mappings = [
+    "beautifulsoup4 = ['bs4']",
+    ]

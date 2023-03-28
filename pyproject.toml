@@ -63,3 +63,4 @@ Zope = [
   'Products.CMFDynamicViewFTI', 'zope.deprecation',
 ]
 python-dateutil = ['dateutil']
+beautifulsoup4 = ['bs4']
