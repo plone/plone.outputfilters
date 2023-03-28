@@ -60,8 +60,3 @@ Zope = [
   'Products.CMFDynamicViewFTI', 'zope.deprecation',
 ]
 python-dateutil = ['dateutil']
-beautifulsoup4 = ['bs4', ]
-ignore-packages = ['zope.app.component']
-
-[tool.codespell]
-ignore-words-list = "discreet"
