@@ -16,6 +16,8 @@ from plone.outputfilters.filters.resolveuid_and_caption import (  # noqa
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 
+import warnings
+
 
 PREFIX = abspath(dirname(__file__))
 
@@ -310,26 +312,32 @@ alert(1);
         self.assertEqual("http://nohost/plone/image.jpg?qs", res.headers["location"])
 
     def test_uuidToURL(self):
-        from plone.outputfilters.browser.resolveuid import uuidToURL
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            from plone.outputfilters.browser.resolveuid import uuidToURL
 
-        self.assertEqual("http://nohost/plone/image.jpg", uuidToURL(self.UID))
+            self.assertEqual("http://nohost/plone/image.jpg", uuidToURL(self.UID))
 
     def test_uuidToObject(self):
-        from plone.outputfilters.browser.resolveuid import uuidToObject
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            from plone.outputfilters.browser.resolveuid import uuidToObject
 
-        self.assertTrue(
-            self.portal["image.jpg"].aq_base is uuidToObject(self.UID).aq_base
-        )
+            self.assertTrue(
+                self.portal["image.jpg"].aq_base is uuidToObject(self.UID).aq_base
+            )
 
     def test_uuidToURL_permission(self):
-        from plone.outputfilters.browser.resolveuid import uuidToObject
-        from plone.outputfilters.browser.resolveuid import uuidToURL
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            from plone.outputfilters.browser.resolveuid import uuidToObject
+            from plone.outputfilters.browser.resolveuid import uuidToURL
 
-        self.portal.invokeFactory("Document", id="page", title="Page")
-        page = self.portal["page"]
-        self.logout()
-        self.assertEqual("http://nohost/plone/page", uuidToURL(page.UID()))
-        self.assertTrue(page.aq_base is uuidToObject(page.UID()).aq_base)
+            self.portal.invokeFactory("Document", id="page", title="Page")
+            page = self.portal["page"]
+            self.logout()
+            self.assertEqual("http://nohost/plone/page", uuidToURL(page.UID()))
+            self.assertTrue(page.aq_base is uuidToObject(page.UID()).aq_base)
 
     def test_image_captioning_in_news_item(self):
         # Create a news item with a relative unscaled image

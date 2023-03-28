@@ -8,10 +8,8 @@ By default, these filters are wired up to occur when text is transformed from
 the text/html mimetype to the text/x-html-safe mimetype via the
 PortalTransforms machinery.
 
-With both Archetypes TextFields and the RichText field of
-``plone.app.textfield``, this transform is typically applied when the field
-value is first accessed. The result of the transform is then cached in a
-volatile attribute for an hour or until the value is replaced.
+With  the RichText field of ``plone.app.textfield``, this transform is typically applied when the field value is first accessed.
+The result of the transform is then cached in a volatile attribute for an hour or until the value is replaced.
 
 
 Included Filters
@@ -45,9 +43,7 @@ requires an extra request after the redirect. The resolveuid filter avoids that
 by replacing such URLs with the object's actual full absolute URL as the link
 is rendered.
 
-UIDs are resolved using ``plone.app.uuid.utils.uuidToURL``, with a fallback to
-the Archetypes UID catalog for backwards compatibility. LinguaPlone translations
-are supported when LinguaPlone is present.
+UIDs are resolved using ``plone.app.uuid.utils.uuidToURL``.
 
 The resolveuid filter is enabled if there is at least one
 ``plone.outputfilters.filters.resolveuid_and_caption.IResolveUidsEnabler``

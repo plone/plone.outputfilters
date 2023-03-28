@@ -42,6 +42,9 @@ profile = "plone"
 [tool.black]
 target-version = ["py38"]
 
+[tool.codespell]
+ignore-words-list = "discreet"
+
 [tool.dependencychecker]
 Zope = [
   # Zope own provided namespaces
@@ -60,8 +63,4 @@ Zope = [
   'Products.CMFDynamicViewFTI', 'zope.deprecation',
 ]
 python-dateutil = ['dateutil']
-beautifulsoup4 = ['bs4', ]
-ignore-packages = ['zope.app.component']
-
-[tool.codespell]
-ignore-words-list = "discreet"
+beautifulsoup4 = ['bs4']

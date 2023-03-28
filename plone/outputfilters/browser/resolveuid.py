@@ -1,17 +1,14 @@
 from Acquisition import aq_base
 from plone.app.uuid.utils import uuidToObject as new_uuidToObject
+from plone.app.uuid.utils import uuidToURL as new_uuidToURL
+from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
+from zope.component.hooks import getSite
 from zope.deprecation import deprecate
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
-
-
-try:
-    from zope.component.hooks import getSite
-except ImportError:
-    from zope.app.component.hooks import getSite
 
 
 @deprecate(
@@ -25,26 +22,21 @@ def uuidToURL(uuid):
         return res[0].getURL()
 
 
-@deprecate("Import from plone.app.uuid.utils instead. Will be removed in Plone 7")
+@deprecate(
+    "Import from plone.app.uuid.utils instead, and call with unrestricted=True. "
+    "Will be removed in Plone 7"
+)
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the Physical Path"""
     return new_uuidToObject(uuid, unrestricted=True)
 
 
-try:
-    from plone.uuid.interfaces import IUUID
-except ImportError:
-
-    def uuidFor(obj):
-        return obj.UID()
-
-else:
-
-    def uuidFor(obj):
-        uuid = IUUID(obj, None)
-        if uuid is None and hasattr(aq_base(obj), "UID"):
-            uuid = obj.UID()
-        return uuid
+@deprecate("uuidFor is not used in core Plone. Will be removed in Plone 7")
+def uuidFor(obj):
+    uuid = IUUID(obj, None)
+    if uuid is None and hasattr(aq_base(obj), "UID"):
+        uuid = obj.UID()
+    return uuid
 
 
 @implementer(IPublishTraverse)
@@ -64,7 +56,7 @@ class ResolveUIDView(BrowserView):
         return self
 
     def __call__(self):
-        url = uuidToURL(self.uuid)
+        url = new_uuidToURL(self.uuid)
 
         if not url:
             raise NotFound("The link you followed is broken")

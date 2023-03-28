@@ -2,4 +2,12 @@
 # https://github.com/plone/meta/tree/master/config/default
 [meta]
 template = "default"
-commit-id = "243ca9ec"
+commit-id = "993150bc"
+
+[codespell]
+additional-ignores = "discreet"
+
+[dependencies]
+mappings = [
+    "beautifulsoup4 = ['bs4']",
+    ]
