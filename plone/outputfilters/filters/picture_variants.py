@@ -35,7 +35,7 @@ class PictureVariantsFilter:
                 continue
             picture_variants_config = get_picture_variants().get(picture_variant_name)
             if not picture_variants_config:
-                logger.warn(
+                logger.warning(
                     "Could not find the given picture_variant_name {}, leave tag untouched!".format(
                         picture_variant_name
                     )

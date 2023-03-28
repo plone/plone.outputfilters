@@ -1,5 +1,6 @@
 from Acquisition import aq_base
 from plone.app.uuid.utils import uuidToObject as new_uuidToObject
+from plone.app.uuid.utils import uuidToURL as new_uuidToURL
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from zExceptions import NotFound
@@ -21,7 +22,10 @@ def uuidToURL(uuid):
         return res[0].getURL()
 
 
-@deprecate("Import from plone.app.uuid.utils instead. Will be removed in Plone 7")
+@deprecate(
+    "Import from plone.app.uuid.utils instead, and call with unrestricted=True. "
+    "Will be removed in Plone 7"
+)
 def uuidToObject(uuid):
     """Resolves a UUID to an object via the Physical Path"""
     return new_uuidToObject(uuid, unrestricted=True)
@@ -52,7 +56,7 @@ class ResolveUIDView(BrowserView):
         return self
 
     def __call__(self):
-        url = uuidToURL(self.uuid)
+        url = new_uuidToURL(self.uuid)
 
         if not url:
             raise NotFound("The link you followed is broken")
