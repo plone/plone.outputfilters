@@ -8,6 +8,8 @@ lib/
 include/
 parts/
 .installed.cfg
+.tox
+dependencies.svg
 develop-eggs/
 eggs/
 local/
