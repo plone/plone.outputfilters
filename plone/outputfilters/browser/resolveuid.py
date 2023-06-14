@@ -43,6 +43,7 @@ def uuidFor(obj):
 class ResolveUIDView(BrowserView):
     """Resolve a URL like /resolveuid/<uuid> to a normalized URL."""
 
+    uuid = None
     subpath = None
 
     def publishTraverse(self, request, name):

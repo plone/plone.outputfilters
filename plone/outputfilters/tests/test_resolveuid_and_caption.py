@@ -299,6 +299,10 @@ alert(1);
         res = self.publish("/plone/resolveuid/BOGUS")
         self.assertEqual(404, res.status)
 
+    def test_resolveuid_view_missing_uuid(self):
+        res = self.publish("/plone/resolveuid")
+        self.assertEqual(404, res.status)
+
     def test_resolveuid_view_subpath(self):
         res = self.publish("/plone/resolveuid/%s/image_thumb" % self.UID)
         self.assertEqual(301, res.status)

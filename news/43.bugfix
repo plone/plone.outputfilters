@@ -1,0 +1,1 @@
+Return a 404 Not Found response if the resolveuid view is called with no uuid. @davisagli
