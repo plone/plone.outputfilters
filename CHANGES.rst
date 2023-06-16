@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.3 (2023-06-16)
+------------------
+
+Bug fixes:
+
+
+- Return a 404 Not Found response if the resolveuid view is called with no uuid. @davisagli (#43)
+
+
 5.0.2 (2023-04-14)
 ------------------
 
