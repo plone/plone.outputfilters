@@ -1,13 +1,11 @@
 # Generated from:
 # https://github.com/plone/meta/tree/master/config/default
+# See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "993150bc"
+commit-id = "7723aeaf"
 
-[codespell]
-additional-ignores = "discreet"
-
-[dependencies]
-mappings = [
+[pyproject]
+dependencies_mappings = [
     "beautifulsoup4 = ['bs4']",
     ]
