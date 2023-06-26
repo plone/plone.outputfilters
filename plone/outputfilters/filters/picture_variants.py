@@ -25,6 +25,7 @@ class PictureVariantsFilter:
         self.context = context
         self.request = request
         self.img2picturetag = Img2PictureTag()
+        self.all_picture_variants = get_picture_variants()
 
     def __call__(self, data):
         soup = BeautifulSoup(safe_text(data), "html.parser")
@@ -33,7 +34,9 @@ class PictureVariantsFilter:
             picture_variant_name = elem.attrs.get("data-picturevariant", "")
             if not picture_variant_name:
                 continue
-            picture_variants_config = get_picture_variants().get(picture_variant_name)
+            picture_variants_config = self.all_picture_variants.get(
+                picture_variant_name
+            )
             if not picture_variants_config:
                 logger.warning(
                     "Could not find the given picture_variant_name {}, leave tag untouched!".format(
