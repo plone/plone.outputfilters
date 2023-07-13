@@ -8,6 +8,23 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.4 (2023-07-13)
+------------------
+
+Bug fixes:
+
+
+- Call registry once per filter rather than for each img tag.
+  [gotcha] (less_call_to_registry)
+
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs] (7723aeaf)
+
+
 5.0.3 (2023-06-16)
 ------------------
 

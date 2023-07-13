@@ -1,2 +1,0 @@
-Call registry once per filter rather than for each img tag.
-[gotcha]
