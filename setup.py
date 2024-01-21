@@ -33,7 +33,7 @@ setup(
     name="plone.outputfilters",
     version=version,
     description=(
-        "Transformations applied to HTML in " "Plone text fields as they are rendered"
+        "Transformations applied to HTML in Plone text fields as they are rendered"
     ),
     long_description=long_description,
     # Get more strings from https://pypi.org/classifiers/
@@ -62,7 +62,6 @@ setup(
     install_requires=[
         "setuptools",
         "beautifulsoup4",
-        "DocumentTemplate",
         "Products.GenericSetup",
         "Products.MimetypesRegistry",
         "Products.PortalTransforms>=2.0",
@@ -71,6 +70,7 @@ setup(
         "plone.namedfile",
         "plone.registry",
         "plone.uuid",
+        "Zope",
         "zope.cachedescriptors",
     ],
     extras_require={
