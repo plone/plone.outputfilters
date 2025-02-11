@@ -3,9 +3,11 @@
 # See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "a489aea8"
+commit-id = "2.0.1.dev0"
 
 [pyproject]
 dependencies_mappings = [
     "beautifulsoup4 = ['bs4']",
     ]
+
+dependencies_ignores = "['z3c.jbot']"
