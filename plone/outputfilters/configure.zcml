@@ -1,6 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="plone.outputfilters"
     >
 
@@ -23,5 +24,13 @@
       >
     <depends name="componentregistry" />
   </gs:importStep>
+
+  <configure zcml:condition="have jbot-deprecations">
+    <include
+        package="z3c.jbot"
+        file="meta.zcml"
+        />
+    <jbotDeprecated dictionary=".jbot_deprecations" />
+  </configure>
 
 </configure>
