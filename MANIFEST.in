@@ -1,7 +1,7 @@
 include *.rst
 
 graft docs
-graft plone
+graft src
 
 global-exclude *pyc
 exclude bootstrap.py
