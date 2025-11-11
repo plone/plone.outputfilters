@@ -37,7 +37,6 @@ setup(
     zip_safe=False,
     python_requires=">=3.10",
     install_requires=[
-        "setuptools",
         "beautifulsoup4",
         "Products.GenericSetup",
         "Products.MimetypesRegistry",
