@@ -18,7 +18,6 @@ from Products.PortalTransforms.tests.utils import normalize_html
 
 import warnings
 
-
 PREFIX = abspath(dirname(__file__))
 
 

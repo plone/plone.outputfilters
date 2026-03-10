@@ -26,7 +26,6 @@ from zope.publisher.interfaces import NotFound as ztkNotFound
 
 import re
 
-
 appendix_re = re.compile("^(.*)([?#].*)$")
 resolveuid_re = re.compile("^[./]*resolve[Uu]id/([^/]*)/?(.*)$")
 

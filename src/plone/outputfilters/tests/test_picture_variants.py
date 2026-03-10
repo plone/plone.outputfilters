@@ -14,7 +14,6 @@ from plone.outputfilters.filters.picture_variants import PictureVariantsFilter
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 
-
 PREFIX = abspath(dirname(__file__))
 
 
