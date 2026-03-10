@@ -155,9 +155,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 </ul>
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
-        """.format(
-            uid=self.UID
-        )
+        """.format(uid=self.UID)
         import time
 
         startTime = time.time()
@@ -231,17 +229,13 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 </ul>
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
-        """.format(
-            uid=self.UID
-        )
+        """.format(uid=self.UID)
         self._assertTransformsTo(text, text_out)
 
     def test_parsing_with_nonexisting_srcset(self):
         text = """
 <p><img class="image-richtext image-inline image-size-thumb" src="resolveuid/{uid}/@@images/image/thumb" alt="" data-linktype="image" data-picturevariant="thumb" data-scale="thumb" data-val="{uid}" /></p>
-        """.format(
-            uid=self.UID
-        )
+        """.format(uid=self.UID)
         res = self.parser(text)
         self.assertTrue(res)
         # verify that tag was not converted:
