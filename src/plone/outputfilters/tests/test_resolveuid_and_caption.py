@@ -18,7 +18,6 @@ from Products.PortalTransforms.tests.utils import normalize_html
 
 import warnings
 
-
 PREFIX = abspath(dirname(__file__))
 
 
@@ -178,9 +177,7 @@ class ResolveUIDAndCaptionFilterIntegrationTestCase(PloneTestCase):
 </ul>
 <p>Thanks for using our product; we hope you like it!</p>
 <p>—The Plone Team</p>
-        """.format(
-            uid=self.UID
-        )
+        """.format(uid=self.UID)
         import time
 
         startTime = time.time()
@@ -263,12 +260,9 @@ alert(1);
         self._assertTransformsTo(text_in, text_in)
 
     def test_resolve_uids_in_image_maps(self):
-        text_in = (
-            """<map id="the_map" name="the_map">
+        text_in = """<map id="the_map" name="the_map">
 <area alt="alpha" href="resolveuid/%s" coords="1,2,3,4" shape="rect" />
-</map>"""
-            % self.UID
-        )
+</map>""" % self.UID
         text_out = """<map id="the_map" name="the_map">
 <area alt="alpha" coords="1,2,3,4" href="http://nohost/plone/image.jpg" shape="rect"/>
 </map>"""
