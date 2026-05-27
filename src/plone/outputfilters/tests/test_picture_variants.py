@@ -98,7 +98,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
         image.image = dummy_image()
         image.reindexObject()
         self.UID = image.UID()
-        self.parser = self._makeParser(captioned_images=True, resolve_uids=True)
+        self.parser = self._makeParser(resolve_uids=True)
         assert self.parser.is_enabled()
 
         self.outputchecker = OutputChecker()
