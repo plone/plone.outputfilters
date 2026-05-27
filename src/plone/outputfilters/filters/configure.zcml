@@ -8,23 +8,10 @@
       name="picture_variants"
       />
 
-  <adapter
-      factory=".resolveuid_and_caption.ResolveUIDAndCaptionFilter"
-      provides="..interfaces.IFilter"
-      for="*
-           *"
-      name="resolveuid_and_caption"
-      />
-
   <!-- Since Plone 5, we always resolve uids -->
   <utility
-      factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
+      factory=".resolveuid.ResolveUidsAlwaysEnabled"
       name="plone5-always-enabled"
-      />
-
-  <utility
-      factory=".resolveuid_and_caption.ImageCaptioningEnabler"
-      name="image-captioning-enabler"
       />
 
 </configure>

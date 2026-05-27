@@ -4,14 +4,6 @@
     >
 
   <browser:page
-      name="plone.outputfilters_captioned_image"
-      for="*"
-      class=".captioned_image.CaptionedImageView"
-      template="captioned_image.pt"
-      permission="zope.Public"
-      />
-
-  <browser:page
       name="resolveuid"
       for="*"
       class=".resolveuid.ResolveUIDView"

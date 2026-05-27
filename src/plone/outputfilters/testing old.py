@@ -3,6 +3,17 @@ from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
+from plone.outputfilters.filters.resolveuid_and_caption import (  # noqa
+    IImageCaptioningEnabler,
+)
+from zope.interface import implementer
+
+import zope.component
+
+
+@implementer(IImageCaptioningEnabler)
+class DummyImageCaptioningEnabler:
+    available = True
 
 
 class PloneOutputfilters(PloneSandboxLayer):
@@ -12,6 +23,17 @@ class PloneOutputfilters(PloneSandboxLayer):
         import plone.outputfilters
 
         self.loadZCML(package=plone.outputfilters)
+        gsm = zope.component.getGlobalSiteManager()
+        gsm.registerUtility(
+            DummyImageCaptioningEnabler(),
+            IImageCaptioningEnabler,
+            "outputfiltertest",
+            event=False,
+        )
+
+    def tearDownZope(self, app):
+        gsm = zope.component.getGlobalSiteManager()
+        gsm.unregisterUtility(provided=IImageCaptioningEnabler, name="outputfiltertest")
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, "plone.outputfilters:default")

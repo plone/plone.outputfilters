@@ -53,7 +53,7 @@ def unregister_transform_policy(context, output_mimetype):
 
 
 def install_mimetype_and_transforms(context):
-    """register mimetype and transformations for captioned images"""
+    """register mimetype and transformations for resolving uids"""
     register_mimetype(context, text_plone_outputfilters_html)
     register_transform(context, plone_outputfilters_html_to_html)
     register_transform(context, html_to_plone_outputfilters_html)
@@ -63,7 +63,7 @@ def install_mimetype_and_transforms(context):
 
 
 def uninstall_mimetype_and_transforms(context):
-    """unregister mimetype and transformations for captioned images"""
+    """unregister mimetype and transformations for resolving uids"""
     unregister_transform(context, "plone_outputfilters_html_to_html")
     unregister_transform(context, "html_to_plone_outputfilters_html")
     unregister_mimetype(context, "text/x-plone-outputfilters-html")
