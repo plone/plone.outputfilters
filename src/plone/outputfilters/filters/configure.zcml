@@ -1,6 +1,14 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <adapter
+      factory=".resolveuid_and_caption.ResolveUIDFilter"
+      provides="..interfaces.IFilter"
+      for="*
+           *"
+      name="resolveuid"
+      />
+
+  <adapter
       factory=".picture_variants.PictureVariantsFilter"
       provides="..interfaces.IFilter"
       for="*
@@ -10,7 +18,7 @@
 
   <!-- Since Plone 5, we always resolve uids -->
   <utility
-      factory=".resolveuid.ResolveUidsAlwaysEnabled"
+      factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
       name="plone5-always-enabled"
       />
 

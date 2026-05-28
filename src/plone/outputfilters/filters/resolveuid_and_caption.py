@@ -13,9 +13,18 @@ from zope.interface import implementer
 from zope.interface import Interface
 
 import re
+import zope.deferredimport
 
 appendix_re = re.compile("^(.*)([?#].*)$")
 resolveuid_re = re.compile("^[./]*resolve[Uu]id/([^/]*)/?(.*)$")
+
+zope.deferredimport.initialize()
+
+
+zope.deferredimport.deprecated(
+    "Please use from plone.outputfilters.resolveuid_and_caption import ResolveUIDFilter",
+    ResolveUIDAndCaptionFilter="plone.outputfilters:filters.resolveuid_and_caption.ResolveUIDFilter",
+)
 
 
 class IResolveUidsEnabler(Interface):

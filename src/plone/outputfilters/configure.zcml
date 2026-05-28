@@ -1,12 +1,14 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
-    xmlns:zcml="http://namespaces.zope.org/zcml"    >
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
 
   <include package=".browser" />
   <include package=".filters" />
 
- <include
+  <include
       package="z3c.jbot"
       file="meta.zcml"
       zcml:condition="installed z3c.jbot"
