@@ -1,6 +1,7 @@
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from bs4 import BeautifulSoup
+from plone.app.uuid.utils import uuidToObject
 from plone.base.utils import safe_text
 from plone.outputfilters.interfaces import IFilter
 from urllib.parse import urljoin
@@ -22,7 +23,7 @@ zope.deferredimport.initialize()
 
 
 zope.deferredimport.deprecated(
-    "Please use from plone.outputfilters.resolveuid_and_caption import ResolveUIDFilter",
+    "Please use from plone.outputfilters.resolveuid_and_caption import ResolveUIDFilter. Image Caption filter has been moved to plone.app.layout.outputfilters.caption_filter.CaptionFilter",
     ResolveUIDAndCaptionFilter="plone.outputfilters:filters.resolveuid_and_caption.ResolveUIDFilter",
 )
 
@@ -145,3 +146,24 @@ class ResolveUIDFilter:
                 continue
             attributes["src"] = self._render_resolveuid(src)
         return str(soup)
+
+    def resolve_link(self, href):
+        obj = None
+        subpath = href
+        appendix = ""
+
+        # preserve querystring and/or appendix
+        match = appendix_re.match(href)
+        if match is not None:
+            subpath, appendix = match.groups()
+
+        if self.resolve_uids:
+            match = resolveuid_re.match(subpath)
+            if match is not None:
+                uid, _subpath = match.groups()
+                # Getting URL of an object from it's UUID needs no permission checks
+                obj = uuidToObject(uid, unrestricted=True)
+                if obj is not None:
+                    subpath = _subpath
+
+        return obj, subpath, appendix

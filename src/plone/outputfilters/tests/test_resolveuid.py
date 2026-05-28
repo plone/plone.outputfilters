@@ -10,7 +10,7 @@ from plone.app.testing.bbb import PloneTestCase
 from plone.namedfile.file import NamedBlobImage
 from plone.namedfile.file import NamedImage
 from plone.namedfile.tests.test_scaling import DummyContent as NFDummyContent
-from plone.outputfilters.filters.resolveuid import ResolveUIDFilter  # noqa
+from plone.outputfilters.filters.resolveuid_and_caption import ResolveUIDFilter  # noqa
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_FUNCTIONAL_TESTING
 from Products.PortalTransforms.tests.utils import normalize_html
 
