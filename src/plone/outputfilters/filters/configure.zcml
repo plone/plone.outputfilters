@@ -1,8 +1,4 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
-    >
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <adapter
       factory=".picture_variants.PictureVariantsFilter"
@@ -20,11 +16,10 @@
       name="resolveuid_and_caption"
       />
 
-  <!-- in Plone 5, we always resolve uids -->
+  <!-- Since Plone 5, we always resolve uids -->
   <utility
       factory=".resolveuid_and_caption.ResolveUidsAlwaysEnabled"
       name="plone5-always-enabled"
-      zcml:condition="have plone-5"
       />
 
   <utility

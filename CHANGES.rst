@@ -8,6 +8,52 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.0 (2026-05-16)
+------------------
+
+Internal:
+
+
+- Make final release, no further changes.
+
+
+6.0.0a2 (2026-03-23)
+--------------------
+
+Internal:
+
+
+- Plone 6 cleanup
+
+  - Remove a now obsolete zcml:condition for plone-5.
+  - Remove unused i18 domain specification from configure.zcml.
+  - Define all tested Python versions.
+  - Remove unused buildout config, which was installing for Plone 5.0.6.
+- Update configuration files.
+  [plone devs]
+
+
+6.0.0a1 (2025-11-19)
+--------------------
+
+Breaking changes:
+
+
+- Replace ``pkg_resources`` namespace with PEP 420 native namespace.
+  Support only Plone 6.2 and Python 3.10+. (#3928)
+
+
+5.0.5 (2025-09-10)
+------------------
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs] (6e36bcc4)
+- Move distribution to src layout [gforcada] (#4217)
+
+
 5.0.4 (2023-07-13)
 ------------------
 

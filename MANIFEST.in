@@ -1,11 +1,9 @@
 include *.rst
 
 graft docs
-graft plone
+graft src
 
 global-exclude *pyc
-exclude bootstrap.py
-exclude buildout.cfg
 include pyproject.toml
 recursive-exclude news *
 exclude news
