@@ -187,7 +187,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p>
     <picture class="captioned">
         <source
-             sizes="(min-width: 576px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w"/>
+             sizes="(min-width: 576px) 600px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w"/>
         <img alt="" class="image-richtext image-left image-size-medium captioned zoomable" data-linktype="image"
             data-picturevariant="medium" data-scale="larger" data-val="{uid}" loading="lazy"
             src="resolveuid/{uid}/@@images/image/teaser"/>
@@ -202,7 +202,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
-             sizes="(min-width: 576px) 1000px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
+             sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-right image-size-large" data-linktype="image"
             data-picturevariant="large" data-scale="huge" data-val="{uid}" loading="lazy"
             src="resolveuid/{uid}/@@images/image/larger"/>
@@ -213,7 +213,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <h2>
     <picture>
         <source
-             sizes="(min-width: 576px) 1000px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
+             sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-inline image-size-large" data-linktype="image"
             data-picturevariant="large" data-scale="huge" data-val="{uid}" loading="lazy"
             src="resolveuid/{uid}/@@images/image/larger"/>
