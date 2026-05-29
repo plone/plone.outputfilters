@@ -3,7 +3,7 @@
 # See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "2.8.0"
+commit-id = "2.9.1.dev0"
 
 [tox]
 test_matrix = {"6.2" = ["*"]}
@@ -12,3 +12,5 @@ test_matrix = {"6.2" = ["*"]}
 dependencies_mappings = [
     "beautifulsoup4 = ['bs4']",
     ]
+
+dependencies_ignores = "['z3c.jbot']"

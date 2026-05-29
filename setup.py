@@ -46,7 +46,6 @@ setup(
         "plone.app.uuid>=2.2.0",
         "plone.base",
         "plone.namedfile",
-        "plone.registry",
         "plone.uuid",
         "Zope",
         "zope.cachedescriptors",
@@ -55,9 +54,9 @@ setup(
         "test": [
             "plone.app.contenttypes[test]",
             "plone.app.testing",
-            "plone.app.textfield",
             "plone.namedfile",
             "plone.testing",
+            "z3c.jbot",
         ]
     },
     entry_points="""
