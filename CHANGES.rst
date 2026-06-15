@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.1 (2026-06-15)
+------------------
+
+Bug fixes:
+
+
+- allow sizes attribute in picture tags, see https://github.com/plone/plone.namedfile/pull/180
+  [MrTango] (#180)
+
+
 6.0.0 (2026-05-16)
 ------------------
 
