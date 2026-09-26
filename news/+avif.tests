@@ -1,0 +1,3 @@
+Test that images in rich text offer AVIF: the picture variants filter puts an `image/avif` source in front of each source, and the resolveuid filter resolves `<scale>.avif` names to stable AVIF scale URLs.
+Needs the AVIF support of plone.namedfile and plone.scale.
+@MrTango
