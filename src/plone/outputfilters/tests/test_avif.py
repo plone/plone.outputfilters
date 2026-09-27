@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from io import BytesIO
 from os.path import dirname
 from os.path import join
 from plone.app.testing import setRoles
@@ -10,6 +11,7 @@ from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
 from zope.component import getAdapters
 
 import PIL.features
+import PIL.Image
 import re
 import unittest
 
@@ -25,6 +27,12 @@ SVG = b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>'
 def image_data():
     with open(join(dirname(__file__), "image.jpg"), "rb") as fd:
         return fd.read()
+
+
+def avif_data():
+    out = BytesIO()
+    PIL.Image.new("RGB", (640, 480), (30, 120, 200)).save(out, "AVIF")
+    return out.getvalue()
 
 
 def srcset_urls(source):
@@ -90,3 +98,19 @@ class TestRichTextImagesOfferAvif(unittest.TestCase):
         soup = self.render(self.rich_text_image())
         self.assertEqual(len(soup.find_all("source")), 1)
         self.assertNotIn(".avif", str(soup))
+
+    def test_avif_upload_falls_back_to_jpeg(self):
+        self.image.image = NamedBlobImage(data=avif_data(), filename="pic.avif")
+        self.assertEqual(self.image.image.contentType, "image/avif")
+        soup = self.render(self.rich_text_image())
+        avif, fallback = soup.find_all("source")
+        self.assertEqual(avif["type"], "image/avif")
+        for url in srcset_urls(avif):
+            self.assertRegex(url, STABLE_AVIF)
+        for url in srcset_urls(fallback):
+            self.assertRegex(url, STABLE_JPEG)
+        self.assertRegex(soup.img["src"], STABLE_JPEG)
+        images = self.image.restrictedTraverse("@@images")
+        self.request["TraversalRequestNameStack"] = []
+        scale = images.publishTraverse(self.request, soup.img["src"].rsplit("/", 1)[-1])
+        self.assertEqual(scale.index_html()[:3], b"\xff\xd8\xff")
