@@ -15,9 +15,7 @@ import PIL.Image
 import re
 import unittest
 
-STABLE = re.compile(
-    r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.\w+$"
-)
+STABLE = re.compile(r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.\w+$")
 STABLE_AVIF = re.compile(
     r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.avif$"
 )
