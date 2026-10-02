@@ -15,6 +15,9 @@ import PIL.Image
 import re
 import unittest
 
+STABLE = re.compile(
+    r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.\w+$"
+)
 STABLE_AVIF = re.compile(
     r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.avif$"
 )
@@ -108,8 +111,8 @@ class TestRichTextImagesOfferAvif(unittest.TestCase):
         for url in srcset_urls(avif):
             self.assertRegex(url, STABLE_AVIF)
         for url in srcset_urls(fallback):
-            self.assertRegex(url, STABLE_JPEG)
-        self.assertRegex(soup.img["src"], STABLE_JPEG)
+            self.assertRegex(url, STABLE)
+        self.assertRegex(soup.img["src"], STABLE)
         images = self.image.restrictedTraverse("@@images")
         self.request["TraversalRequestNameStack"] = []
         scale = images.publishTraverse(self.request, soup.img["src"].rsplit("/", 1)[-1])
