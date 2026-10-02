@@ -8,16 +8,16 @@ from plone.namedfile.file import NamedBlobImage
 from plone.outputfilters import apply_filters
 from plone.outputfilters.interfaces import IFilter
 from plone.outputfilters.testing import PLONE_OUTPUTFILTERS_INTEGRATION_TESTING
+from plone.registry.interfaces import IRegistry
 from zope.component import getAdapters
+from zope.component import getUtility
 
 import PIL.features
 import PIL.Image
 import re
 import unittest
 
-STABLE = re.compile(
-    r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.\w+$"
-)
+STABLE = re.compile(r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.\w+$")
 STABLE_AVIF = re.compile(
     r"^http://nohost/plone/pic/@@images/image-\d+-[0-9a-f]{32}\.avif$"
 )
@@ -58,6 +58,9 @@ class TestRichTextImagesOfferAvif(unittest.TestCase):
     def render(self, html):
         filters = [f for _, f in getAdapters((self.portal.doc, self.request), IFilter)]
         return BeautifulSoup(apply_filters(filters, html), "html.parser")
+
+    def set_avif_mode(self, mode):
+        getUtility(IRegistry)["plone.avif_mode"] = mode
 
     def rich_text_image(self, variant="medium"):
         return (
@@ -111,9 +114,38 @@ class TestRichTextImagesOfferAvif(unittest.TestCase):
         for url in srcset_urls(avif):
             self.assertRegex(url, STABLE_AVIF)
         for url in srcset_urls(fallback):
-            self.assertRegex(url, STABLE)
-        self.assertRegex(soup.img["src"], STABLE)
+            self.assertRegex(url, STABLE_JPEG)
+        self.assertRegex(soup.img["src"], STABLE_JPEG)
         images = self.image.restrictedTraverse("@@images")
         self.request["TraversalRequestNameStack"] = []
         scale = images.publishTraverse(self.request, soup.img["src"].rsplit("/", 1)[-1])
         self.assertEqual(scale.index_html()[:3], b"\xff\xd8\xff")
+
+    def test_disabled_mode_keeps_an_avif_upload_avif(self):
+        self.set_avif_mode("disabled")
+        self.image.image = NamedBlobImage(data=avif_data(), filename="pic.avif")
+        soup = self.render(self.rich_text_image())
+        (source,) = soup.find_all("source")
+        self.assertIsNone(source.get("type"))
+        for url in srcset_urls(source):
+            self.assertRegex(url, STABLE_AVIF)
+        self.assertRegex(soup.img["src"], STABLE_AVIF)
+        images = self.image.restrictedTraverse("@@images")
+        self.request["TraversalRequestNameStack"] = []
+        scale = images.publishTraverse(self.request, soup.img["src"].rsplit("/", 1)[-1])
+        self.assertEqual(scale.index_html()[4:12], b"ftypavif")
+
+    def test_disabled_mode_has_no_avif_source(self):
+        self.set_avif_mode("disabled")
+        soup = self.render(self.rich_text_image())
+        self.assertEqual(len(soup.find_all("source")), 1)
+        self.assertNotIn(".avif", str(soup))
+
+    def test_avif_only_mode_has_avif_scales_and_no_twin(self):
+        self.set_avif_mode("avif_only")
+        soup = self.render(self.rich_text_image())
+        (source,) = soup.find_all("source")
+        self.assertIsNone(source.get("type"))
+        for url in srcset_urls(source):
+            self.assertRegex(url, STABLE_AVIF)
+        self.assertRegex(soup.img["src"], STABLE_AVIF)
