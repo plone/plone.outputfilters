@@ -53,6 +53,7 @@ setup(
     ],
     extras_require={
         "test": [
+            "Pillow",
             "plone.app.contenttypes[test]",
             "plone.app.testing",
             "plone.app.textfield",

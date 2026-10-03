@@ -11,4 +11,5 @@ test_matrix = {"6.2" = ["*"]}
 [pyproject]
 dependencies_mappings = [
     "beautifulsoup4 = ['bs4']",
+    "Pillow = ['PIL']",
     ]
