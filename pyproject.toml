@@ -4,7 +4,76 @@
 [build-system]
 requires = ["setuptools>=68.2,<83", "wheel"]
 
+# START-MARKER-MANUAL-CONFIG
+# Anything from here until END-MARKER-MANUAL-CONFIG
+# will be kept by plone.meta
 
+[project]
+name = "plone.outputfilters"
+version = "6.0.2.dev0"
+description = "Transformations applied to HTML in Plone text fields as they are rendered"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Plone",
+    "Framework :: Plone :: 6.2",
+    "Framework :: Plone :: Core",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+license = "GPL-2.0-only"
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "David Glick, Plone Foundation",email = "davidglick@groundwire.org"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "plone-developers@lists.sourceforge.net"},
+]
+dependencies = [
+    "Products.GenericSetup",
+    "Products.MimetypesRegistry",
+    "Products.PortalTransforms>=2.0",
+    "Zope",
+    "beautifulsoup4",
+    "plone.app.uuid>=2.2.0",
+    "plone.base",
+    "plone.namedfile",
+    "plone.registry",
+    "plone.uuid",
+    "zope.cachedescriptors",
+]
+keywords = [
+    "plone",
+    "transform",
+    "filter",
+    "uid",
+    "caption",
+]
+
+[project.entry-points."plone.autoinclude.plugin"]
+target = "plone"
+
+[project.optional-dependencies]
+test = [
+    "plone.app.contenttypes[test]",
+    "plone.app.testing",
+    "plone.app.textfield",
+    "plone.namedfile",
+    "plone.testing",
+]
+
+[project.urls]
+Source = "http://github.com/plone/plone.outputfilters"
+Issues = "https://github.com/plone/Products.CMFPlone/issues"
+Changelog = "https://github.com/plone/plone.outputfilters/blob/master/CHANGES.rst"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "src/plone/outputfilters/README.rst", "CHANGES.rst"]}
+# END-MARKER-MANUAL-CONFIG
 
 [tool.towncrier]
 directory = "news/"
