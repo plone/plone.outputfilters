@@ -170,6 +170,8 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
+             sizes="(min-width: 576px) 400px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/preview.avif 400w, resolveuid/{uid}/@@images/image/large.avif 800w, resolveuid/{uid}/@@images/image/larger.avif 1000w" type="image/avif"/>
+        <source
              sizes="(min-width: 576px) 400px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w"/>
         <img alt="" class="image-richtext image-inline image-size-small" data-linktype="image"
             data-picturevariant="small" data-scale="preview" data-val="{uid}" loading="lazy"
@@ -187,6 +189,8 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p>
     <picture class="captioned">
         <source
+             sizes="(min-width: 576px) 600px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/teaser.avif 600w, resolveuid/{uid}/@@images/image/preview.avif 400w, resolveuid/{uid}/@@images/image/large.avif 800w, resolveuid/{uid}/@@images/image/larger.avif 1000w, resolveuid/{uid}/@@images/image/great.avif 1200w" type="image/avif"/>
+        <source
              sizes="(min-width: 576px) 600px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w"/>
         <img alt="" class="image-richtext image-left image-size-medium captioned zoomable" data-linktype="image"
             data-picturevariant="medium" data-scale="larger" data-val="{uid}" loading="lazy"
@@ -202,6 +206,8 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">
     <picture>
         <source
+             sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger.avif 1000w, resolveuid/{uid}/@@images/image/preview.avif 400w, resolveuid/{uid}/@@images/image/teaser.avif 600w, resolveuid/{uid}/@@images/image/large.avif 800w, resolveuid/{uid}/@@images/image/great.avif 1200w, resolveuid/{uid}/@@images/image/huge.avif 1600w" type="image/avif"/>
+        <source
              sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-right image-size-large" data-linktype="image"
             data-picturevariant="large" data-scale="huge" data-val="{uid}" loading="lazy"
@@ -212,6 +218,8 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
     programming language. More about these technologies:</p>
 <h2>
     <picture>
+        <source
+             sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger.avif 1000w, resolveuid/{uid}/@@images/image/preview.avif 400w, resolveuid/{uid}/@@images/image/teaser.avif 600w, resolveuid/{uid}/@@images/image/large.avif 800w, resolveuid/{uid}/@@images/image/great.avif 1200w, resolveuid/{uid}/@@images/image/huge.avif 1600w" type="image/avif"/>
         <source
              sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-inline image-size-large" data-linktype="image"
