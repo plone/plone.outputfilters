@@ -168,7 +168,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p class="discreet">If you're seeing this instead of the web site you were expecting, the owner of this web site has
     just installed Plone. Do not contact the Plone Team or the Plone support channels about this.</p>
 <p class="discreet">
-    <picture>
+    <picture data-picturevariant="small">
         <source
              sizes="(min-width: 576px) 400px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w"/>
         <img alt="" class="image-richtext image-inline image-size-small" data-linktype="image"
@@ -185,7 +185,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <h2>Get comfortable</h2>
 <p>After that, we suggest you do one or more of the following:</p>
 <p>
-    <picture class="captioned">
+    <picture class="captioned" data-picturevariant="medium">
         <source
              sizes="(min-width: 576px) 600px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/great 1200w"/>
         <img alt="" class="image-richtext image-left image-size-medium captioned zoomable" data-linktype="image"
@@ -200,7 +200,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
     that delivers Plone-based solutions?</p>
 <h2>Find out more about Plone</h2>
 <p class="discreet">
-    <picture>
+    <picture data-picturevariant="large">
         <source
              sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-right image-size-large" data-linktype="image"
@@ -211,7 +211,7 @@ class PictureVariantsFilterIntegrationTestCase(PloneTestCase):
 <p>Plone is a powerful content management system built on a rock-solid application stack written using the Python
     programming language. More about these technologies:</p>
 <h2>
-    <picture>
+    <picture data-picturevariant="large">
         <source
              sizes="(min-width: 576px) 1000px, (min-width: 768px) 600px, 98vw" srcset="resolveuid/{uid}/@@images/image/larger 1000w, resolveuid/{uid}/@@images/image/preview 400w, resolveuid/{uid}/@@images/image/teaser 600w, resolveuid/{uid}/@@images/image/large 800w, resolveuid/{uid}/@@images/image/great 1200w, resolveuid/{uid}/@@images/image/huge 1600w"/>
         <img alt="" class="image-richtext image-inline image-size-large" data-linktype="image"

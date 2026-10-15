@@ -1,0 +1,3 @@
+Expect the picture variant name on the `picture` tag of rich text images, as `data-picturevariant`.
+Needs the matching fix in plone.namedfile.
+@MrTango
